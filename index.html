@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>立直麻将 Wordle</title>
+    <style>
+        :root {
+            --green: #538d4e;
+            --yellow: #b59f3b;
+            --gray: #3a3a3c;
+            --dark-gray: #5a5a5c;
+            --light-gray: #818384;
+            --bg: #121213;
+            --text: #ffffff;
+            --tile-bg: #ffffff;
+            --cell-border: #3a3a3c;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: "Helvetica Neue", Arial, "PingFang SC", "Microsoft YaHei", sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0;
+            padding: 16px 8px;
+            min-height: 100vh;
+        }
+
+        h1 {
+            margin-bottom: 2px;
+            font-size: 28px;
+            letter-spacing: 2px;
+        }
+        .subtitle {
+            color: #aaa;
+            margin-bottom: 4px;
+            font-size: 13px;
+            text-align: center;
+            line-height: 1.5;
+        }
+        .subtitle .highlight {
+            color: #e6c34a;
+            font-weight: bold;
+        }
+
+        #game-info {
+            background-color: #1e1e1e;
+            border: 1px solid #444;
+            border-radius: 8px;
+            padding: 8px 18px;
+            margin-bottom: 16px;
+            font-size: 15px;
+            color: #ddd;
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        #game-info span {
+            color: #e6c34a;
+            font-weight: bold;
+        }
+        .wind-emoji {
+            font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+            font-size: 20px;
+        }
+
+        #board {
+            display: grid;
+            grid-template-rows: repeat(6, 1fr);
+            gap: 6px;
+            margin-bottom: 20px;
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: repeat(14, 1fr);
+            gap: 4px;
+        }
+
+        .cell {
+            width: 34px;
+            height: 46px;
+            border: 2px solid var(--cell-border);
+            border-radius: 4px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 28px;
+            font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", "Noto Emoji", sans-serif;
+            background-color: transparent;
+            user-select: none;
+            transition: background-color 0.15s ease, border-color 0.15s ease;
+        }
+
+        .cell:nth-child(14) {
+            margin-left: 8px;
+            border-left: 3px dashed #666;
+        }
+
+        .cell.filled {
+            background-color: var(--tile-bg);
+            color: #000;
+            border-color: #999;
+        }
+
+        .cell.correct {
+            background-color: var(--green);
+            border-color: var(--green);
+            color: white;
+        }
+        .cell.present {
+            background-color: var(--yellow);
+            border-color: var(--yellow);
+            color: white;
+        }
+        .cell.absent {
+            background-color: var(--gray);
+            border-color: var(--gray);
+            color: white;
+        }
+
+        #keyboard {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            align-items: center;
+            max-width: 620px;
+            width: 100%;
+        }
+
+        .key-row {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .key {
+            padding: 7px 9px;
+            border-radius: 5px;
+            background-color: var(--light-gray);
+            border: none;
+            color: white;
+            font-size: 22px;
+            font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", "Noto Emoji", sans-serif;
+            cursor: pointer;
+            user-select: none;
+            transition: background-color 0.2s ease;
+            min-width: 36px;
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        .key:hover {
+            filter: brightness(1.25);
+        }
+        .key:active {
+            filter: brightness(0.85);
+            transform: scale(0.94);
+            transition: transform 0.05s ease;
+        }
+
+        .key.action {
+            font-size: 15px;
+            font-weight: bold;
+            padding: 14px 22px;
+            font-family: inherit;
+            min-width: 80px;
+            letter-spacing: 1px;
+            background-color: #555;
+        }
+        .key.action:hover {
+            background-color: #777;
+        }
+        .key.action.submit-btn {
+            background-color: #4a7c4f;
+        }
+        .key.action.submit-btn:hover {
+            background-color: #5d9e63;
+        }
+        .key.action.hint-btn {
+            background-color: #b07d3b;
+        }
+        .key.action.hint-btn:hover {
+            background-color: #c88e44;
+        }
+
+        .key.key-correct {
+            background-color: var(--green);
+            border: 1px solid #6ab464;
+        }
+        .key.key-present {
+            background-color: var(--yellow);
+            border: 1px solid #d4b840;
+        }
+        .key.key-absent {
+            background-color: #2a2a2c;
+            border: 1px solid #444;
+            color: #666;
+        }
+
+        #message {
+            position: fixed;
+            top: 18%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(255, 255, 255, 0.92);
+            color: #000;
+            padding: 14px 22px;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 15px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+            z-index: 100;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            white-space: pre-line;
+            max-width: 90vw;
+        }
+
+        .show-message {
+            opacity: 1 !important;
+        }
+
+        @media (max-width: 580px) {
+            .cell {
+                width: 22px;
+                height: 32px;
+                font-size: 18px;
+                border-width: 1.5px;
+                border-radius: 3px;
+            }
+            .cell:nth-child(14) {
+                margin-left: 4px;
+                border-left-width: 2px;
+            }
+            .key {
+                font-size: 16px;
+                padding: 5px 6px;
+                min-width: 26px;
+                border-radius: 3px;
+            }
+            .key.action {
+                font-size: 13px;
+                padding: 10px 14px;
+                min-width: 60px;
+            }
+            h1 {
+                font-size: 22px;
+            }
+            .subtitle {
+                font-size: 11px;
+            }
+            .row {
+                gap: 2px;
+            }
+            #board {
+                gap: 4px;
+            }
+            #game-info {
+                font-size: 13px;
+                padding: 6px 12px;
+                gap: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>🀫 立直麻将 Wordle</h1>
+    <div class="subtitle">
+        猜出14张牌的<span class="highlight">有役和牌型</span>（最后一张为和牌）<br>
+        前13张按 <span class="highlight">万→筒→索→字</span> 排序 · 共6次机会
+    </div>
+
+    <div id="game-info">
+        场风：<span id="field-wind-display"></span>
+        自风：<span id="self-wind-display"></span>
+        · 和牌方式：<span id="win-method-display"></span>
+    </div>
+
+    <div id="board"></div>
+
+    <div id="keyboard">
+        <div class="key-row" id="row-man"></div>
+        <div class="key-row" id="row-pin"></div>
+        <div class="key-row" id="row-sou"></div>
+        <div class="key-row" id="row-ji"></div>
+        <div class="key-row" style="margin-top:4px;">
+            <button class="key action" onclick="deleteTile()">⌫ 删除</button>
+            <button class="key action submit-btn" onclick="submitGuess()">✓ 提交和牌</button>
+            <button class="key action hint-btn" onclick="showHint()">💡 提示</button>
+        </div>
+    </div>
+
+    <div id="message"></div>
+
+    <script>
+        // ============ 麻将牌字符集 ============
+        const TILES = [
+            '🀇', '🀈', '🀉', '🀊', '🀋', '🀌', '🀍', '🀎', '🀏', // 0-8:   万 (1-9)
+            '🀙', '🀚', '🀛', '🀜', '🀝', '🀞', '🀟', '🀠', '🀡', // 9-17:  筒 (1-9)
+            '🀐', '🀑', '🀒', '🀓', '🀔', '🀕', '🀖', '🀗', '🀘', // 18-26: 索 (1-9)
+            '🀀', '🀁', '🀂', '🀃', '🀆', '🀅', '🀄' // 27-33: 东 南 西 北 白 发 中
+        ];
+
+        const TOTAL_TILE_TYPES = 34;
+        const GUESS_LENGTH = 14;
+        const MAX_ROWS = 6;
+
+        const SUIT_MAN = { start: 0, end: 8 };
+        const SUIT_PIN = { start: 9, end: 17 };
+        const SUIT_SOU = { start: 18, end: 26 };
+        const SUIT_JI = { start: 27, end: 33 };
+
+        const YAOCHU_INDICES = new Set([0, 8, 9, 17, 18, 26, 27, 28, 29, 30, 31, 32, 33]);
+        const KOKUSHI_INDICES = [0, 8, 9, 17, 18, 26, 27, 28, 29, 30, 31, 32, 33];
+        const YAKUHAI_TRIPLE = [31, 32, 33]; // 白 发 中
+
+        // ============ 游戏状态 ============
+        let targetHand = [];
+        let currentGuess = [];
+        let currentRow = 0;
+        let gameOver = false;
+        let keyColors = new Array(TOTAL_TILE_TYPES).fill('');
+
+        // 场况信息
+        let fieldWind = 0;  // 0-东, 1-南, 2-西, 3-北
+        let selfWind = 0;
+        let isTsumo = true; // true=自摸, false=荣和
+
+        // ============ 初始化 ============
+        function init() {
+            randomizeGameContext();
+            updateGameInfoDisplay();
+            createBoard();
+            createKeyboard();
+            generateTargetHand();
+            console.log("🎯 答案:", targetHand.map(i => TILES[i]).join(' '));
+            console.log("   场风:", getWindName(fieldWind), "自风:", getWindName(selfWind), isTsumo ? "自摸" : "荣和");
+        }
+
+        function randomizeGameContext() {
+            fieldWind = Math.floor(Math.random() * 4);
+            selfWind = Math.floor(Math.random() * 4);
+            isTsumo = Math.random() < 0.5;
+        }
+
+        function updateGameInfoDisplay() {
+            document.getElementById('field-wind-display').innerHTML = TILES[27 + fieldWind] + ' ' + getWindName(fieldWind);
+            document.getElementById('self-wind-display').innerHTML = TILES[27 + selfWind] + ' ' + getWindName(selfWind);
+            document.getElementById('win-method-display').innerHTML = isTsumo ? '🚀 自摸' : '🎯 荣和';
+        }
+
+        function getWindName(index) {
+            return ['东', '南', '西', '北'][index];
+        }
+
+        function createBoard() {
+            const board = document.getElementById('board');
+            board.innerHTML = '';
+            for (let r = 0; r < MAX_ROWS; r++) {
+                const row = document.createElement('div');
+                row.className = 'row';
+                row.id = `row-${r}`;
+                for (let c = 0; c < GUESS_LENGTH; c++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'cell';
+                    cell.id = `cell-${r}-${c}`;
+                    if (c === 13) cell.title = '和牌（第14张）';
+                    row.appendChild(cell);
+                }
+                board.appendChild(row);
+            }
+        }
+
+        function createKeyboard() {
+            const groups = [
+                { id: 'row-man', start: SUIT_MAN.start, end: SUIT_MAN.end },
+                { id: 'row-pin', start: SUIT_PIN.start, end: SUIT_PIN.end },
+                { id: 'row-sou', start: SUIT_SOU.start, end: SUIT_SOU.end },
+                { id: 'row-ji', start: SUIT_JI.start, end: SUIT_JI.end }
+            ];
+
+            groups.forEach(group => {
+                const container = document.getElementById(group.id);
+                container.innerHTML = '';
+                for (let i = group.start; i <= group.end; i++) {
+                    const btn = document.createElement('button');
+                    btn.className = 'key';
+                    btn.id = `key-${i}`;
+                    btn.innerText = TILES[i];
+                    btn.title = getTileName(i);
+                    btn.onclick = () => addTile(i);
+                    container.appendChild(btn);
+                }
+            });
+        }
+
+        function getTileName(index) {
+            const suitNames = ['万', '万', '万', '万', '万', '万', '万', '万', '万',
+                '筒', '筒', '筒', '筒', '筒', '筒', '筒', '筒', '筒',
+                '索', '索', '索', '索', '索', '索', '索', '索', '索'
+            ];
+            const jiNames = ['东', '南', '西', '北', '白', '发', '中'];
+            if (index < 27) {
+                const num = (index % 9) + 1;
+                return `${num}${suitNames[index]}`;
+            } else {
+                return jiNames[index - 27];
+            }
+        }
+
+        // ============ 目标牌型生成 ============
+        function generateTargetHand() {
+            let valid = false;
+            let handIndices = [];
+            let counts = new Array(TOTAL_TILE_TYPES).fill(0);
+            let attempts = 0;
+            const maxAttempts = 8000;
+
+            while (!valid && attempts < maxAttempts) {
+                attempts++;
+                counts.fill(0);
+                const rand = Math.random();
+                if (rand < 0.04) {
+                    valid = tryGenerateKokushi(counts);
+                } else if (rand < 0.14) {
+                    valid = tryGenerateSevenPairs(counts);
+                } else {
+                    valid = tryGenerateStandardHand(counts);
+                }
+
+                if (valid) {
+                    valid = counts.every(c => c <= 4);
+                    if (valid) {
+                        if (!isTsumo) {
+                            valid = hasYakuForRon(counts);
+                        }
+                    }
+                }
+            }
+
+            if (!valid) {
+                counts = generateFallbackCounts();
+            }
+
+            handIndices = [];
+            for (let i = 0; i < TOTAL_TILE_TYPES; i++) {
+                for (let j = 0; j < counts[i]; j++) {
+                    handIndices.push(i);
+                }
+            }
+
+            const winIdx = Math.floor(Math.random() * handIndices.length);
+            const winningTile = handIndices.splice(winIdx, 1)[0];
+            handIndices.sort((a, b) => a - b);
+            handIndices.push(winningTile);
+            targetHand = handIndices;
+        }
+
+        function tryGenerateKokushi(counts) {
+            const pairIdx = KOKUSHI_INDICES[Math.floor(Math.random() * KOKUSHI_INDICES.length)];
+            for (const idx of KOKUSHI_INDICES) counts[idx] = 1;
+            counts[pairIdx] = 2;
+            return true;
+        }
+
+        function tryGenerateSevenPairs(counts) {
+            const available = Array.from({ length: TOTAL_TILE_TYPES }, (_, i) => i);
+            for (let i = available.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [available[i], available[j]] = [available[j], available[i]];
+            }
+            const chosen = available.slice(0, 7);
+            for (const idx of chosen) counts[idx] = 2;
+            return true;
+        }
+
+        function tryGenerateStandardHand(counts) {
+            const pair = Math.floor(Math.random() * TOTAL_TILE_TYPES);
+            counts[pair] += 2;
+
+            for (let m = 0; m < 4; m++) {
+                const isTriplet = Math.random() < 0.3;
+                if (isTriplet) {
+                    let t;
+                    if (Math.random() < 0.5) {
+                        const suit = Math.floor(Math.random() * 3);
+                        const num = Math.floor(Math.random() * 7) + 1; // 2-8
+                        t = suit * 9 + num;
+                    } else {
+                        t = Math.floor(Math.random() * TOTAL_TILE_TYPES);
+                    }
+                    counts[t] += 3;
+                } else {
+                    const suit = Math.floor(Math.random() * 3);
+                    const start = Math.floor(Math.random() * 7);
+                    const base = suit * 9 + start;
+                    counts[base]++;
+                    counts[base + 1]++;
+                    counts[base + 2]++;
+                }
+            }
+            return counts.every(c => c <= 4);
+        }
+
+        function generateFallbackCounts() {
+            const counts = new Array(TOTAL_TILE_TYPES).fill(0);
+            const patterns = [
+                { suit: 0, start: 1 }, { suit: 1, start: 2 },
+                { suit: 2, start: 3 }, { suit: 0, start: 4 }
+            ];
+            patterns.forEach(p => {
+                const base = p.suit * 9 + p.start;
+                counts[base]++; counts[base + 1]++; counts[base + 2]++;
+            });
+            counts[1 * 9 + 5] += 2; // 6筒雀头
+            return counts;
+        }
+
+        // ============ 役种判断（基于计数与分解） ============
+        function hasYakuForRon(counts) {
+            const yakuList = getAllYakuFromCounts(counts);
+            return yakuList.length > 0 && !(yakuList.length === 1 && yakuList[0] === '门清（无其他役）');
+        }
+
+        // 获取所有役（基于完整手牌计数）
+        function getAllYakuFromCounts(counts) {
+            // 先检查特殊形
+            if (isKokushiShape(counts)) return ['国士无双'];
+            if (isSevenPairs(counts)) {
+                const yaku = ['七对子'];
+                if (isTanyao(counts)) yaku.push('断幺九');
+                if (isHonitsu(counts)) yaku.push('混一色');
+                if (isChinitsu(counts)) yaku.push('清一色');
+                return yaku;
+            }
+
+            // 尝试进行标准分解，获取所有可能的役
+            const decompositions = findAllDecompositions(counts);
+            let bestYaku = [];
+            for (const decomp of decompositions) {
+                const currentYaku = detectYakuFromDecomposition(counts, decomp);
+                if (currentYaku.length > bestYaku.length) {
+                    bestYaku = currentYaku;
+                }
+            }
+
+            if (bestYaku.length === 0) {
+                if (isTsumo) return ['门清自摸'];
+                return ['门清（无其他役）'];
+            }
+            return bestYaku;
+        }
+
+        // 找到所有可能的4面子+1雀头分解
+        function findAllDecompositions(counts) {
+            const results = [];
+            const used = new Array(TOTAL_TILE_TYPES).fill(0);
+
+            function backtrack(melds, pairIdx) {
+                if (melds.length === 4 && pairIdx !== -1) {
+                    results.push({ melds: [...melds], pair: pairIdx });
+                    return;
+                }
+                // 先找雀头
+                if (pairIdx === -1) {
+                    for (let i = 0; i < TOTAL_TILE_TYPES; i++) {
+                        if (counts[i] - used[i] >= 2) {
+                            used[i] += 2;
+                            backtrack(melds, i);
+                            used[i] -= 2;
+                        }
+                    }
+                } else {
+                    // 找面子
+                    for (let i = 0; i < TOTAL_TILE_TYPES; i++) {
+                        if (counts[i] - used[i] >= 3) {
+                            used[i] += 3;
+                            melds.push({ type: 'triplet', tile: i });
+                            backtrack(melds, pairIdx);
+                            melds.pop();
+                            used[i] -= 3;
+                        }
+                    }
+                    for (let suit = 0; suit < 3; suit++) {
+                        for (let num = 0; num < 7; num++) {
+                            const i = suit * 9 + num;
+                            if (counts[i] - used[i] > 0 && counts[i+1] - used[i+1] > 0 && counts[i+2] - used[i+2] > 0) {
+                                used[i]++; used[i+1]++; used[i+2]++;
+                                melds.push({ type: 'sequence', start: i });
+                                backtrack(melds, pairIdx);
+                                melds.pop();
+                                used[i]--; used[i+1]--; used[i+2]--;
+                            }
+                        }
+                    }
+                }
+            }
+
+            backtrack([], -1);
+            // 去重（相同结构）
+            const unique = new Map();
+            for (const res of results) {
+                const key = JSON.stringify({ 
+                    melds: res.melds.map(m => m.type + m.start || m.tile).sort(), 
+                    pair: res.pair 
+                });
+                if (!unique.has(key)) unique.set(key, res);
+            }
+            return [...unique.values()];
+        }
+
+        function detectYakuFromDecomposition(counts, decomp) {
+            const yaku = [];
+            const melds = decomp.melds;
+            const pair = decomp.pair;
+
+            // 计数类役种
+            if (isTanyao(counts)) yaku.push('断幺九');
+            if (isChinitsu(counts)) yaku.push('清一色');
+            else if (isHonitsu(counts)) yaku.push('混一色');
+            if (hasYakuhaiKotsu(counts, fieldWind, selfWind)) {
+                const parts = [];
+                if (counts[27 + selfWind] >= 3) parts.push('自风');
+                if (counts[27 + fieldWind] >= 3) parts.push('场风');
+                if (counts[31] >= 3) parts.push('白');
+                if (counts[32] >= 3) parts.push('发');
+                if (counts[33] >= 3) parts.push('中');
+                yaku.push('役牌(' + parts.join('/') + ')');
+            }
+
+            // 顺子相关役
+            const sequences = melds.filter(m => m.type === 'sequence');
+            const triplets = melds.filter(m => m.type === 'triplet');
+
+            // 平和：全顺子，雀头非役牌
+            if (sequences.length === 4) {
+                const yakuhaiSet = new Set([27 + selfWind, 27 + fieldWind, 31, 32, 33]);
+                if (!yakuhaiSet.has(pair)) {
+                    yaku.push('平和');
+                }
+            }
+
+            // 一杯口：有两组完全相同的顺子
+            const seqCounts = new Map();
+            for (const s of sequences) {
+                const key = s.start;
+                seqCounts.set(key, (seqCounts.get(key) || 0) + 1);
+            }
+            let iipeikou = false;
+            for (const [key, cnt] of seqCounts) {
+                if (cnt >= 2) {
+                    iipeikou = true;
+                    break;
+                }
+            }
+            if (iipeikou) yaku.push('一杯口');
+            // 二杯口：有两个一杯口
+            if (sequences.length === 4) {
+                const values = [...seqCounts.values()];
+                if (values.filter(v => v >= 2).length >= 2 || values.some(v => v >= 4)) {
+                    yaku.push('二杯口');
+                }
+            }
+
+            // 三色同顺：万筒索各有同一数字的顺子
+            const suitSeqStarts = [new Set(), new Set(), new Set()];
+            for (const s of sequences) {
+                const suit = Math.floor(s.start / 9);
+                const num = s.start % 9;
+                suitSeqStarts[suit].add(num);
+            }
+            for (let num = 0; num < 9; num++) {
+                if (suitSeqStarts[0].has(num) && suitSeqStarts[1].has(num) && suitSeqStarts[2].has(num)) {
+                    yaku.push('三色同顺');
+                    break;
+                }
+            }
+
+            // 一气通贯：同花色的123、456、789顺子
+            for (let suit = 0; suit < 3; suit++) {
+                const starts = suitSeqStarts[suit];
+                if (starts.has(0) && starts.has(3) && starts.has(6)) {
+                    yaku.push('一气通贯');
+                    break;
+                }
+            }
+
+            // 对对和：4个刻子
+            if (triplets.length === 4) {
+                yaku.push('对对和');
+            }
+
+            // 三暗刻：三个刻子（这里全部视为暗刻，因为没有鸣牌）
+            if (triplets.length >= 3) {
+                yaku.push('三暗刻');
+            }
+
+            // 混全带幺九：所有面子+雀头都含幺九牌
+            let isMixedOutside = true;
+            for (const m of melds) {
+                if (m.type === 'triplet') {
+                    if (!YAOCHU_INDICES.has(m.tile)) { isMixedOutside = false; break; }
+                } else {
+                    if (m.start % 9 !== 0 && m.start % 9 !== 6) { isMixedOutside = false; break; }
+                }
+            }
+            if (isMixedOutside && YAOCHU_INDICES.has(pair)) {
+                yaku.push('混全带幺九');
+            }
+
+            // 纯全带幺九：同混全，但无字牌
+            if (isMixedOutside && YAOCHU_INDICES.has(pair) && !counts.slice(27).some(c => c > 0)) {
+                yaku.push('纯全带幺九');
+            }
+
+            // 混老头：所有牌都是幺九牌（1、9、字）
+            if (counts.every((c, i) => c === 0 || YAOCHU_INDICES.has(i))) {
+                yaku.push('混老头');
+            }
+
+            // 清老头：只有1、9，无字牌
+            if (counts.every((c, i) => c === 0 || (YAOCHU_INDICES.has(i) && i < 27))) {
+                yaku.push('清老头');
+            }
+
+            return yaku;
+        }
+
+        // 原有役种辅助判断函数
+        function isKokushiShape(counts) {
+            return KOKUSHI_INDICES.every(idx => counts[idx] >= 1) &&
+                KOKUSHI_INDICES.reduce((sum, idx) => sum + counts[idx], 0) === 14;
+        }
+
+        function isSevenPairs(counts) {
+            let pairCount = 0;
+            for (let i = 0; i < TOTAL_TILE_TYPES; i++) {
+                if (counts[i] === 2) pairCount++;
+                else if (counts[i] === 4) pairCount += 2;
+                else if (counts[i] !== 0) return false;
+            }
+            return pairCount === 7;
+        }
+
+        function isTanyao(counts) {
+            for (let i = 0; i < TOTAL_TILE_TYPES; i++) {
+                if (counts[i] > 0 && YAOCHU_INDICES.has(i)) return false;
+            }
+            return true;
+        }
+
+        function hasYakuhaiKotsu(counts, fieldWind, selfWind) {
+            if (counts[27 + selfWind] >= 3) return true;
+            if (counts[27 + fieldWind] >= 3) return true;
+            for (const idx of YAKUHAI_TRIPLE) {
+                if (counts[idx] >= 3) return true;
+            }
+            return false;
+        }
+
+        function isHonitsu(counts) {
+            let suit = -1;
+            let hasJi = false;
+            for (let i = 0; i < TOTAL_TILE_TYPES; i++) {
+                if (counts[i] > 0) {
+                    if (i >= 27) hasJi = true;
+                    else {
+                        const s = Math.floor(i / 9);
+                        if (suit === -1) suit = s;
+                        else if (suit !== s) return false;
+                    }
+                }
+            }
+            return suit !== -1 && hasJi;
+        }
+
+        function isChinitsu(counts) {
+            let suit = -1;
+            for (let i = 0; i < 27; i++) {
+                if (counts[i] > 0) {
+                    const s = Math.floor(i / 9);
+                    if (suit === -1) suit = s;
+                    else if (suit !== s) return false;
+                }
+            }
+            for (let i = 27; i < TOTAL_TILE_TYPES; i++) {
+                if (counts[i] > 0) return false;
+            }
+            return suit !== -1;
+        }
+
+        // ============ 提示功能 ============
+        function showHint() {
+            const counts = new Array(TOTAL_TILE_TYPES).fill(0);
+            for (const idx of targetHand) counts[idx]++;
+
+            const yakuList = getAllYakuFromCounts(counts);
+            let hintText = '💡 答案役种提示：\n';
+            hintText += `场风: ${getWindName(fieldWind)}  自风: ${getWindName(selfWind)}\n`;
+            hintText += `和牌: ${isTsumo ? '自摸' : '荣和'}\n`;
+            hintText += `役种: ${yakuList.length > 0 ? yakuList.join(' · ') : '无役（仅限自摸）'}`;
+
+            showMessage(hintText, 6000);
+        }
+
+        // ============ 玩家输入 ============
+        function addTile(tileIndex) {
+            if (gameOver || currentGuess.length >= GUESS_LENGTH) return;
+            if (currentGuess.filter(x => x === tileIndex).length >= 4) {
+                showMessage("一种牌最多只能有4张哦～");
+                return;
+            }
+            currentGuess.push(tileIndex);
+            updateGrid();
+        }
+
+        function deleteTile() {
+            if (gameOver || currentGuess.length === 0) return;
+            currentGuess.pop();
+            updateGrid();
+        }
+
+        function updateGrid() {
+            for (let i = 0; i < GUESS_LENGTH; i++) {
+                const cell = document.getElementById(`cell-${currentRow}-${i}`);
+                cell.innerText = '';
+                cell.classList.remove('filled', 'correct', 'present', 'absent');
+            }
+            for (let i = 0; i < currentGuess.length; i++) {
+                const cell = document.getElementById(`cell-${currentRow}-${i}`);
+                cell.innerText = TILES[currentGuess[i]];
+                cell.classList.add('filled');
+            }
+        }
+
+        function showMessage(msg, duration = 2000) {
+            const msgBox = document.getElementById('message');
+            msgBox.innerText = msg;
+            msgBox.classList.add('show-message');
+            clearTimeout(msgBox._timeout);
+            msgBox._timeout = setTimeout(() => {
+                msgBox.classList.remove('show-message');
+            }, duration);
+        }
+
+        // ============ 提交逻辑 ============
+        function submitGuess() {
+            if (gameOver) return;
+            if (currentGuess.length < GUESS_LENGTH) {
+                showMessage(`牌数不足14张（当前${currentGuess.length}张）`);
+                return;
+            }
+
+            const validationResult = validateFullHand(currentGuess);
+            if (!validationResult.valid) {
+                showMessage(validationResult.reason || "非有效和牌型，请重试");
+                return;
+            }
+
+            const sortedGuess = sortGuessLikeTarget(currentGuess);
+
+            for (let i = 0; i < GUESS_LENGTH; i++) {
+                const cell = document.getElementById(`cell-${currentRow}-${i}`);
+                cell.innerText = TILES[sortedGuess[i]];
+                cell.classList.add('filled');
+            }
+
+            const targetCopy = [...targetHand];
+            const guessCopy = [...sortedGuess];
+            const cellColors = new Array(GUESS_LENGTH).fill('absent');
+
+            for (let i = 0; i < GUESS_LENGTH; i++) {
+                if (guessCopy[i] === targetCopy[i]) {
+                    cellColors[i] = 'correct';
+                    targetCopy[i] = -1;
+                    guessCopy[i] = -2;
+                }
+            }
+
+            for (let i = 0; i < GUESS_LENGTH; i++) {
+                if (guessCopy[i] >= 0) {
+                    const foundIdx = targetCopy.indexOf(guessCopy[i]);
+                    if (foundIdx !== -1) {
+                        cellColors[i] = 'present';
+                        targetCopy[foundIdx] = -1;
+                    }
+                }
+            }
+
+            let allCorrect = true;
+            for (let i = 0; i < GUESS_LENGTH; i++) {
+                const cell = document.getElementById(`cell-${currentRow}-${i}`);
+                cell.classList.remove('filled');
+                cell.classList.add(cellColors[i]);
+                if (cellColors[i] !== 'correct') allCorrect = false;
+            }
+
+            updateKeyboardColors(sortedGuess, cellColors);
+
+            if (allCorrect) {
+                const yakuList = getAllYakuFromCounts(validationResult.counts);
+                const yakuText = yakuList.length > 0 ? yakuList.join(' · ') : '无役';
+                showMessage(`🎉 恭喜！你猜对了！\n役种：${yakuText}`, 5000);
+                gameOver = true;
+                highlightKeyboardAllCorrect();
+                return;
+            }
+
+            currentRow++;
+            currentGuess = [];
+
+            if (currentRow >= MAX_ROWS) {
+                const answerStr = targetHand.map(i => TILES[i]).join(' ');
+                showMessage(`😢 游戏结束\n答案是: ${answerStr}`, 6000);
+                gameOver = true;
+            }
+        }
+
+        function sortGuessLikeTarget(guess) {
+            const first13 = guess.slice(0, 13);
+            const lastTile = guess[13];
+            first13.sort((a, b) => a - b);
+            return [...first13, lastTile];
+        }
+
+        function updateKeyboardColors(guess, colors) {
+            for (let i = 0; i < GUESS_LENGTH; i++) {
+                const tileIdx = guess[i];
+                const color = colors[i];
+                if (color === 'correct') keyColors[tileIdx] = 'correct';
+                else if (color === 'present' && keyColors[tileIdx] !== 'correct') keyColors[tileIdx] = 'present';
+                else if (color === 'absent' && keyColors[tileIdx] !== 'correct' && keyColors[tileIdx] !== 'present') keyColors[tileIdx] = 'absent';
+            }
+            applyKeyColors();
+        }
+
+        function highlightKeyboardAllCorrect() {
+            for (const tileIdx of targetHand) keyColors[tileIdx] = 'correct';
+            applyKeyColors();
+        }
+
+        function applyKeyColors() {
+            for (let i = 0; i < TOTAL_TILE_TYPES; i++) {
+                const btn = document.getElementById(`key-${i}`);
+                if (!btn) continue;
+                btn.classList.remove('key-correct', 'key-present', 'key-absent');
+                if (keyColors[i] === 'correct') btn.classList.add('key-correct');
+                else if (keyColors[i] === 'present') btn.classList.add('key-present');
+                else if (keyColors[i] === 'absent') btn.classList.add('key-absent');
+            }
+        }
+
+        // ============ 和牌合法性验证 ============
+        function validateFullHand(handArr) {
+            const counts = new Array(TOTAL_TILE_TYPES).fill(0);
+            for (const tile of handArr) counts[tile]++;
+
+            if (!counts.every(c => c <= 4)) {
+                return { valid: false, reason: "存在超过4张的同种牌" };
+            }
+
+            if (isKokushiShape(counts)) return { valid: true, counts };
+            if (isSevenPairs(counts)) return { valid: true, counts };
+
+            const decompositions = findAllDecompositions(counts);
+            if (decompositions.length > 0) {
+                return { valid: true, counts };
+            }
+
+            return { valid: false, reason: "无法构成有效的和牌型" };
+        }
+
+        // 物理键盘支持
+        document.addEventListener('keydown', (e) => {
+            if (gameOver) return;
+            if (e.key === 'Backspace' || e.key === 'Delete') {
+                e.preventDefault();
+                deleteTile();
+            } else if (e.key === 'Enter') {
+                e.preventDefault();
+                submitGuess();
+            }
+        });
+
+        init();
+    </script>
+</body>
+</html>
