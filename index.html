@@ -193,6 +193,13 @@
         .key.action.hint-btn:hover {
             background-color: #c88e44;
         }
+        /* 刷新按钮样式 */
+        .key.action.refresh-btn {
+            background-color: #4a4a6a;
+        }
+        .key.action.refresh-btn:hover {
+            background-color: #6a6a8a;
+        }
 
         .key.key-correct {
             background-color: var(--green);
@@ -301,6 +308,7 @@
             <button class="key action" onclick="deleteTile()">⌫ 删除</button>
             <button class="key action submit-btn" onclick="submitGuess()">✓ 提交和牌</button>
             <button class="key action hint-btn" onclick="showHint()">💡 提示</button>
+            <button class="key action refresh-btn" onclick="location.reload()">🔄 新游戏</button>
         </div>
     </div>
 
@@ -978,6 +986,16 @@
 
             const decompositions = findAllDecompositions(counts);
             if (decompositions.length > 0) {
+                if (!isTsumo) {
+                    if (!hasYakuForRon(counts)) {
+                        return { valid: false, reason: "无役！荣和必须至少有一个役（如役牌、平和、断幺等）" };
+                    }
+                } else {
+                    const yakuList = getAllYakuFromCounts(counts);
+                    if (yakuList.length === 0) {
+                        return { valid: false, reason: "无效手牌（无法构成任何役）" };
+                    }
+                }
                 return { valid: true, counts };
             }
 
