@@ -193,7 +193,6 @@
         .key.action.hint-btn:hover {
             background-color: #c88e44;
         }
-        /* 刷新按钮样式 */
         .key.action.refresh-btn {
             background-color: #4a4a6a;
         }
@@ -344,7 +343,7 @@
         let keyColors = new Array(TOTAL_TILE_TYPES).fill('');
 
         // 场况信息
-        let fieldWind = 0;  // 0-东, 1-南, 2-西, 3-北
+        let fieldWind = 0; // 0-东, 1-南, 2-西, 3-北
         let selfWind = 0;
         let isTsumo = true; // true=自摸, false=荣和
 
@@ -433,7 +432,6 @@
         // ============ 目标牌型生成 ============
         function generateTargetHand() {
             let valid = false;
-            let handIndices = [];
             let counts = new Array(TOTAL_TILE_TYPES).fill(0);
             let attempts = 0;
             const maxAttempts = 8000;
@@ -452,30 +450,69 @@
 
                 if (valid) {
                     valid = counts.every(c => c <= 4);
-                    if (valid) {
-                        if (!isTsumo) {
-                            valid = hasYakuForRon(counts);
+                }
+
+                if (valid) {
+                    // 从counts构建14张牌
+                    const allTiles = [];
+                    for (let i = 0; i < TOTAL_TILE_TYPES; i++) {
+                        for (let j = 0; j < counts[i]; j++) {
+                            allTiles.push(i);
                         }
+                    }
+                    // 随机选择winning tile
+                    const winIdx = Math.floor(Math.random() * allTiles.length);
+                    const winningTile = allTiles.splice(winIdx, 1)[0];
+                    // 前13张排序
+                    allTiles.sort((a, b) => a - b);
+                    allTiles.push(winningTile);
+
+                    // 验证（包括平和的两面听检查）
+                    valid = validateFinalHand(allTiles, winningTile);
+
+                    if (valid) {
+                        targetHand = allTiles;
                     }
                 }
             }
 
             if (!valid) {
-                counts = generateFallbackCounts();
+                targetHand = generateFallbackTargetHand();
+            }
+        }
+
+        function validateFinalHand(handArr, winningTile) {
+            const counts = new Array(TOTAL_TILE_TYPES).fill(0);
+            for (const tile of handArr) counts[tile]++;
+
+            if (!counts.every(c => c <= 4)) return false;
+
+            // 检查是否是有效的和牌型
+            if (isKokushiShape(counts)) return true;
+            if (isSevenPairs(counts)) return true;
+
+            const decompositions = findAllDecompositions(counts);
+            if (decompositions.length === 0) return false;
+
+            // 检查役种
+            if (!isTsumo) {
+                return hasYakuForRon(counts, winningTile);
             }
 
-            handIndices = [];
-            for (let i = 0; i < TOTAL_TILE_TYPES; i++) {
-                for (let j = 0; j < counts[i]; j++) {
-                    handIndices.push(i);
-                }
-            }
+            return true;
+        }
 
-            const winIdx = Math.floor(Math.random() * handIndices.length);
-            const winningTile = handIndices.splice(winIdx, 1)[0];
-            handIndices.sort((a, b) => a - b);
-            handIndices.push(winningTile);
-            targetHand = handIndices;
+        function generateFallbackTargetHand() {
+            // 万子234,567；筒子234,567；雀头2索；winning tile: 7万（两面听完成567顺子）
+            const hand13 = [
+                1, 2, 3, 4, 5, // 万：2,3,4,5,6 → indices 1,2,3,4,5 （缺6=7万）
+                10, 11, 12, 13, 14, 15, // 筒：2,3,4,5,6,7 → indices 10-15
+                19, 19 // 雀头：2索 → index 19
+            ];
+            const winningTile = 6; // 7万，两面听（手牌有5万和6万等4或7）
+            hand13.sort((a, b) => a - b);
+            hand13.push(winningTile);
+            return hand13;
         }
 
         function tryGenerateKokushi(counts) {
@@ -506,7 +543,7 @@
                     let t;
                     if (Math.random() < 0.5) {
                         const suit = Math.floor(Math.random() * 3);
-                        const num = Math.floor(Math.random() * 7) + 1; // 2-8
+                        const num = Math.floor(Math.random() * 7) + 1;
                         t = suit * 9 + num;
                     } else {
                         t = Math.floor(Math.random() * TOTAL_TILE_TYPES);
@@ -524,28 +561,14 @@
             return counts.every(c => c <= 4);
         }
 
-        function generateFallbackCounts() {
-            const counts = new Array(TOTAL_TILE_TYPES).fill(0);
-            const patterns = [
-                { suit: 0, start: 1 }, { suit: 1, start: 2 },
-                { suit: 2, start: 3 }, { suit: 0, start: 4 }
-            ];
-            patterns.forEach(p => {
-                const base = p.suit * 9 + p.start;
-                counts[base]++; counts[base + 1]++; counts[base + 2]++;
-            });
-            counts[1 * 9 + 5] += 2; // 6筒雀头
-            return counts;
-        }
-
         // ============ 役种判断（基于计数与分解） ============
-        function hasYakuForRon(counts) {
-            const yakuList = getAllYakuFromCounts(counts);
+        function hasYakuForRon(counts, winningTile) {
+            const yakuList = getAllYakuFromCounts(counts, winningTile);
             return yakuList.length > 0 && !(yakuList.length === 1 && yakuList[0] === '门清（无其他役）');
         }
 
         // 获取所有役（基于完整手牌计数）
-        function getAllYakuFromCounts(counts) {
+        function getAllYakuFromCounts(counts, winningTile) {
             // 先检查特殊形
             if (isKokushiShape(counts)) return ['国士无双'];
             if (isSevenPairs(counts)) {
@@ -560,7 +583,7 @@
             const decompositions = findAllDecompositions(counts);
             let bestYaku = [];
             for (const decomp of decompositions) {
-                const currentYaku = detectYakuFromDecomposition(counts, decomp);
+                const currentYaku = detectYakuFromDecomposition(counts, decomp, winningTile);
                 if (currentYaku.length > bestYaku.length) {
                     bestYaku = currentYaku;
                 }
@@ -606,12 +629,17 @@
                     for (let suit = 0; suit < 3; suit++) {
                         for (let num = 0; num < 7; num++) {
                             const i = suit * 9 + num;
-                            if (counts[i] - used[i] > 0 && counts[i+1] - used[i+1] > 0 && counts[i+2] - used[i+2] > 0) {
-                                used[i]++; used[i+1]++; used[i+2]++;
+                            if (counts[i] - used[i] > 0 && counts[i + 1] - used[i + 1] > 0 && counts[i + 2] - used[
+                                    i + 2] > 0) {
+                                used[i]++;
+                                used[i + 1]++;
+                                used[i + 2]++;
                                 melds.push({ type: 'sequence', start: i });
                                 backtrack(melds, pairIdx);
                                 melds.pop();
-                                used[i]--; used[i+1]--; used[i+2]--;
+                                used[i]--;
+                                used[i + 1]--;
+                                used[i + 2]--;
                             }
                         }
                     }
@@ -622,16 +650,39 @@
             // 去重（相同结构）
             const unique = new Map();
             for (const res of results) {
-                const key = JSON.stringify({ 
-                    melds: res.melds.map(m => m.type + m.start || m.tile).sort(), 
-                    pair: res.pair 
+                const key = JSON.stringify({
+                    melds: res.melds.map(m => m.type + (m.start !== undefined ? m.start : m.tile)).sort(),
+                    pair: res.pair
                 });
                 if (!unique.has(key)) unique.set(key, res);
             }
             return [...unique.values()];
         }
 
-        function detectYakuFromDecomposition(counts, decomp) {
+        // 检查听牌形式是否为两面听（在给定的顺子分解中）
+        function isRyanmenWaitInDecomp(sequences, winningTile) {
+            for (const seq of sequences) {
+                const start = seq.start;
+                const tiles = [start, start + 1, start + 2];
+                if (tiles.includes(winningTile)) {
+                    const remaining = tiles.filter(t => t !== winningTile);
+                    if (remaining.length !== 2) continue;
+                    const [a, b] = remaining.sort((x, y) => x - y);
+                    if (b - a === 1) {
+                        // 连续的两张
+                        const num = a % 9;
+                        // 边张：1和2(等3) 或 8和9(等7)
+                        if (num === 0 || num === 7) return false;
+                        return true; // 两面
+                    }
+                    return false; // 坎张
+                }
+            }
+            // winning tile不在顺子中（单骑或其他）
+            return false;
+        }
+
+        function detectYakuFromDecomposition(counts, decomp, winningTile) {
             const yaku = [];
             const melds = decomp.melds;
             const pair = decomp.pair;
@@ -654,11 +705,13 @@
             const sequences = melds.filter(m => m.type === 'sequence');
             const triplets = melds.filter(m => m.type === 'triplet');
 
-            // 平和：全顺子，雀头非役牌
+            // 平和：全顺子，雀头非役牌，且听牌为两面
             if (sequences.length === 4) {
                 const yakuhaiSet = new Set([27 + selfWind, 27 + fieldWind, 31, 32, 33]);
                 if (!yakuhaiSet.has(pair)) {
-                    yaku.push('平和');
+                    if (isRyanmenWaitInDecomp(sequences, winningTile)) {
+                        yaku.push('平和');
+                    }
                 }
             }
 
@@ -816,7 +869,8 @@
             const counts = new Array(TOTAL_TILE_TYPES).fill(0);
             for (const idx of targetHand) counts[idx]++;
 
-            const yakuList = getAllYakuFromCounts(counts);
+            const winningTile = targetHand[13];
+            const yakuList = getAllYakuFromCounts(counts, winningTile);
             let hintText = '💡 答案役种提示：\n';
             hintText += `场风: ${getWindName(fieldWind)}  自风: ${getWindName(selfWind)}\n`;
             hintText += `和牌: ${isTsumo ? '自摸' : '荣和'}\n`;
@@ -920,7 +974,7 @@
             updateKeyboardColors(sortedGuess, cellColors);
 
             if (allCorrect) {
-                const yakuList = getAllYakuFromCounts(validationResult.counts);
+                const yakuList = getAllYakuFromCounts(validationResult.counts, sortedGuess[13]);
                 const yakuText = yakuList.length > 0 ? yakuList.join(' · ') : '无役';
                 showMessage(`🎉 恭喜！你猜对了！\n役种：${yakuText}`, 5000);
                 gameOver = true;
@@ -951,7 +1005,8 @@
                 const color = colors[i];
                 if (color === 'correct') keyColors[tileIdx] = 'correct';
                 else if (color === 'present' && keyColors[tileIdx] !== 'correct') keyColors[tileIdx] = 'present';
-                else if (color === 'absent' && keyColors[tileIdx] !== 'correct' && keyColors[tileIdx] !== 'present') keyColors[tileIdx] = 'absent';
+                else if (color === 'absent' && keyColors[tileIdx] !== 'correct' && keyColors[tileIdx] !== 'present')
+                    keyColors[tileIdx] = 'absent';
             }
             applyKeyColors();
         }
@@ -981,17 +1036,19 @@
                 return { valid: false, reason: "存在超过4张的同种牌" };
             }
 
+            const winningTile = handArr[13]; // 最后一张是和牌
+
             if (isKokushiShape(counts)) return { valid: true, counts };
             if (isSevenPairs(counts)) return { valid: true, counts };
 
             const decompositions = findAllDecompositions(counts);
             if (decompositions.length > 0) {
                 if (!isTsumo) {
-                    if (!hasYakuForRon(counts)) {
+                    if (!hasYakuForRon(counts, winningTile)) {
                         return { valid: false, reason: "无役！荣和必须至少有一个役（如役牌、平和、断幺等）" };
                     }
                 } else {
-                    const yakuList = getAllYakuFromCounts(counts);
+                    const yakuList = getAllYakuFromCounts(counts, winningTile);
                     if (yakuList.length === 0) {
                         return { valid: false, reason: "无效手牌（无法构成任何役）" };
                     }
