@@ -15,6 +15,7 @@
             --text: #ffffff;
             --tile-bg: #ffffff;
             --cell-border: #3a3a3c;
+            --emoji-font: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", "Noto Emoji", sans-serif;
         }
 
         * {
@@ -68,10 +69,6 @@
             color: #e6c34a;
             font-weight: bold;
         }
-        .wind-emoji {
-            font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
-            font-size: 20px;
-        }
 
         #board {
             display: grid;
@@ -83,26 +80,27 @@
         .row {
             display: grid;
             grid-template-columns: repeat(14, 1fr);
-            gap: 4px;
+            gap: 4px; /* 加大尺寸后，稍微紧凑一些间距 */
         }
 
+        /* 放大后的桌面端牌面尺寸 */
         .cell {
-            width: 34px;
-            height: 46px;
+            width: 42px;
+            height: 56px;
             border: 2px solid var(--cell-border);
             border-radius: 4px;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 28px;
-            font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", "Noto Emoji", sans-serif;
+            font-size: 34px;
+            font-family: var(--emoji-font);
             background-color: transparent;
             user-select: none;
             transition: background-color 0.15s ease, border-color 0.15s ease;
         }
 
         .cell:nth-child(14) {
-            margin-left: 8px;
+            margin-left: 10px;
             border-left: 3px dashed #666;
         }
 
@@ -150,8 +148,8 @@
             background-color: var(--light-gray);
             border: none;
             color: white;
-            font-size: 22px;
-            font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", "Noto Emoji", sans-serif;
+            font-size: 24px;
+            font-family: var(--emoji-font);
             cursor: pointer;
             user-select: none;
             transition: background-color 0.2s ease;
@@ -178,41 +176,17 @@
             letter-spacing: 1px;
             background-color: #555;
         }
-        .key.action:hover {
-            background-color: #777;
-        }
-        .key.action.submit-btn {
-            background-color: #4a7c4f;
-        }
-        .key.action.submit-btn:hover {
-            background-color: #5d9e63;
-        }
-        .key.action.hint-btn {
-            background-color: #b07d3b;
-        }
-        .key.action.hint-btn:hover {
-            background-color: #c88e44;
-        }
-        .key.action.refresh-btn {
-            background-color: #4a4a6a;
-        }
-        .key.action.refresh-btn:hover {
-            background-color: #6a6a8a;
-        }
+        .key.action:hover { background-color: #777; }
+        .key.action.submit-btn { background-color: #4a7c4f; }
+        .key.action.submit-btn:hover { background-color: #5d9e63; }
+        .key.action.hint-btn { background-color: #b07d3b; }
+        .key.action.hint-btn:hover { background-color: #c88e44; }
+        .key.action.refresh-btn { background-color: #4a4a6a; }
+        .key.action.refresh-btn:hover { background-color: #6a6a8a; }
 
-        .key.key-correct {
-            background-color: var(--green);
-            border: 1px solid #6ab464;
-        }
-        .key.key-present {
-            background-color: var(--yellow);
-            border: 1px solid #d4b840;
-        }
-        .key.key-absent {
-            background-color: #2a2a2c;
-            border: 1px solid #444;
-            color: #666;
-        }
+        .key.key-correct { background-color: var(--green); border: 1px solid #6ab464; }
+        .key.key-present { background-color: var(--yellow); border: 1px solid #d4b840; }
+        .key.key-absent { background-color: #2a2a2c; border: 1px solid #444; color: #666; }
 
         #message {
             position: fixed;
@@ -240,19 +214,20 @@
         }
 
         @media (max-width: 580px) {
+            /* 放大后的移动端牌面尺寸 */
             .cell {
-                width: 22px;
-                height: 32px;
-                font-size: 18px;
+                width: 26px;
+                height: 38px;
+                font-size: 21px;
                 border-width: 1.5px;
                 border-radius: 3px;
             }
             .cell:nth-child(14) {
-                margin-left: 4px;
+                margin-left: 6px;
                 border-left-width: 2px;
             }
             .key {
-                font-size: 16px;
+                font-size: 18px;
                 padding: 5px 6px;
                 min-width: 26px;
                 border-radius: 3px;
@@ -262,18 +237,10 @@
                 padding: 10px 14px;
                 min-width: 60px;
             }
-            h1 {
-                font-size: 22px;
-            }
-            .subtitle {
-                font-size: 11px;
-            }
-            .row {
-                gap: 2px;
-            }
-            #board {
-                gap: 4px;
-            }
+            h1 { font-size: 22px; }
+            .subtitle { font-size: 11px; }
+            .row { gap: 2px; } /* 缩小移动端间距，防止换行 */
+            #board { gap: 4px; }
             #game-info {
                 font-size: 13px;
                 padding: 6px 12px;
@@ -326,14 +293,10 @@
         const GUESS_LENGTH = 14;
         const MAX_ROWS = 6;
 
-        const SUIT_MAN = { start: 0, end: 8 };
-        const SUIT_PIN = { start: 9, end: 17 };
-        const SUIT_SOU = { start: 18, end: 26 };
-        const SUIT_JI = { start: 27, end: 33 };
-
-        const YAOCHU_INDICES = new Set([0, 8, 9, 17, 18, 26, 27, 28, 29, 30, 31, 32, 33]);
+        // 优化：合并重复常量的定义
         const KOKUSHI_INDICES = [0, 8, 9, 17, 18, 26, 27, 28, 29, 30, 31, 32, 33];
-        const YAKUHAI_TRIPLE = [31, 32, 33]; // 白 发 中
+        const YAOCHU_INDICES = new Set(KOKUSHI_INDICES);
+        const YAKUHAI_TRIPLE = [31, 32, 33];
 
         // ============ 游戏状态 ============
         let targetHand = [];
@@ -342,10 +305,9 @@
         let gameOver = false;
         let keyColors = new Array(TOTAL_TILE_TYPES).fill('');
 
-        // 场况信息
-        let fieldWind = 0; // 0-东, 1-南, 2-西, 3-北
+        let fieldWind = 0; 
         let selfWind = 0;
-        let isTsumo = true; // true=自摸, false=荣和
+        let isTsumo = true; 
 
         // ============ 初始化 ============
         function init() {
@@ -393,11 +355,12 @@
         }
 
         function createKeyboard() {
+            // 优化：将花色区间直接内联到生成逻辑中
             const groups = [
-                { id: 'row-man', start: SUIT_MAN.start, end: SUIT_MAN.end },
-                { id: 'row-pin', start: SUIT_PIN.start, end: SUIT_PIN.end },
-                { id: 'row-sou', start: SUIT_SOU.start, end: SUIT_SOU.end },
-                { id: 'row-ji', start: SUIT_JI.start, end: SUIT_JI.end }
+                { id: 'row-man', start: 0, end: 8 },
+                { id: 'row-pin', start: 9, end: 17 },
+                { id: 'row-sou', start: 18, end: 26 },
+                { id: 'row-ji', start: 27, end: 33 }
             ];
 
             groups.forEach(group => {
@@ -453,21 +416,17 @@
                 }
 
                 if (valid) {
-                    // 从counts构建14张牌
                     const allTiles = [];
                     for (let i = 0; i < TOTAL_TILE_TYPES; i++) {
                         for (let j = 0; j < counts[i]; j++) {
                             allTiles.push(i);
                         }
                     }
-                    // 随机选择winning tile
                     const winIdx = Math.floor(Math.random() * allTiles.length);
                     const winningTile = allTiles.splice(winIdx, 1)[0];
-                    // 前13张排序
                     allTiles.sort((a, b) => a - b);
                     allTiles.push(winningTile);
 
-                    // 验证（包括平和的两面听检查）
                     valid = validateFinalHand(allTiles, winningTile);
 
                     if (valid) {
@@ -481,35 +440,13 @@
             }
         }
 
-        function validateFinalHand(handArr, winningTile) {
-            const counts = new Array(TOTAL_TILE_TYPES).fill(0);
-            for (const tile of handArr) counts[tile]++;
-
-            if (!counts.every(c => c <= 4)) return false;
-
-            // 检查是否是有效的和牌型
-            if (isKokushiShape(counts)) return true;
-            if (isSevenPairs(counts)) return true;
-
-            const decompositions = findAllDecompositions(counts);
-            if (decompositions.length === 0) return false;
-
-            // 检查役种
-            if (!isTsumo) {
-                return hasYakuForRon(counts, winningTile);
-            }
-
-            return true;
-        }
-
         function generateFallbackTargetHand() {
-            // 万子234,567；筒子234,567；雀头2索；winning tile: 7万（两面听完成567顺子）
             const hand13 = [
-                1, 2, 3, 4, 5, // 万：2,3,4,5,6 → indices 1,2,3,4,5 （缺6=7万）
-                10, 11, 12, 13, 14, 15, // 筒：2,3,4,5,6,7 → indices 10-15
-                19, 19 // 雀头：2索 → index 19
+                1, 2, 3, 4, 5,
+                10, 11, 12, 13, 14, 15,
+                19, 19
             ];
-            const winningTile = 6; // 7万，两面听（手牌有5万和6万等4或7）
+            const winningTile = 6; 
             hand13.sort((a, b) => a - b);
             hand13.push(winningTile);
             return hand13;
@@ -561,15 +498,44 @@
             return counts.every(c => c <= 4);
         }
 
-        // ============ 役种判断（基于计数与分解） ============
+        // ============ 役种判断与验证 ============
+        // 优化：提取公共验证逻辑，供系统验证和玩家提交复用
+        function checkHandValidity(counts, winningTile) {
+            if (!counts.every(c => c <= 4)) return { valid: false, reason: "存在超过4张的同种牌" };
+
+            if (isKokushiShape(counts)) return { valid: true };
+            if (isSevenPairs(counts)) return { valid: true };
+
+            const decompositions = findAllDecompositions(counts);
+            if (decompositions.length > 0) {
+                if (!isTsumo && !hasYakuForRon(counts, winningTile)) {
+                    return { valid: false, reason: "无役！荣和必须至少有一个役（如役牌、平和、断幺等）" };
+                }
+                return { valid: true };
+            }
+            return { valid: false, reason: "无法构成有效的和牌型" };
+        }
+
+        function validateFinalHand(handArr, winningTile) {
+            const counts = new Array(TOTAL_TILE_TYPES).fill(0);
+            for (const tile of handArr) counts[tile]++;
+            return checkHandValidity(counts, winningTile).valid;
+        }
+
+        function validateFullHand(handArr) {
+            const counts = new Array(TOTAL_TILE_TYPES).fill(0);
+            for (const tile of handArr) counts[tile]++;
+            const result = checkHandValidity(counts, handArr[13]);
+            if (result.valid) return { valid: true, counts };
+            return result;
+        }
+
         function hasYakuForRon(counts, winningTile) {
             const yakuList = getAllYakuFromCounts(counts, winningTile);
             return yakuList.length > 0 && !(yakuList.length === 1 && yakuList[0] === '门清（无其他役）');
         }
 
-        // 获取所有役（基于完整手牌计数）
         function getAllYakuFromCounts(counts, winningTile) {
-            // 先检查特殊形
             if (isKokushiShape(counts)) return ['国士无双'];
             if (isSevenPairs(counts)) {
                 const yaku = ['七对子'];
@@ -579,7 +545,6 @@
                 return yaku;
             }
 
-            // 尝试进行标准分解，获取所有可能的役
             const decompositions = findAllDecompositions(counts);
             let bestYaku = [];
             for (const decomp of decompositions) {
@@ -596,7 +561,6 @@
             return bestYaku;
         }
 
-        // 找到所有可能的4面子+1雀头分解
         function findAllDecompositions(counts) {
             const results = [];
             const used = new Array(TOTAL_TILE_TYPES).fill(0);
@@ -606,7 +570,6 @@
                     results.push({ melds: [...melds], pair: pairIdx });
                     return;
                 }
-                // 先找雀头
                 if (pairIdx === -1) {
                     for (let i = 0; i < TOTAL_TILE_TYPES; i++) {
                         if (counts[i] - used[i] >= 2) {
@@ -616,7 +579,6 @@
                         }
                     }
                 } else {
-                    // 找面子
                     for (let i = 0; i < TOTAL_TILE_TYPES; i++) {
                         if (counts[i] - used[i] >= 3) {
                             used[i] += 3;
@@ -629,17 +591,12 @@
                     for (let suit = 0; suit < 3; suit++) {
                         for (let num = 0; num < 7; num++) {
                             const i = suit * 9 + num;
-                            if (counts[i] - used[i] > 0 && counts[i + 1] - used[i + 1] > 0 && counts[i + 2] - used[
-                                    i + 2] > 0) {
-                                used[i]++;
-                                used[i + 1]++;
-                                used[i + 2]++;
+                            if (counts[i] - used[i] > 0 && counts[i + 1] - used[i + 1] > 0 && counts[i + 2] - used[i + 2] > 0) {
+                                used[i]++; used[i + 1]++; used[i + 2]++;
                                 melds.push({ type: 'sequence', start: i });
                                 backtrack(melds, pairIdx);
                                 melds.pop();
-                                used[i]--;
-                                used[i + 1]--;
-                                used[i + 2]--;
+                                used[i]--; used[i + 1]--; used[i + 2]--;
                             }
                         }
                     }
@@ -647,7 +604,6 @@
             }
 
             backtrack([], -1);
-            // 去重（相同结构）
             const unique = new Map();
             for (const res of results) {
                 const key = JSON.stringify({
@@ -659,7 +615,6 @@
             return [...unique.values()];
         }
 
-        // 检查听牌形式是否为两面听（在给定的顺子分解中）
         function isRyanmenWaitInDecomp(sequences, winningTile) {
             for (const seq of sequences) {
                 const start = seq.start;
@@ -669,16 +624,13 @@
                     if (remaining.length !== 2) continue;
                     const [a, b] = remaining.sort((x, y) => x - y);
                     if (b - a === 1) {
-                        // 连续的两张
                         const num = a % 9;
-                        // 边张：1和2(等3) 或 8和9(等7)
                         if (num === 0 || num === 7) return false;
-                        return true; // 两面
+                        return true; 
                     }
-                    return false; // 坎张
+                    return false; 
                 }
             }
-            // winning tile不在顺子中（单骑或其他）
             return false;
         }
 
@@ -687,7 +639,6 @@
             const melds = decomp.melds;
             const pair = decomp.pair;
 
-            // 计数类役种
             if (isTanyao(counts)) yaku.push('断幺九');
             if (isChinitsu(counts)) yaku.push('清一色');
             else if (isHonitsu(counts)) yaku.push('混一色');
@@ -701,11 +652,9 @@
                 yaku.push('役牌(' + parts.join('/') + ')');
             }
 
-            // 顺子相关役
             const sequences = melds.filter(m => m.type === 'sequence');
             const triplets = melds.filter(m => m.type === 'triplet');
 
-            // 平和：全顺子，雀头非役牌，且听牌为两面
             if (sequences.length === 4) {
                 const yakuhaiSet = new Set([27 + selfWind, 27 + fieldWind, 31, 32, 33]);
                 if (!yakuhaiSet.has(pair)) {
@@ -715,7 +664,6 @@
                 }
             }
 
-            // 一杯口：有两组完全相同的顺子
             const seqCounts = new Map();
             for (const s of sequences) {
                 const key = s.start;
@@ -729,7 +677,7 @@
                 }
             }
             if (iipeikou) yaku.push('一杯口');
-            // 二杯口：有两个一杯口
+            
             if (sequences.length === 4) {
                 const values = [...seqCounts.values()];
                 if (values.filter(v => v >= 2).length >= 2 || values.some(v => v >= 4)) {
@@ -737,7 +685,6 @@
                 }
             }
 
-            // 三色同顺：万筒索各有同一数字的顺子
             const suitSeqStarts = [new Set(), new Set(), new Set()];
             for (const s of sequences) {
                 const suit = Math.floor(s.start / 9);
@@ -751,7 +698,6 @@
                 }
             }
 
-            // 一气通贯：同花色的123、456、789顺子
             for (let suit = 0; suit < 3; suit++) {
                 const starts = suitSeqStarts[suit];
                 if (starts.has(0) && starts.has(3) && starts.has(6)) {
@@ -760,17 +706,9 @@
                 }
             }
 
-            // 对对和：4个刻子
-            if (triplets.length === 4) {
-                yaku.push('对对和');
-            }
+            if (triplets.length === 4) yaku.push('对对和');
+            if (triplets.length >= 3) yaku.push('三暗刻');
 
-            // 三暗刻：三个刻子（这里全部视为暗刻，因为没有鸣牌）
-            if (triplets.length >= 3) {
-                yaku.push('三暗刻');
-            }
-
-            // 混全带幺九：所有面子+雀头都含幺九牌
             let isMixedOutside = true;
             for (const m of melds) {
                 if (m.type === 'triplet') {
@@ -783,25 +721,16 @@
                 yaku.push('混全带幺九');
             }
 
-            // 纯全带幺九：同混全，但无字牌
             if (isMixedOutside && YAOCHU_INDICES.has(pair) && !counts.slice(27).some(c => c > 0)) {
                 yaku.push('纯全带幺九');
             }
 
-            // 混老头：所有牌都是幺九牌（1、9、字）
-            if (counts.every((c, i) => c === 0 || YAOCHU_INDICES.has(i))) {
-                yaku.push('混老头');
-            }
-
-            // 清老头：只有1、9，无字牌
-            if (counts.every((c, i) => c === 0 || (YAOCHU_INDICES.has(i) && i < 27))) {
-                yaku.push('清老头');
-            }
+            if (counts.every((c, i) => c === 0 || YAOCHU_INDICES.has(i))) yaku.push('混老头');
+            if (counts.every((c, i) => c === 0 || (YAOCHU_INDICES.has(i) && i < 27))) yaku.push('清老头');
 
             return yaku;
         }
 
-        // 原有役种辅助判断函数
         function isKokushiShape(counts) {
             return KOKUSHI_INDICES.every(idx => counts[idx] >= 1) &&
                 KOKUSHI_INDICES.reduce((sum, idx) => sum + counts[idx], 0) === 14;
@@ -864,7 +793,7 @@
             return suit !== -1;
         }
 
-        // ============ 提示功能 ============
+        // ============ 交互与渲染 ============
         function showHint() {
             const counts = new Array(TOTAL_TILE_TYPES).fill(0);
             for (const idx of targetHand) counts[idx]++;
@@ -879,7 +808,6 @@
             showMessage(hintText, 6000);
         }
 
-        // ============ 玩家输入 ============
         function addTile(tileIndex) {
             if (gameOver || currentGuess.length >= GUESS_LENGTH) return;
             if (currentGuess.filter(x => x === tileIndex).length >= 4) {
@@ -900,7 +828,7 @@
             for (let i = 0; i < GUESS_LENGTH; i++) {
                 const cell = document.getElementById(`cell-${currentRow}-${i}`);
                 cell.innerText = '';
-                cell.classList.remove('filled', 'correct', 'present', 'absent');
+                cell.className = 'cell'; // 重置所有状态
             }
             for (let i = 0; i < currentGuess.length; i++) {
                 const cell = document.getElementById(`cell-${currentRow}-${i}`);
@@ -919,7 +847,6 @@
             }, duration);
         }
 
-        // ============ 提交逻辑 ============
         function submitGuess() {
             if (gameOver) return;
             if (currentGuess.length < GUESS_LENGTH) {
@@ -934,17 +861,11 @@
             }
 
             const sortedGuess = sortGuessLikeTarget(currentGuess);
-
-            for (let i = 0; i < GUESS_LENGTH; i++) {
-                const cell = document.getElementById(`cell-${currentRow}-${i}`);
-                cell.innerText = TILES[sortedGuess[i]];
-                cell.classList.add('filled');
-            }
-
             const targetCopy = [...targetHand];
             const guessCopy = [...sortedGuess];
             const cellColors = new Array(GUESS_LENGTH).fill('absent');
 
+            // 精确匹配
             for (let i = 0; i < GUESS_LENGTH; i++) {
                 if (guessCopy[i] === targetCopy[i]) {
                     cellColors[i] = 'correct';
@@ -953,6 +874,7 @@
                 }
             }
 
+            // 部分匹配
             for (let i = 0; i < GUESS_LENGTH; i++) {
                 if (guessCopy[i] >= 0) {
                     const foundIdx = targetCopy.indexOf(guessCopy[i]);
@@ -964,10 +886,11 @@
             }
 
             let allCorrect = true;
+            // 优化：一次性完成 DOM 的文字写入和状态覆盖，避免冗余重绘
             for (let i = 0; i < GUESS_LENGTH; i++) {
                 const cell = document.getElementById(`cell-${currentRow}-${i}`);
-                cell.classList.remove('filled');
-                cell.classList.add(cellColors[i]);
+                cell.innerText = TILES[sortedGuess[i]];
+                cell.className = `cell ${cellColors[i]}`;
                 if (cellColors[i] !== 'correct') allCorrect = false;
             }
 
@@ -1027,39 +950,6 @@
             }
         }
 
-        // ============ 和牌合法性验证 ============
-        function validateFullHand(handArr) {
-            const counts = new Array(TOTAL_TILE_TYPES).fill(0);
-            for (const tile of handArr) counts[tile]++;
-
-            if (!counts.every(c => c <= 4)) {
-                return { valid: false, reason: "存在超过4张的同种牌" };
-            }
-
-            const winningTile = handArr[13]; // 最后一张是和牌
-
-            if (isKokushiShape(counts)) return { valid: true, counts };
-            if (isSevenPairs(counts)) return { valid: true, counts };
-
-            const decompositions = findAllDecompositions(counts);
-            if (decompositions.length > 0) {
-                if (!isTsumo) {
-                    if (!hasYakuForRon(counts, winningTile)) {
-                        return { valid: false, reason: "无役！荣和必须至少有一个役（如役牌、平和、断幺等）" };
-                    }
-                } else {
-                    const yakuList = getAllYakuFromCounts(counts, winningTile);
-                    if (yakuList.length === 0) {
-                        return { valid: false, reason: "无效手牌（无法构成任何役）" };
-                    }
-                }
-                return { valid: true, counts };
-            }
-
-            return { valid: false, reason: "无法构成有效的和牌型" };
-        }
-
-        // 物理键盘支持
         document.addEventListener('keydown', (e) => {
             if (gameOver) return;
             if (e.key === 'Backspace' || e.key === 'Delete') {
