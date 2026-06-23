@@ -909,7 +909,7 @@
             if (game.mode === 'practice') {
                 document.getElementById('stats-content').style.display = 'none';
                 document.getElementById('practice-stats').style.display = 'block';
-                document.getElementById('practice-tries').innerText = game.currentRow;
+                document.getElementById('practice-tries').innerText = game.guessHistory.length;
                 document.getElementById('stats-title').innerText = '♾️ 练习模式';
                 return;
             }
