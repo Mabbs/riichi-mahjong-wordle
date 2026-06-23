@@ -39,6 +39,7 @@
             font-size: 28px;
             letter-spacing: 2px;
         }
+
         .subtitle {
             color: #aaa;
             margin-bottom: 4px;
@@ -49,6 +50,24 @@
         .subtitle .highlight {
             color: #e6c34a;
             font-weight: bold;
+        }
+
+        .hint-bar {
+            color: #888;
+            font-size: 12px;
+            margin-bottom: 6px;
+            text-align: center;
+        }
+        .hint-bar .key-hint {
+            display: inline-block;
+            background: #333;
+            color: #e6c34a;
+            padding: 2px 7px;
+            border-radius: 3px;
+            margin: 0 2px;
+            font-weight: bold;
+            font-size: 11px;
+            letter-spacing: 0.5px;
         }
 
         #game-info {
@@ -80,10 +99,9 @@
         .row {
             display: grid;
             grid-template-columns: repeat(14, 1fr);
-            gap: 4px; /* 加大尺寸后，稍微紧凑一些间距 */
+            gap: 4px;
         }
 
-        /* 放大后的桌面端牌面尺寸 */
         .cell {
             width: 42px;
             height: 56px;
@@ -108,6 +126,27 @@
             background-color: var(--tile-bg);
             color: #000;
             border-color: #999;
+        }
+
+        .cell.pending-number {
+            font-family: "Helvetica Neue", Arial, "PingFang SC", "Microsoft YaHei", sans-serif;
+            color: #aaa;
+            border-color: #888;
+            border-style: dashed;
+            background-color: rgba(255, 255, 255, 0.04);
+            font-size: 28px;
+            font-weight: bold;
+            animation: pulse-pending 1.2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-pending {
+            0%,
+            100% {
+                border-color: #777;
+            }
+            50% {
+                border-color: #b0b0b0;
+            }
         }
 
         .cell.correct {
@@ -137,7 +176,7 @@
 
         .key-row {
             display: flex;
-            gap: 5px;
+            gap: 8px;
             flex-wrap: wrap;
             justify-content: center;
         }
@@ -176,17 +215,41 @@
             letter-spacing: 1px;
             background-color: #555;
         }
-        .key.action:hover { background-color: #777; }
-        .key.action.submit-btn { background-color: #4a7c4f; }
-        .key.action.submit-btn:hover { background-color: #5d9e63; }
-        .key.action.hint-btn { background-color: #b07d3b; }
-        .key.action.hint-btn:hover { background-color: #c88e44; }
-        .key.action.refresh-btn { background-color: #4a4a6a; }
-        .key.action.refresh-btn:hover { background-color: #6a6a8a; }
+        .key.action:hover {
+            background-color: #777;
+        }
+        .key.action.submit-btn {
+            background-color: #4a7c4f;
+        }
+        .key.action.submit-btn:hover {
+            background-color: #5d9e63;
+        }
+        .key.action.hint-btn {
+            background-color: #b07d3b;
+        }
+        .key.action.hint-btn:hover {
+            background-color: #c88e44;
+        }
+        .key.action.refresh-btn {
+            background-color: #4a4a6a;
+        }
+        .key.action.refresh-btn:hover {
+            background-color: #6a6a8a;
+        }
 
-        .key.key-correct { background-color: var(--green); border: 1px solid #6ab464; }
-        .key.key-present { background-color: var(--yellow); border: 1px solid #d4b840; }
-        .key.key-absent { background-color: #2a2a2c; border: 1px solid #444; color: #666; }
+        .key.key-correct {
+            background-color: var(--green);
+            border: 1px solid #6ab464;
+        }
+        .key.key-present {
+            background-color: var(--yellow);
+            border: 1px solid #d4b840;
+        }
+        .key.key-absent {
+            background-color: #2a2a2c;
+            border: 1px solid #444;
+            color: #666;
+        }
 
         #message {
             position: fixed;
@@ -225,6 +288,9 @@
                 margin-left: 4px;
                 border-left-width: 2px;
             }
+            .cell.pending-number {
+                font-size: 15px;
+            }
             .key {
                 font-size: 18px;
                 padding: 5px 6px;
@@ -236,10 +302,25 @@
                 padding: 10px 14px;
                 min-width: 60px;
             }
-            h1 { font-size: 22px; }
-            .subtitle { font-size: 11px; }
-            .row { gap: 2px; } /* 缩小移动端间距，防止换行 */
-            #board { gap: 4px; }
+            h1 {
+                font-size: 22px;
+            }
+            .subtitle {
+                font-size: 11px;
+            }
+            .hint-bar {
+                font-size: 10px;
+            }
+            .hint-bar .key-hint {
+                font-size: 10px;
+                padding: 1px 5px;
+            }
+            .row {
+                gap: 2px;
+            }
+            #board {
+                gap: 4px;
+            }
             #game-info {
                 font-size: 13px;
                 padding: 6px 12px;
@@ -254,6 +335,12 @@
     <div class="subtitle">
         猜出14张牌的<span class="highlight">有役和牌型</span>（最后一张为和牌）<br>
         前13张按 <span class="highlight">万→筒→索→字</span> 排序 · 共6次机会
+    </div>
+    <div class="hint-bar">
+        💡 键盘快捷输入：<span class="key-hint">数字</span> + <span class="key-hint">M/P/S/Z</span>
+        &nbsp;例如 <span class="key-hint">2</span><span class="key-hint">M</span> = 2万 ·
+        <span class="key-hint">3</span><span class="key-hint">P</span> = 3筒 ·
+        <span class="key-hint">1</span><span class="key-hint">Z</span> = 东
     </div>
 
     <div id="game-info">
@@ -282,17 +369,16 @@
     <script>
         // ============ 麻将牌字符集 ============
         const TILES = [
-            '🀇', '🀈', '🀉', '🀊', '🀋', '🀌', '🀍', '🀎', '🀏', // 0-8:   万 (1-9)
-            '🀙', '🀚', '🀛', '🀜', '🀝', '🀞', '🀟', '🀠', '🀡', // 9-17:  筒 (1-9)
-            '🀐', '🀑', '🀒', '🀓', '🀔', '🀕', '🀖', '🀗', '🀘', // 18-26: 索 (1-9)
-            '🀀', '🀁', '🀂', '🀃', '🀆', '🀅', '🀄' // 27-33: 东 南 西 北 白 发 中
+            '🀇', '🀈', '🀉', '🀊', '🀋', '🀌', '🀍', '🀎', '🀏', // 0-8:   万
+            '🀙', '🀚', '🀛', '🀜', '🀝', '🀞', '🀟', '🀠', '🀡', // 9-17:  筒
+            '🀐', '🀑', '🀒', '🀓', '🀔', '🀕', '🀖', '🀗', '🀘', // 18-26: 索
+            '🀀', '🀁', '🀂', '🀃', '🀆', '🀅', '🀄' // 27-33: 东南西北白发中
         ];
 
         const TOTAL_TILE_TYPES = 34;
         const GUESS_LENGTH = 14;
         const MAX_ROWS = 6;
 
-        // 优化：合并重复常量的定义
         const KOKUSHI_INDICES = [0, 8, 9, 17, 18, 26, 27, 28, 29, 30, 31, 32, 33];
         const YAOCHU_INDICES = new Set(KOKUSHI_INDICES);
         const YAKUHAI_TRIPLE = [31, 32, 33];
@@ -304,9 +390,11 @@
         let gameOver = false;
         let keyColors = new Array(TOTAL_TILE_TYPES).fill('');
 
-        let fieldWind = 0; 
+        let fieldWind = 0;
         let selfWind = 0;
-        let isTsumo = true; 
+        let isTsumo = true;
+
+        let pendingNumber = null; // 当前待处理的数字输入（用于键盘快捷输入）
 
         // ============ 初始化 ============
         function init() {
@@ -326,7 +414,8 @@
         }
 
         function updateGameInfoDisplay() {
-            document.getElementById('field-wind-display').innerHTML = TILES[27 + fieldWind] + ' ' + getWindName(fieldWind);
+            document.getElementById('field-wind-display').innerHTML = TILES[27 + fieldWind] + ' ' + getWindName(
+                fieldWind);
             document.getElementById('self-wind-display').innerHTML = TILES[27 + selfWind] + ' ' + getWindName(selfWind);
             document.getElementById('win-method-display').innerHTML = isTsumo ? '🚀 自摸' : '🎯 荣和';
         }
@@ -354,7 +443,6 @@
         }
 
         function createKeyboard() {
-            // 优化：将花色区间直接内联到生成逻辑中
             const groups = [
                 { id: 'row-man', start: 0, end: 8 },
                 { id: 'row-pin', start: 9, end: 17 },
@@ -389,6 +477,42 @@
             } else {
                 return jiNames[index - 27];
             }
+        }
+
+        /**
+         * 根据数字和花色字符计算牌索引
+         * @param {number} number - 数字 1-9
+         * @param {string} suitChar - 花色字符 'm'|'p'|'s'|'z'
+         * @returns {number} 牌索引，无效时返回 -1
+         */
+        function handleCodeInput(number, suitChar) {
+            let suitBase;
+            let maxNumber;
+
+            switch (suitChar) {
+                case 'm':
+                    suitBase = 0;
+                    maxNumber = 9;
+                    break;
+                case 'p':
+                    suitBase = 9;
+                    maxNumber = 9;
+                    break;
+                case 's':
+                    suitBase = 18;
+                    maxNumber = 9;
+                    break;
+                case 'z':
+                    suitBase = 27;
+                    maxNumber = 7;
+                    break;
+                default:
+                    return -1;
+            }
+
+            if (number < 1 || number > maxNumber) return -1;
+
+            return suitBase + (number - 1);
         }
 
         // ============ 目标牌型生成 ============
@@ -440,12 +564,8 @@
         }
 
         function generateFallbackTargetHand() {
-            const hand13 = [
-                1, 2, 3, 4, 5,
-                10, 11, 12, 13, 14, 15,
-                19, 19
-            ];
-            const winningTile = 6; 
+            const hand13 = [1, 2, 3, 4, 5, 10, 11, 12, 13, 14, 15, 19, 19];
+            const winningTile = 6;
             hand13.sort((a, b) => a - b);
             hand13.push(winningTile);
             return hand13;
@@ -498,7 +618,6 @@
         }
 
         // ============ 役种判断与验证 ============
-        // 优化：提取公共验证逻辑，供系统验证和玩家提交复用
         function checkHandValidity(counts, winningTile) {
             if (!counts.every(c => c <= 4)) return { valid: false, reason: "存在超过4张的同种牌" };
 
@@ -590,12 +709,17 @@
                     for (let suit = 0; suit < 3; suit++) {
                         for (let num = 0; num < 7; num++) {
                             const i = suit * 9 + num;
-                            if (counts[i] - used[i] > 0 && counts[i + 1] - used[i + 1] > 0 && counts[i + 2] - used[i + 2] > 0) {
-                                used[i]++; used[i + 1]++; used[i + 2]++;
+                            if (counts[i] - used[i] > 0 && counts[i + 1] - used[i + 1] > 0 && counts[i + 2] - used[i +
+                                    2] > 0) {
+                                used[i]++;
+                                used[i + 1]++;
+                                used[i + 2]++;
                                 melds.push({ type: 'sequence', start: i });
                                 backtrack(melds, pairIdx);
                                 melds.pop();
-                                used[i]--; used[i + 1]--; used[i + 2]--;
+                                used[i]--;
+                                used[i + 1]--;
+                                used[i + 2]--;
                             }
                         }
                     }
@@ -625,9 +749,9 @@
                     if (b - a === 1) {
                         const num = a % 9;
                         if (num === 0 || num === 7) return false;
-                        return true; 
+                        return true;
                     }
-                    return false; 
+                    return false;
                 }
             }
             return false;
@@ -638,9 +762,14 @@
             const melds = decomp.melds;
             const pair = decomp.pair;
 
+            if (isChinitsu(counts)) {
+                yaku.push('清一色');
+            } else if (isHonitsu(counts)) {
+                yaku.push('混一色');
+            }
+
             if (isTanyao(counts)) yaku.push('断幺九');
-            if (isChinitsu(counts)) yaku.push('清一色');
-            else if (isHonitsu(counts)) yaku.push('混一色');
+
             if (hasYakuhaiKotsu(counts, fieldWind, selfWind)) {
                 const parts = [];
                 if (counts[27 + selfWind] >= 3) parts.push('自风');
@@ -668,20 +797,26 @@
                 const key = s.start;
                 seqCounts.set(key, (seqCounts.get(key) || 0) + 1);
             }
-            let iipeikou = false;
-            for (const [key, cnt] of seqCounts) {
-                if (cnt >= 2) {
-                    iipeikou = true;
-                    break;
-                }
-            }
-            if (iipeikou) yaku.push('一杯口');
-            
+
+            let isDoubleIipeikou = false;
             if (sequences.length === 4) {
                 const values = [...seqCounts.values()];
                 if (values.filter(v => v >= 2).length >= 2 || values.some(v => v >= 4)) {
-                    yaku.push('二杯口');
+                    isDoubleIipeikou = true;
                 }
+            }
+
+            if (isDoubleIipeikou) {
+                yaku.push('二杯口');
+            } else {
+                let hasIipeikou = false;
+                for (const cnt of seqCounts.values()) {
+                    if (cnt >= 2) {
+                        hasIipeikou = true;
+                        break;
+                    }
+                }
+                if (hasIipeikou) yaku.push('一杯口');
             }
 
             const suitSeqStarts = [new Set(), new Set(), new Set()];
@@ -706,26 +841,45 @@
             }
 
             if (triplets.length === 4) yaku.push('对对和');
-            if (triplets.length >= 3) yaku.push('三暗刻');
+
+            let concealedTriplets = 0;
+            for (const t of triplets) {
+                const tile = t.tile;
+                if (isTsumo || tile !== winningTile) {
+                    concealedTriplets++;
+                }
+            }
+            if (concealedTriplets >= 3) yaku.push('三暗刻');
 
             let isMixedOutside = true;
             for (const m of melds) {
                 if (m.type === 'triplet') {
-                    if (!YAOCHU_INDICES.has(m.tile)) { isMixedOutside = false; break; }
+                    if (!YAOCHU_INDICES.has(m.tile)) {
+                        isMixedOutside = false;
+                        break;
+                    }
                 } else {
-                    if (m.start % 9 !== 0 && m.start % 9 !== 6) { isMixedOutside = false; break; }
+                    if (m.start % 9 !== 0 && m.start % 9 !== 6) {
+                        isMixedOutside = false;
+                        break;
+                    }
                 }
             }
+
             if (isMixedOutside && YAOCHU_INDICES.has(pair)) {
-                yaku.push('混全带幺九');
+                const hasJi = counts.slice(27).some(c => c > 0);
+                if (!hasJi) {
+                    yaku.push('纯全带幺九');
+                } else {
+                    yaku.push('混全带幺九');
+                }
             }
 
-            if (isMixedOutside && YAOCHU_INDICES.has(pair) && !counts.slice(27).some(c => c > 0)) {
-                yaku.push('纯全带幺九');
+            if (counts.every((c, i) => c === 0 || (YAOCHU_INDICES.has(i) && i < 27))) {
+                yaku.push('清老头');
+            } else if (counts.every((c, i) => c === 0 || YAOCHU_INDICES.has(i))) {
+                yaku.push('混老头');
             }
-
-            if (counts.every((c, i) => c === 0 || YAOCHU_INDICES.has(i))) yaku.push('混老头');
-            if (counts.every((c, i) => c === 0 || (YAOCHU_INDICES.has(i) && i < 27))) yaku.push('清老头');
 
             return yaku;
         }
@@ -809,6 +963,8 @@
 
         function addTile(tileIndex) {
             if (gameOver || currentGuess.length >= GUESS_LENGTH) return;
+            // 通过任何方式添加牌时，清除pending数字
+            pendingNumber = null;
             if (currentGuess.filter(x => x === tileIndex).length >= 4) {
                 showMessage("一种牌最多只能有4张哦～");
                 return;
@@ -818,21 +974,40 @@
         }
 
         function deleteTile() {
-            if (gameOver || currentGuess.length === 0) return;
+            if (gameOver) return;
+            // 如果有pending数字，先清除它
+            if (pendingNumber !== null) {
+                pendingNumber = null;
+                updateGrid();
+                return;
+            }
+            if (currentGuess.length === 0) return;
             currentGuess.pop();
             updateGrid();
         }
 
         function updateGrid() {
+            // 清除当前行所有cell
             for (let i = 0; i < GUESS_LENGTH; i++) {
                 const cell = document.getElementById(`cell-${currentRow}-${i}`);
                 cell.innerText = '';
-                cell.className = 'cell'; // 重置所有状态
+                cell.className = 'cell';
+                cell.title = i === 13 ? '和牌（第14张）' : '';
             }
+
+            // 显示已填入的牌
             for (let i = 0; i < currentGuess.length; i++) {
                 const cell = document.getElementById(`cell-${currentRow}-${i}`);
                 cell.innerText = TILES[currentGuess[i]];
                 cell.classList.add('filled');
+            }
+
+            // 显示pending数字（在下一个空位）
+            if (pendingNumber !== null && currentGuess.length < GUESS_LENGTH) {
+                const cell = document.getElementById(`cell-${currentRow}-${currentGuess.length}`);
+                cell.innerText = pendingNumber;
+                cell.classList.add('pending-number');
+                cell.title = '等待输入花色（按 M/P/S/Z）';
             }
         }
 
@@ -848,6 +1023,13 @@
 
         function submitGuess() {
             if (gameOver) return;
+
+            // 如果有pending数字，先清除（用户可能忘记完成输入）
+            if (pendingNumber !== null) {
+                pendingNumber = null;
+                updateGrid();
+            }
+
             if (currentGuess.length < GUESS_LENGTH) {
                 showMessage(`牌数不足14张（当前${currentGuess.length}张）`);
                 return;
@@ -885,7 +1067,6 @@
             }
 
             let allCorrect = true;
-            // 优化：一次性完成 DOM 的文字写入和状态覆盖，避免冗余重绘
             for (let i = 0; i < GUESS_LENGTH; i++) {
                 const cell = document.getElementById(`cell-${currentRow}-${i}`);
                 cell.innerText = TILES[sortedGuess[i]];
@@ -949,15 +1130,80 @@
             }
         }
 
+        // ============ 物理键盘事件处理 ============
         document.addEventListener('keydown', (e) => {
             if (gameOver) return;
-            if (e.key === 'Backspace' || e.key === 'Delete') {
+
+            const key = e.key;
+            const lowerKey = key.toLowerCase();
+
+            // 删除键
+            if (key === 'Backspace' || key === 'Delete') {
                 e.preventDefault();
                 deleteTile();
-            } else if (e.key === 'Enter') {
+                return;
+            }
+
+            // 回车键：提交
+            if (key === 'Enter') {
                 e.preventDefault();
                 submitGuess();
+                return;
             }
+
+            // 数字键 1-9：设置pending数字
+            if (/^[1-9]$/.test(key)) {
+                e.preventDefault();
+                if (currentGuess.length >= GUESS_LENGTH) return;
+                pendingNumber = parseInt(key, 10);
+                updateGrid();
+                return;
+            }
+
+            // 数字键 0：忽略（无效的麻将代码）
+            if (key === '0') {
+                e.preventDefault();
+                return;
+            }
+
+            // 花色键 m/p/s/z
+            if (['m', 'p', 's', 'z'].includes(lowerKey)) {
+                e.preventDefault();
+                if (pendingNumber === null) return;
+                if (currentGuess.length >= GUESS_LENGTH) {
+                    pendingNumber = null;
+                    updateGrid();
+                    return;
+                }
+
+                const tileIndex = handleCodeInput(pendingNumber, lowerKey);
+                const num = pendingNumber;
+                pendingNumber = null;
+
+                if (tileIndex === -1) {
+                    updateGrid();
+                    if (lowerKey === 'z') {
+                        showMessage(`无效的字牌代码：${num}z（字牌只有1z~7z）`);
+                    } else {
+                        showMessage(`无效的牌代码：${num}${lowerKey}`);
+                    }
+                    return;
+                }
+
+                // 检查4张限制
+                if (currentGuess.filter(x => x === tileIndex).length >= 4) {
+                    updateGrid();
+                    showMessage("一种牌最多只能有4张哦～");
+                    return;
+                }
+
+                currentGuess.push(tileIndex);
+                updateGrid();
+                return;
+            }
+
+            // 其他按键：如果有pending数字，按了非花色键则忽略（保留pending数字）
+            // 不做任何处理
         });
 
         init();
