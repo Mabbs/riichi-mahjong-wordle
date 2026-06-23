@@ -338,8 +338,7 @@
     </div>
     <div class="hint-bar">
         💡 键盘快捷输入：<span class="key-hint">数字</span> + <span class="key-hint">M/P/S/Z</span>
-        &nbsp;例如 <span class="key-hint">2</span><span class="key-hint">M</span> = 2万 ·
-        <span class="key-hint">3</span><span class="key-hint">P</span> = 3筒 ·
+        &nbsp;可连续输入数字如 <span class="key-hint">1</span><span class="key-hint">2</span><span class="key-hint">3</span><span class="key-hint">M</span> = 1万2万3万 ·
         <span class="key-hint">1</span><span class="key-hint">Z</span> = 东
     </div>
 
@@ -394,7 +393,7 @@
         let selfWind = 0;
         let isTsumo = true;
 
-        let pendingNumber = null; // 当前待处理的数字输入（用于键盘快捷输入）
+        let pendingNumbers = []; // 待处理的数字输入列表（支持连续输入多个数字再按花色）
 
         // ============ 初始化 ============
         function init() {
@@ -963,8 +962,8 @@
 
         function addTile(tileIndex) {
             if (gameOver || currentGuess.length >= GUESS_LENGTH) return;
-            // 通过任何方式添加牌时，清除pending数字
-            pendingNumber = null;
+            // 通过点击键盘添加牌时，清除pending数字
+            pendingNumbers = [];
             if (currentGuess.filter(x => x === tileIndex).length >= 4) {
                 showMessage("一种牌最多只能有4张哦～");
                 return;
@@ -975,9 +974,9 @@
 
         function deleteTile() {
             if (gameOver) return;
-            // 如果有pending数字，先清除它
-            if (pendingNumber !== null) {
-                pendingNumber = null;
+            // 如果有pending数字，先删除最后一个pending
+            if (pendingNumbers.length > 0) {
+                pendingNumbers.pop();
                 updateGrid();
                 return;
             }
@@ -1002,10 +1001,10 @@
                 cell.classList.add('filled');
             }
 
-            // 显示pending数字（在下一个空位）
-            if (pendingNumber !== null && currentGuess.length < GUESS_LENGTH) {
-                const cell = document.getElementById(`cell-${currentRow}-${currentGuess.length}`);
-                cell.innerText = pendingNumber;
+            // 显示pending数字（在已确认牌之后依次显示）
+            for (let i = 0; i < pendingNumbers.length && currentGuess.length + i < GUESS_LENGTH; i++) {
+                const cell = document.getElementById(`cell-${currentRow}-${currentGuess.length + i}`);
+                cell.innerText = pendingNumbers[i];
                 cell.classList.add('pending-number');
                 cell.title = '等待输入花色（按 M/P/S/Z）';
             }
@@ -1025,8 +1024,8 @@
             if (gameOver) return;
 
             // 如果有pending数字，先清除（用户可能忘记完成输入）
-            if (pendingNumber !== null) {
-                pendingNumber = null;
+            if (pendingNumbers.length > 0) {
+                pendingNumbers = [];
                 updateGrid();
             }
 
@@ -1151,11 +1150,11 @@
                 return;
             }
 
-            // 数字键 1-9：设置pending数字
+            // 数字键 1-9：添加到pending数字列表
             if (/^[1-9]$/.test(key)) {
                 e.preventDefault();
-                if (currentGuess.length >= GUESS_LENGTH) return;
-                pendingNumber = parseInt(key, 10);
+                if (currentGuess.length + pendingNumbers.length >= GUESS_LENGTH) return;
+                pendingNumbers.push(parseInt(key, 10));
                 updateGrid();
                 return;
             }
@@ -1166,38 +1165,49 @@
                 return;
             }
 
-            // 花色键 m/p/s/z
+            // 花色键 m/p/s/z：批量转换所有pending数字
             if (['m', 'p', 's', 'z'].includes(lowerKey)) {
                 e.preventDefault();
-                if (pendingNumber === null) return;
-                if (currentGuess.length >= GUESS_LENGTH) {
-                    pendingNumber = null;
+                if (pendingNumbers.length === 0) return;
+                if (currentGuess.length + pendingNumbers.length > GUESS_LENGTH) {
+                    pendingNumbers = [];
                     updateGrid();
                     return;
                 }
 
-                const tileIndex = handleCodeInput(pendingNumber, lowerKey);
-                const num = pendingNumber;
-                pendingNumber = null;
-
-                if (tileIndex === -1) {
-                    updateGrid();
-                    if (lowerKey === 'z') {
-                        showMessage(`无效的字牌代码：${num}z（字牌只有1z~7z）`);
-                    } else {
-                        showMessage(`无效的牌代码：${num}${lowerKey}`);
+                // 先批量计算所有tileIndex，任何非法则整批拒绝
+                const tileIndices = [];
+                for (const num of pendingNumbers) {
+                    const tileIndex = handleCodeInput(num, lowerKey);
+                    if (tileIndex === -1) {
+                        updateGrid();
+                        if (lowerKey === 'z') {
+                            showMessage(`无效的字牌代码：${num}z（字牌只有1z~7z）`);
+                        } else {
+                            showMessage(`无效的牌代码：${num}${lowerKey}`);
+                        }
+                        return;
                     }
-                    return;
+                    tileIndices.push(tileIndex);
                 }
 
-                // 检查4张限制
-                if (currentGuess.filter(x => x === tileIndex).length >= 4) {
-                    updateGrid();
-                    showMessage("一种牌最多只能有4张哦～");
-                    return;
+                // 检查4张限制（考虑批量添加后的累计数量）
+                const tempCounts = {};
+                currentGuess.forEach(x => { tempCounts[x] = (tempCounts[x] || 0) + 1; });
+                for (const tileIndex of tileIndices) {
+                    tempCounts[tileIndex] = (tempCounts[tileIndex] || 0) + 1;
+                    if (tempCounts[tileIndex] > 4) {
+                        updateGrid();
+                        showMessage("一种牌最多只能有4张哦～");
+                        return;
+                    }
                 }
 
-                currentGuess.push(tileIndex);
+                // 全部通过，批量添加
+                for (const tileIndex of tileIndices) {
+                    currentGuess.push(tileIndex);
+                }
+                pendingNumbers = [];
                 updateGrid();
                 return;
             }
