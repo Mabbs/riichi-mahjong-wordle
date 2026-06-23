@@ -1115,7 +1115,7 @@
                 attempts++;
                 counts.fill(0);
                 const rand = rng();
-                if (rand < 0.02) valid = tryGenerateKokushi(counts);
+                if (rand < 0.02) valid = tryGenerateKokushi(counts, rng);
                 else if (rand < 0.1) valid = tryGenerateSevenPairs(counts, rng);
                 else valid = tryGenerateStandardHand(counts, rng);
 
@@ -1143,8 +1143,9 @@
             return hand13;
         }
 
-        function tryGenerateKokushi(counts) {
-            const pairIdx = KOKUSHI_INDICES[Math.floor(Math.random() * KOKUSHI_INDICES.length)];
+        function tryGenerateKokushi(counts, rng) {
+            rng = rng || Math.random;
+            const pairIdx = KOKUSHI_INDICES[Math.floor(rng() * KOKUSHI_INDICES.length)];
             for (const idx of KOKUSHI_INDICES) counts[idx] = 1;
             counts[pairIdx] = 2;
             return true;
