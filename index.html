@@ -44,17 +44,16 @@
         body {
             background-color: var(--bg);
             color: var(--text);
-            font-family: "Helvetica Neue", Arial, "PingFang SC", "Microsoft YaHei", sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
             margin: 0;
             padding: 16px 8px;
             min-height: 100vh;
+            font-family: "Helvetica Neue", Arial, "PingFang SC", "Microsoft YaHei", sans-serif;
             transition: background-color 0.3s ease, color 0.3s ease;
         }
 
-        /* ====== 顶栏 ====== */
         .topbar {
             display: flex;
             align-items: center;
@@ -99,7 +98,6 @@
             background-color: var(--panel-border);
         }
 
-        /* ====== 模式切换 ====== */
         .mode-switch {
             display: flex;
             gap: 0;
@@ -171,7 +169,6 @@
             padding: 8px 18px;
             margin-bottom: 16px;
             font-size: 15px;
-            color: var(--text);
             display: flex;
             gap: 20px;
             align-items: center;
@@ -184,7 +181,6 @@
             font-weight: bold;
         }
 
-        /* ====== 棋盘 ====== */
         #board {
             display: grid;
             grid-template-rows: repeat(6, 1fr);
@@ -208,9 +204,8 @@
             align-items: center;
             font-size: 34px;
             font-family: var(--emoji-font);
-            background-color: transparent;
             user-select: none;
-            transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.2s ease;
+            transition: background-color 0.15s, border-color 0.15s, transform 0.2s;
         }
 
         .cell:nth-child(14) {
@@ -225,7 +220,7 @@
         }
 
         .cell.pending-number {
-            font-family: "Helvetica Neue", Arial, "PingFang SC", "Microsoft YaHei", sans-serif;
+            font-family: "Helvetica Neue", Arial, sans-serif;
             color: var(--dark-gray);
             border-color: var(--dark-gray);
             border-style: dashed;
@@ -274,20 +269,17 @@
         }
 
         @keyframes flip {
-            0% {
+
+            0%,
+            100% {
                 transform: rotateX(0);
             }
 
             50% {
                 transform: rotateX(90deg);
             }
-
-            100% {
-                transform: rotateX(0);
-            }
         }
 
-        /* ====== 键盘 ====== */
         #keyboard {
             display: flex;
             flex-direction: column;
@@ -314,7 +306,7 @@
             font-family: var(--emoji-font);
             cursor: pointer;
             user-select: none;
-            transition: background-color 0.2s ease, transform 0.05s ease;
+            transition: background-color 0.2s, transform 0.05s;
             min-width: 36px;
             text-align: center;
             line-height: 1.2;
@@ -411,7 +403,6 @@
             color: #fff;
         }
 
-        /* ====== 消息 ====== */
         #message {
             position: fixed;
             top: 18%;
@@ -424,7 +415,7 @@
             font-weight: bold;
             font-size: 15px;
             opacity: 0;
-            transition: opacity 0.3s ease;
+            transition: opacity 0.3s;
             pointer-events: none;
             z-index: 400;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
@@ -437,14 +428,10 @@
             opacity: 1 !important;
         }
 
-        /* ====== 弹窗 ====== */
         .modal-overlay {
             display: none;
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
+            inset: 0;
             background: rgba(0, 0, 0, 0.6);
             z-index: 300;
             justify-content: center;
@@ -462,7 +449,6 @@
             padding: 24px;
             max-width: 420px;
             width: 90%;
-            color: var(--text);
             box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
         }
 
@@ -487,9 +473,6 @@
             grid-template-columns: repeat(4, 1fr);
             gap: 8px;
             margin-bottom: 20px;
-        }
-
-        .stat-cell {
             text-align: center;
         }
 
@@ -582,7 +565,6 @@
         .modal-text {
             font-size: 14px;
             line-height: 1.7;
-            color: var(--text);
         }
 
         .modal-text .example-cell {
@@ -594,7 +576,7 @@
             justify-content: center;
             font-family: var(--emoji-font);
             font-size: 18px;
-            margin: 2px 2px;
+            margin: 2px;
             vertical-align: middle;
         }
 
@@ -613,7 +595,6 @@
             color: white;
         }
 
-        /* ====== 响应式 ====== */
         @media (max-width: 580px) {
             .cell {
                 width: 22px;
@@ -690,7 +671,6 @@
 
 <body>
 
-    <!-- ====== 顶栏 ====== -->
     <div class="topbar">
         <div class="topbar-side"></div>
         <h1>🀫 立直麻将 Wordle</h1>
@@ -701,7 +681,6 @@
         </div>
     </div>
 
-    <!-- ====== 模式切换 ====== -->
     <div class="mode-switch">
         <button class="mode-btn active" id="mode-daily" onclick="switchMode('daily')">📅 每日挑战</button>
         <button class="mode-btn" id="mode-practice" onclick="switchMode('practice')">♾️ 无限练习</button>
@@ -738,10 +717,8 @@
         </div>
     </div>
 
-    <!-- ====== 消息 ====== -->
     <div id="message"></div>
 
-    <!-- ====== 玩法弹窗 ====== -->
     <div class="modal-overlay" id="modal-info">
         <div class="modal">
             <button class="close-btn" onclick="closeModal('info')">×</button>
@@ -765,7 +742,6 @@
         </div>
     </div>
 
-    <!-- ====== 统计弹窗 ====== -->
     <div class="modal-overlay" id="modal-stats">
         <div class="modal">
             <button class="close-btn" onclick="closeModal('stats')">×</button>
@@ -798,55 +774,39 @@
             </div>
             <div id="practice-stats"
                 style="display:none;text-align:center;color:var(--dark-gray);font-size:14px;padding:20px 0;">
-                练习模式不计入统计<br>
-                本局用了 <span id="practice-tries">0</span> 次猜测
+                练习模式不计入统计<br>本局用了 <span id="practice-tries">0</span> 次猜测
             </div>
         </div>
     </div>
 
     <script>
         // ============================================================
-        //  麻将牌常量
+        // 常量与全局设定
         // ============================================================
-        const TILES = [
-            '🀇', '🀈', '🀉', '🀊', '🀋', '🀌', '🀍', '🀎', '🀏',  // 0-8  万
-            '🀙', '🀚', '🀛', '🀜', '🀝', '🀞', '🀟', '🀠', '🀡',  // 9-17 筒
-            '🀐', '🀑', '🀒', '🀓', '🀔', '🀕', '🀖', '🀗', '🀘',  // 18-26 索
-            '🀀', '🀁', '🀂', '🀃', '🀆', '🀅', '🀄'              // 27-33 东南西北白发中
-        ];
-        const TOTAL_TILE_TYPES = 34;
-        const GUESS_LENGTH = 14;
-        const MAX_ROWS = 6;
+        const TILES = ['🀇', '🀈', '🀉', '🀊', '🀋', '🀌', '🀍', '🀎', '🀏', '🀙', '🀚', '🀛', '🀜', '🀝', '🀞', '🀟', '🀠', '🀡', '🀐', '🀑', '🀒', '🀓', '🀔', '🀕', '🀖', '🀗', '🀘', '🀀', '🀁', '🀂', '🀃', '🀆', '🀅', '🀄'];
+        const TOTAL_TILE_TYPES = 34, GUESS_LENGTH = 14, MAX_ROWS = 6;
         const KOKUSHI_INDICES = [0, 8, 9, 17, 18, 26, 27, 28, 29, 30, 31, 32, 33];
         const YAOCHU_INDICES = new Set(KOKUSHI_INDICES);
-        const YAKUHAI_TRIPLE = [31, 32, 33];
         const WIND_NAMES = ['东', '南', '西', '北'];
 
-        // ============================================================
-        //  游戏状态（收拢在一个对象里）
-        // ============================================================
         const game = {
-            mode: 'daily',          // 'daily' | 'practice'
-            targetHand: [],
-            currentGuess: [],
-            pendingNumbers: [],
-            currentRow: 0,
-            gameOver: false,
-            gameWon: false,
-            keyColors: new Array(TOTAL_TILE_TYPES).fill(''),
-            fieldWind: 0,
-            selfWind: 0,
-            isTsumo: true,
-            guessHistory: [],       // [[{tile,color}], ...]  用于分享
-            theme: 'dark',
-            dailyDate: '',
+            mode: 'daily', targetHand: [], currentGuess: [], pendingNumbers: [],
+            currentRow: 0, gameOver: false, gameWon: false, keyColors: new Array(TOTAL_TILE_TYPES).fill(''),
+            fieldWind: 0, selfWind: 0, isTsumo: true, guessHistory: [], theme: 'dark', dailyDate: '',
         };
 
-        // ============================================================
-        //  种子随机数（每日挑战用）
-        // ============================================================
+        const LS = {
+            get: (k, d) => { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch { return d; } },
+            set: (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch { } }
+        };
+
+        // 核心辅助方法（精简循环和数据组装）
+        const getCounts = arr => arr.reduce((acc, val) => { acc[val]++; return acc; }, new Array(TOTAL_TILE_TYPES).fill(0));
+        const getTileName = i => i < 27 ? `${(i % 9) + 1}${['万', '筒', '索'][Math.floor(i / 9)]}` : WIND_NAMES.concat(['白', '发', '中'])[i - 27];
+        const sortGuessLikeTarget = guess => [...guess.slice(0, 13).sort((a, b) => a - b), guess[13]];
+
         function mulberry32(seed) {
-            return function () {
+            return () => {
                 seed |= 0; seed = seed + 0x6D2B79F5 | 0;
                 let t = Math.imul(seed ^ seed >>> 15, 1 | seed);
                 t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
@@ -858,131 +818,12 @@
             const now = new Date();
             const dateStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
             let hash = 0;
-            for (let i = 0; i < dateStr.length; i++) {
-                hash = ((hash << 5) - hash) + dateStr.charCodeAt(i);
-                hash |= 0;
-            }
+            for (let i = 0; i < dateStr.length; i++) hash = ((hash << 5) - hash) + dateStr.charCodeAt(i) | 0;
             return { seed: Math.abs(hash), dateStr };
         }
 
         // ============================================================
-        //  localStorage 工具
-        // ============================================================
-        const LS = {
-            get(key, def) {
-                try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : def; }
-                catch { return def; }
-            },
-            set(key, val) {
-                try { localStorage.setItem(key, JSON.stringify(val)); } catch { }
-            },
-        };
-
-        // ============================================================
-        //  统计
-        // ============================================================
-        function getStats() {
-            return LS.get('mw_stats', {
-                played: 0, wins: 0, currentStreak: 0, maxStreak: 0, dist: [0, 0, 0, 0, 0, 0]
-            });
-        }
-
-        function saveStats(stats) { LS.set('mw_stats', stats); }
-
-        function addStat(won, tries) {
-            const stats = getStats();
-            stats.played++;
-            if (won) {
-                stats.wins++;
-                stats.currentStreak++;
-                stats.maxStreak = Math.max(stats.maxStreak, stats.currentStreak);
-                if (tries >= 1 && tries <= 6) stats.dist[tries - 1]++;
-            } else {
-                stats.currentStreak = 0;
-            }
-            saveStats(stats);
-        }
-
-        function renderStats() {
-            if (game.mode === 'practice') {
-                document.getElementById('stats-content').style.display = 'none';
-                document.getElementById('practice-stats').style.display = 'block';
-                document.getElementById('practice-tries').innerText = game.guessHistory.length;
-                document.getElementById('stats-title').innerText = '♾️ 练习模式';
-                return;
-            }
-            document.getElementById('stats-content').style.display = 'block';
-            document.getElementById('practice-stats').style.display = 'none';
-            document.getElementById('stats-title').innerText = '📊 每日统计';
-
-            const stats = getStats();
-            document.getElementById('stat-played').innerText = stats.played;
-            document.getElementById('stat-winrate').innerText = stats.played > 0 ? Math.round(stats.wins / stats.played * 100) : 0;
-            document.getElementById('stat-streak').innerText = stats.currentStreak;
-            document.getElementById('stat-maxstreak').innerText = stats.maxStreak;
-
-            const container = document.getElementById('dist-container');
-            container.innerHTML = '';
-            const maxDist = Math.max(...stats.dist, 1);
-            for (let i = 0; i < 6; i++) {
-                const row = document.createElement('div');
-                row.className = 'dist-row';
-                const num = document.createElement('div');
-                num.className = 'guess-num';
-                num.innerText = i + 1;
-                const bar = document.createElement('div');
-                bar.className = 'dist-bar ' + (game.gameWon && game.currentRow === i + 1 ? 'green' : 'gray');
-                bar.style.width = Math.max(8, stats.dist[i] / maxDist * 100) + '%';
-                bar.innerText = stats.dist[i];
-                row.appendChild(num);
-                row.appendChild(bar);
-                container.appendChild(row);
-            }
-        }
-
-        // ============================================================
-        //  分享
-        // ============================================================
-        function shareResult() {
-            if (game.mode !== 'daily') {
-                showMessage('练习模式无法分享');
-                return;
-            }
-            if (game.guessHistory.length === 0) {
-                showMessage('还没有完成的局');
-                return;
-            }
-
-            const { dateStr } = getTodaySeed();
-            const emoji = {
-                correct: '🟩',
-                present: '🟨',
-                absent: '⬜'
-            };
-
-            let text = `立直麻将Wordle ${dateStr} `;
-            if (game.gameWon) text += `${game.guessHistory.length}/${MAX_ROWS}\n`;
-            else text += `X/${MAX_ROWS}\n`;
-            text += location.origin + location.pathname + '\n\n';
-
-            for (const row of game.guessHistory) {
-                let line = '';
-                for (let i = 0; i < row.length; i++) {
-                    line += emoji[row[i].color];
-                    if (i === 12) line += ' '; // 第14张前空格
-                }
-                text += line + '\n';
-            }
-
-            navigator.clipboard.writeText(text).then(() => {
-                showMessage('已复制到剪贴板！');
-            }).catch(() => {
-                showMessage(text, 5000);
-            });
-        }
-
-        // ============================================================
-        //  主题
+        // 游戏状态与 UI 渲染
         // ============================================================
         function toggleTheme() {
             game.theme = game.theme === 'dark' ? 'light' : 'dark';
@@ -991,202 +832,118 @@
             LS.set('mw_theme', game.theme);
         }
 
-        function loadTheme() {
-            game.theme = LS.get('mw_theme', 'dark');
-            document.body.setAttribute('data-theme', game.theme);
-            document.getElementById('theme-btn').innerText = game.theme === 'dark' ? '☀️' : '🌙';
-        }
-
-        // ============================================================
-        //  弹窗
-        // ============================================================
-        function openModal(name) {
-            if (name === 'stats') renderStats();
-            document.getElementById('modal-' + name).classList.add('show');
-        }
-        function closeModal(name) {
-            document.getElementById('modal-' + name).classList.remove('show');
-        }
-        // 点击遮罩关闭
-        document.querySelectorAll('.modal-overlay').forEach(el => {
-            el.addEventListener('click', e => { if (e.target === el) el.classList.remove('show'); });
-        });
-
-        // ============================================================
-        //  模式切换
-        // ============================================================
         function switchMode(mode) {
             if (mode === game.mode) return;
             game.mode = mode;
             document.getElementById('mode-daily').classList.toggle('active', mode === 'daily');
             document.getElementById('mode-practice').classList.toggle('active', mode === 'practice');
-            document.getElementById('btn-new-game').style.display = (mode === 'practice') ? '' : 'none';
             newGame();
         }
 
-        // ============================================================
-        //  倒计时（每日模式）
-        // ============================================================
-        function updateCountdown() {
-            if (game.mode !== 'daily') {
-                document.getElementById('countdown').innerText = '';
-                return;
-            }
-            const now = new Date();
-            const tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
-            const diff = tomorrow - now;
-            const h = String(Math.floor(diff / 3600000)).padStart(2, '0');
-            const m = String(Math.floor(diff % 3600000 / 60000)).padStart(2, '0');
-            const s = String(Math.floor(diff % 60000 / 1000)).padStart(2, '0');
-            document.getElementById('countdown').innerText = `下期题目\n⏰ ${h}:${m}:${s}`;
+        function showMessage(msg, duration = 2000) {
+            const msgBox = document.getElementById('message');
+            msgBox.innerText = msg;
+            msgBox.classList.add('show-message');
+            clearTimeout(msgBox._timeout);
+            msgBox._timeout = setTimeout(() => msgBox.classList.remove('show-message'), duration);
         }
 
-        // ============================================================
-        //  棋盘 & 键盘
-        // ============================================================
+        function openModal(name) { if (name === 'stats') renderStats(); document.getElementById('modal-' + name).classList.add('show'); }
+        function closeModal(name) { document.getElementById('modal-' + name).classList.remove('show'); }
+        document.querySelectorAll('.modal-overlay').forEach(el => el.addEventListener('click', e => { if (e.target === el) el.classList.remove('show'); }));
+
         function createBoard() {
             const board = document.getElementById('board');
-            board.innerHTML = '';
-            for (let r = 0; r < MAX_ROWS; r++) {
-                const row = document.createElement('div');
-                row.className = 'row';
-                row.id = `row-${r}`;
-                for (let c = 0; c < GUESS_LENGTH; c++) {
-                    const cell = document.createElement('div');
-                    cell.className = 'cell';
-                    cell.id = `cell-${r}-${c}`;
-                    if (c === 13) cell.title = '和牌（第14张）';
-                    row.appendChild(cell);
-                }
-                board.appendChild(row);
-            }
+            board.innerHTML = Array.from({ length: MAX_ROWS }, (_, r) =>
+                `<div class="row" id="row-${r}">` + Array.from({ length: GUESS_LENGTH }, (_, c) =>
+                    `<div class="cell" id="cell-${r}-${c}" ${c === 13 ? 'title="和牌（第14张）"' : ''}></div>`).join('') + `</div>`
+            ).join('');
         }
 
         function createKeyboard() {
-            const groups = [
-                { id: 'row-man', start: 0, end: 8 },
-                { id: 'row-pin', start: 9, end: 17 },
-                { id: 'row-sou', start: 18, end: 26 },
-                { id: 'row-ji', start: 27, end: 33 }
-            ];
-            groups.forEach(group => {
-                const container = document.getElementById(group.id);
+            const bounds = [0, 9, 18, 27, 34];
+            ['row-man', 'row-pin', 'row-sou', 'row-ji'].forEach((id, g) => {
+                const container = document.getElementById(id);
                 container.innerHTML = '';
-                for (let i = group.start; i <= group.end; i++) {
+                for (let i = bounds[g]; i < bounds[g + 1]; i++) {
                     const btn = document.createElement('button');
-                    btn.className = 'key';
-                    btn.id = `key-${i}`;
-                    btn.innerText = TILES[i];
-                    btn.title = getTileName(i);
+                    btn.className = 'key'; btn.id = `key-${i}`;
+                    btn.innerText = TILES[i]; btn.title = getTileName(i);
                     btn.onclick = () => addTile(i);
                     container.appendChild(btn);
                 }
             });
         }
 
-        function getTileName(index) {
-            const suitNames = ['万', '万', '万', '万', '万', '万', '万', '万', '万', '筒', '筒', '筒', '筒', '筒', '筒', '筒', '筒', '筒', '索', '索', '索', '索', '索', '索', '索', '索', '索'];
-            const jiNames = ['东', '南', '西', '北', '白', '发', '中'];
-            if (index < 27) { const num = (index % 9) + 1; return `${num}${suitNames[index]}`; }
-            return jiNames[index - 27];
-        }
-
-        function handleCodeInput(number, suitChar) {
-            const suitBases = { m: 0, p: 9, s: 18, z: 27 };
-            const maxNums = { m: 9, p: 9, s: 9, z: 7 };
-            if (!(suitChar in suitBases)) return -1;
-            if (number < 1 || number > maxNums[suitChar]) return -1;
-            return suitBases[suitChar] + (number - 1);
-        }
-
-        // ============================================================
-        //  目标牌型生成
-        // ============================================================
-        function generateTargetHand(rng) {
-            rng = rng || Math.random;
-            let valid = false;
-            let counts = new Array(TOTAL_TILE_TYPES).fill(0);
-            let attempts = 0;
-            const maxAttempts = 8000;
-
-            while (!valid && attempts < maxAttempts) {
-                attempts++;
-                counts.fill(0);
-                const rand = rng();
-                if (rand < 0.02) valid = tryGenerateKokushi(counts, rng);
-                else if (rand < 0.1) valid = tryGenerateSevenPairs(counts, rng);
-                else valid = tryGenerateStandardHand(counts, rng);
-
-                if (valid) valid = counts.every(c => c <= 4);
-                if (valid) {
-                    const allTiles = [];
-                    for (let i = 0; i < TOTAL_TILE_TYPES; i++)
-                        for (let j = 0; j < counts[i]; j++) allTiles.push(i);
-                    const winIdx = Math.floor(rng() * allTiles.length);
-                    const winningTile = allTiles.splice(winIdx, 1)[0];
-                    allTiles.sort((a, b) => a - b);
-                    allTiles.push(winningTile);
-                    valid = validateFinalHand(allTiles, winningTile);
-                    if (valid) game.targetHand = allTiles;
+        function updateGrid() {
+            for (let i = 0; i < GUESS_LENGTH; i++) {
+                const cell = document.getElementById(`cell-${game.currentRow}-${i}`);
+                cell.className = 'cell'; cell.innerText = ''; cell.title = i === 13 ? '和牌（第14张）' : '';
+                if (i < game.currentGuess.length) {
+                    cell.innerText = TILES[game.currentGuess[i]]; cell.classList.add('filled');
+                } else if (i - game.currentGuess.length < game.pendingNumbers.length) {
+                    cell.innerText = game.pendingNumbers[i - game.currentGuess.length];
+                    cell.classList.add('pending-number'); cell.title = '等待输入花色（按 M/P/S/Z）';
                 }
             }
-            if (!valid) game.targetHand = generateFallbackTargetHand();
         }
 
-        function generateFallbackTargetHand() {
-            const hand13 = [1, 2, 3, 4, 5, 10, 11, 12, 13, 14, 15, 19, 19];
-            const winningTile = 6;
-            hand13.sort((a, b) => a - b);
-            hand13.push(winningTile);
-            return hand13;
-        }
-
-        function tryGenerateKokushi(counts, rng) {
-            rng = rng || Math.random;
-            const pairIdx = KOKUSHI_INDICES[Math.floor(rng() * KOKUSHI_INDICES.length)];
-            for (const idx of KOKUSHI_INDICES) counts[idx] = 1;
-            counts[pairIdx] = 2;
-            return true;
-        }
-
-        function tryGenerateSevenPairs(counts, rng) {
-            rng = rng || Math.random;
-            const available = Array.from({ length: TOTAL_TILE_TYPES }, (_, i) => i);
-            for (let i = available.length - 1; i > 0; i--) {
-                const j = Math.floor(rng() * (i + 1));
-                [available[i], available[j]] = [available[j], available[i]];
+        function applyKeyColors() {
+            for (let i = 0; i < TOTAL_TILE_TYPES; i++) {
+                const btn = document.getElementById(`key-${i}`);
+                if (btn) {
+                    btn.classList.remove('key-correct', 'key-present', 'key-absent');
+                    if (game.keyColors[i]) btn.classList.add(`key-${game.keyColors[i]}`);
+                }
             }
-            const chosen = available.slice(0, 7);
-            for (const idx of chosen) counts[idx] = 2;
-            return true;
+        }
+
+        function updateKeyboardColors(guess, colors) {
+            const rank = { '': 0, 'absent': 1, 'present': 2, 'correct': 3 };
+            guess.forEach((ti, i) => { if (rank[colors[i]] > rank[game.keyColors[ti] || '']) game.keyColors[ti] = colors[i]; });
+            applyKeyColors();
+        }
+
+        function renderBoardFromHistory() {
+            game.guessHistory.forEach((row, r) => row.forEach((cellData, i) => {
+                const cell = document.getElementById(`cell-${r}-${i}`);
+                if (cell) { cell.innerText = TILES[cellData.tile]; cell.className = `cell ${cellData.color}`; }
+            }));
+        }
+
+        // ============================================================
+        // 麻将生成与校验逻辑
+        // ============================================================
+        function generateTargetHand(rng = Math.random) {
+            let valid = false, counts = new Array(TOTAL_TILE_TYPES).fill(0), attempts = 0;
+            while (!valid && attempts++ < 8000) {
+                counts.fill(0);
+                const rand = rng();
+                if (rand < 0.02) { counts[KOKUSHI_INDICES[Math.floor(rng() * KOKUSHI_INDICES.length)]] = 2; KOKUSHI_INDICES.forEach(i => counts[i] = Math.max(counts[i], 1)); valid = true; }
+                else if (rand < 0.1) {
+                    const avail = Array.from({ length: TOTAL_TILE_TYPES }, (_, i) => i).sort(() => rng() - 0.5).slice(0, 7);
+                    avail.forEach(i => counts[i] = 2); valid = true;
+                } else valid = tryGenerateStandardHand(counts, rng);
+
+                if (valid = valid && counts.every(c => c <= 4)) {
+                    const allTiles = counts.flatMap((c, i) => Array(c).fill(i));
+                    const winningTile = allTiles.splice(Math.floor(rng() * allTiles.length), 1)[0];
+                    const fullHand = [...allTiles.sort((a, b) => a - b), winningTile];
+                    if (valid = checkHandValidity(counts, winningTile).valid) game.targetHand = fullHand;
+                }
+            }
+            if (!valid) game.targetHand = [1, 2, 3, 4, 5, 10, 11, 12, 13, 14, 15, 19, 19, 6];
         }
 
         function tryGenerateStandardHand(counts, rng) {
-            rng = rng || Math.random;
-            const pair = Math.floor(rng() * TOTAL_TILE_TYPES);
-            counts[pair] += 2;
+            counts[Math.floor(rng() * TOTAL_TILE_TYPES)] += 2;
             for (let m = 0; m < 4; m++) {
-                if (rng() < 0.3) {
-                    let t;
-                    if (rng() < 0.5) {
-                        const suit = Math.floor(rng() * 3);
-                        const num = Math.floor(rng() * 7) + 1;
-                        t = suit * 9 + num;
-                    } else { t = Math.floor(rng() * TOTAL_TILE_TYPES); }
-                    counts[t] += 3;
-                } else {
-                    const suit = Math.floor(rng() * 3);
-                    const start = Math.floor(rng() * 7);
-                    const base = suit * 9 + start;
-                    counts[base]++; counts[base + 1]++; counts[base + 2]++;
-                }
+                if (rng() < 0.3) counts[rng() < 0.5 ? Math.floor(rng() * 3) * 9 + Math.floor(rng() * 7) + 1 : Math.floor(rng() * TOTAL_TILE_TYPES)] += 3;
+                else { const base = Math.floor(rng() * 3) * 9 + Math.floor(rng() * 7); counts[base]++; counts[base + 1]++; counts[base + 2]++; }
             }
             return counts.every(c => c <= 4);
         }
 
-        // ============================================================
-        //  役种判断
-        // ============================================================
         function checkHandValidity(counts, winningTile) {
             if (!counts.every(c => c <= 4)) return { valid: false, reason: '存在超过4张的同种牌' };
             if (isKokushiShape(counts)) return { valid: true };
@@ -1200,20 +957,6 @@
             return { valid: false, reason: '无法构成有效的和牌型' };
         }
 
-        function validateFinalHand(handArr, winningTile) {
-            const counts = new Array(TOTAL_TILE_TYPES).fill(0);
-            for (const t of handArr) counts[t]++;
-            return checkHandValidity(counts, winningTile).valid;
-        }
-
-        function validateFullHand(handArr) {
-            const counts = new Array(TOTAL_TILE_TYPES).fill(0);
-            for (const t of handArr) counts[t]++;
-            const result = checkHandValidity(counts, handArr[13]);
-            if (result.valid) return { valid: true, counts };
-            return result;
-        }
-
         function hasYakuForRon(counts, winningTile) {
             const yakuList = getAllYakuFromCounts(counts, winningTile);
             return yakuList.length > 0 && !(yakuList.length === 1 && yakuList[0] === '门清（无其他役）');
@@ -1221,498 +964,250 @@
 
         function getAllYakuFromCounts(counts, winningTile) {
             if (isKokushiShape(counts)) return ['国士无双'];
-            if (isSevenPairs(counts)) {
-                const yaku = ['七对子'];
-                if (isTanyao(counts)) yaku.push('断幺九');
-                if (isHonitsu(counts)) yaku.push('混一色');
-                if (isChinitsu(counts)) yaku.push('清一色');
-                return yaku;
-            }
-            const decompositions = findAllDecompositions(counts);
+            if (isSevenPairs(counts)) return ['七对子', ...(isTanyao(counts) ? ['断幺九'] : []), ...(isHonitsu(counts) ? ['混一色'] : []), ...(isChinitsu(counts) ? ['清一色'] : [])];
             let bestYaku = [];
-            for (const decomp of decompositions) {
+            findAllDecompositions(counts).forEach(decomp => {
                 const y = detectYakuFromDecomposition(counts, decomp, winningTile);
                 if (y.length > bestYaku.length) bestYaku = y;
+            });
+            return bestYaku.length ? bestYaku : (game.isTsumo ? ['门清自摸'] : ['门清（无其他役）']);
+        }
+
+        function detectYakuFromDecomposition(counts, decomp, winningTile) {
+            const yaku = [], { melds, pair } = decomp;
+            if (isChinitsu(counts)) yaku.push('清一色'); else if (isHonitsu(counts)) yaku.push('混一色');
+            if (isTanyao(counts)) yaku.push('断幺九');
+            if ([27 + game.selfWind, 27 + game.fieldWind, 31, 32, 33].some(i => counts[i] >= 3)) {
+                const p = [counts[27 + game.selfWind] >= 3 && '自风', counts[27 + game.fieldWind] >= 3 && '场风', counts[31] >= 3 && '白', counts[32] >= 3 && '发', counts[33] >= 3 && '中'].filter(Boolean);
+                yaku.push(`役牌(${p.join('/')})`);
             }
-            if (bestYaku.length === 0) {
-                if (game.isTsumo) return ['门清自摸'];
-                return ['门清（无其他役）'];
-            }
-            return bestYaku;
+            const sequences = melds.filter(m => m.type === 'sequence'), triplets = melds.filter(m => m.type === 'triplet');
+
+            if (sequences.length === 4 && ![27 + game.selfWind, 27 + game.fieldWind, 31, 32, 33].includes(pair) &&
+                sequences.some(s => {
+                    const tiles = [s.start, s.start + 1, s.start + 2];
+                    if (!tiles.includes(winningTile)) return false;
+                    const rem = tiles.filter(t => t !== winningTile);
+                    return rem.length === 2 && rem[1] - rem[0] === 1 && rem[0] % 9 !== 0 && rem[0] % 9 !== 7;
+                })) yaku.push('平和');
+
+            const sC = {}; sequences.forEach(s => sC[s.start] = (sC[s.start] || 0) + 1);
+            const vals = Object.values(sC);
+            if (sequences.length === 4 && (vals.filter(v => v >= 2).length >= 2 || vals.some(v => v >= 4))) yaku.push('二杯口');
+            else if (vals.some(v => v >= 2)) yaku.push('一杯口');
+
+            const suitS = [new Set(), new Set(), new Set()]; sequences.forEach(s => suitS[Math.floor(s.start / 9)].add(s.start % 9));
+            for (let i = 0; i < 9; i++) if (suitS[0].has(i) && suitS[1].has(i) && suitS[2].has(i)) { yaku.push('三色同顺'); break; }
+            for (let i = 0; i < 3; i++) if (suitS[i].has(0) && suitS[i].has(3) && suitS[i].has(6)) { yaku.push('一气通贯'); break; }
+
+            if (triplets.length === 4) yaku.push('对对和');
+            if (triplets.filter(t => game.isTsumo || t.tile !== winningTile).length >= 3) yaku.push('三暗刻');
+
+            if (melds.every(m => m.type === 'triplet' ? YAOCHU_INDICES.has(m.tile) : (m.start % 9 === 0 || m.start % 9 === 6)) && YAOCHU_INDICES.has(pair))
+                yaku.push(counts.slice(27).some(c => c > 0) ? '混全带幺九' : '纯全带幺九');
+
+            if (counts.every((c, i) => c === 0 || (YAOCHU_INDICES.has(i) && i < 27))) yaku.push('清老头');
+            else if (counts.every((c, i) => c === 0 || YAOCHU_INDICES.has(i))) yaku.push('混老头');
+
+            return yaku;
         }
 
         function findAllDecompositions(counts) {
-            const results = [];
-            const used = new Array(TOTAL_TILE_TYPES).fill(0);
+            const results = [], used = new Array(TOTAL_TILE_TYPES).fill(0);
             function backtrack(melds, pairIdx) {
-                if (melds.length === 4 && pairIdx !== -1) {
-                    results.push({ melds: [...melds], pair: pairIdx });
-                    return;
-                }
+                if (melds.length === 4 && pairIdx !== -1) return results.push({ melds: [...melds], pair: pairIdx });
                 if (pairIdx === -1) {
-                    for (let i = 0; i < TOTAL_TILE_TYPES; i++) {
-                        if (counts[i] - used[i] >= 2) {
-                            used[i] += 2; backtrack(melds, i); used[i] -= 2;
-                        }
-                    }
+                    for (let i = 0; i < TOTAL_TILE_TYPES; i++) if (counts[i] - used[i] >= 2) { used[i] += 2; backtrack(melds, i); used[i] -= 2; }
                 } else {
-                    for (let i = 0; i < TOTAL_TILE_TYPES; i++) {
-                        if (counts[i] - used[i] >= 3) {
-                            used[i] += 3; melds.push({ type: 'triplet', tile: i }); backtrack(melds, pairIdx); melds.pop(); used[i] -= 3;
-                        }
-                    }
-                    for (let suit = 0; suit < 3; suit++) {
-                        for (let num = 0; num < 7; num++) {
-                            const i = suit * 9 + num;
-                            if (counts[i] - used[i] > 0 && counts[i + 1] - used[i + 1] > 0 && counts[i + 2] - used[i + 2] > 0) {
-                                used[i]++; used[i + 1]++; used[i + 2]++;
-                                melds.push({ type: 'sequence', start: i }); backtrack(melds, pairIdx); melds.pop();
-                                used[i]--; used[i + 1]--; used[i + 2]--;
-                            }
+                    for (let i = 0; i < TOTAL_TILE_TYPES; i++) if (counts[i] - used[i] >= 3) { used[i] += 3; melds.push({ type: 'triplet', tile: i }); backtrack(melds, pairIdx); melds.pop(); used[i] -= 3; }
+                    for (let s = 0; s < 3; s++) for (let n = 0; n < 7; n++) {
+                        const i = s * 9 + n;
+                        if (counts[i] - used[i] > 0 && counts[i + 1] - used[i + 1] > 0 && counts[i + 2] - used[i + 2] > 0) {
+                            used[i]++; used[i + 1]++; used[i + 2]++;
+                            melds.push({ type: 'sequence', start: i }); backtrack(melds, pairIdx); melds.pop();
+                            used[i]--; used[i + 1]--; used[i + 2]--;
                         }
                     }
                 }
             }
             backtrack([], -1);
             const unique = new Map();
-            for (const res of results) {
-                const key = JSON.stringify({ melds: res.melds.map(m => m.type + (m.start !== undefined ? m.start : m.tile)).sort(), pair: res.pair });
-                if (!unique.has(key)) unique.set(key, res);
-            }
+            results.forEach(res => unique.set(JSON.stringify({ melds: res.melds.map(m => m.type + (m.start ?? m.tile)).sort(), pair: res.pair }), res));
             return [...unique.values()];
         }
 
-        function isRyanmenWaitInDecomp(sequences, winningTile) {
-            for (const seq of sequences) {
-                const start = seq.start;
-                const tiles = [start, start + 1, start + 2];
-                if (tiles.includes(winningTile)) {
-                    const remaining = tiles.filter(t => t !== winningTile);
-                    if (remaining.length !== 2) continue;
-                    const [a, b] = remaining.sort((x, y) => x - y);
-                    if (b - a === 1) { const num = a % 9; if (num === 0 || num === 7) return false; return true; }
-                    return false;
-                }
-            }
-            return false;
-        }
-
-        function detectYakuFromDecomposition(counts, decomp, winningTile) {
-            const yaku = [];
-            const melds = decomp.melds;
-            const pair = decomp.pair;
-            if (isChinitsu(counts)) yaku.push('清一色');
-            else if (isHonitsu(counts)) yaku.push('混一色');
-            if (isTanyao(counts)) yaku.push('断幺九');
-            if (hasYakuhaiKotsu(counts, game.fieldWind, game.selfWind)) {
-                const parts = [];
-                if (counts[27 + game.selfWind] >= 3) parts.push('自风');
-                if (counts[27 + game.fieldWind] >= 3) parts.push('场风');
-                if (counts[31] >= 3) parts.push('白');
-                if (counts[32] >= 3) parts.push('发');
-                if (counts[33] >= 3) parts.push('中');
-                yaku.push('役牌(' + parts.join('/') + ')');
-            }
-            const sequences = melds.filter(m => m.type === 'sequence');
-            const triplets = melds.filter(m => m.type === 'triplet');
-            if (sequences.length === 4) {
-                const yakuhaiSet = new Set([27 + game.selfWind, 27 + game.fieldWind, 31, 32, 33]);
-                if (!yakuhaiSet.has(pair)) {
-                    if (isRyanmenWaitInDecomp(sequences, winningTile)) yaku.push('平和');
-                }
-            }
-            const seqCounts = new Map();
-            for (const s of sequences) { const k = s.start; seqCounts.set(k, (seqCounts.get(k) || 0) + 1); }
-            let isDoubleIipeikou = false;
-            if (sequences.length === 4) {
-                const vals = [...seqCounts.values()];
-                if (vals.filter(v => v >= 2).length >= 2 || vals.some(v => v >= 4)) isDoubleIipeikou = true;
-            }
-            if (isDoubleIipeikou) yaku.push('二杯口');
-            else {
-                let hasIipeikou = false;
-                for (const cnt of seqCounts.values()) { if (cnt >= 2) { hasIipeikou = true; break; } }
-                if (hasIipeikou) yaku.push('一杯口');
-            }
-            const suitSeqStarts = [new Set(), new Set(), new Set()];
-            for (const s of sequences) { const suit = Math.floor(s.start / 9); const num = s.start % 9; suitSeqStarts[suit].add(num); }
-            for (let num = 0; num < 9; num++) { if (suitSeqStarts[0].has(num) && suitSeqStarts[1].has(num) && suitSeqStarts[2].has(num)) { yaku.push('三色同顺'); break; } }
-            for (let suit = 0; suit < 3; suit++) { const starts = suitSeqStarts[suit]; if (starts.has(0) && starts.has(3) && starts.has(6)) { yaku.push('一气通贯'); break; } }
-            if (triplets.length === 4) yaku.push('对对和');
-            let concealedTriplets = 0;
-            for (const t of triplets) { if (game.isTsumo || t.tile !== winningTile) concealedTriplets++; }
-            if (concealedTriplets >= 3) yaku.push('三暗刻');
-            let isMixedOutside = true;
-            for (const m of melds) {
-                if (m.type === 'triplet') { if (!YAOCHU_INDICES.has(m.tile)) { isMixedOutside = false; break; } }
-                else { if (m.start % 9 !== 0 && m.start % 9 !== 6) { isMixedOutside = false; break; } }
-            }
-            if (isMixedOutside && YAOCHU_INDICES.has(pair)) {
-                const hasJi = counts.slice(27).some(c => c > 0);
-                yaku.push(hasJi ? '混全带幺九' : '纯全带幺九');
-            }
-            if (counts.every((c, i) => c === 0 || (YAOCHU_INDICES.has(i) && i < 27))) yaku.push('清老头');
-            else if (counts.every((c, i) => c === 0 || YAOCHU_INDICES.has(i))) yaku.push('混老头');
-            return yaku;
-        }
-
-        function isKokushiShape(counts) {
-            return KOKUSHI_INDICES.every(idx => counts[idx] >= 1) &&
-                KOKUSHI_INDICES.reduce((s, idx) => s + counts[idx], 0) === 14;
-        }
-        function isSevenPairs(counts) {
-            let pc = 0;
-            for (let i = 0; i < TOTAL_TILE_TYPES; i++) {
-                if (counts[i] === 2) pc++; else if (counts[i] === 4) pc += 2; else if (counts[i] !== 0) return false;
-            }
-            return pc === 7;
-        }
-        function isTanyao(counts) {
-            for (let i = 0; i < TOTAL_TILE_TYPES; i++) if (counts[i] > 0 && YAOCHU_INDICES.has(i)) return false;
-            return true;
-        }
-        function hasYakuhaiKotsu(counts, fw, sw) {
-            if (counts[27 + sw] >= 3) return true;
-            if (counts[27 + fw] >= 3) return true;
-            for (const idx of YAKUHAI_TRIPLE) if (counts[idx] >= 3) return true;
-            return false;
-        }
-        function isHonitsu(counts) {
-            let suit = -1, hasJi = false;
-            for (let i = 0; i < TOTAL_TILE_TYPES; i++) {
-                if (counts[i] > 0) {
-                    if (i >= 27) hasJi = true;
-                    else { const s = Math.floor(i / 9); if (suit === -1) suit = s; else if (suit !== s) return false; }
-                }
-            }
-            return suit !== -1 && hasJi;
-        }
-        function isChinitsu(counts) {
-            let suit = -1;
-            for (let i = 0; i < 27; i++) { if (counts[i] > 0) { const s = Math.floor(i / 9); if (suit === -1) suit = s; else if (suit !== s) return false; } }
-            for (let i = 27; i < TOTAL_TILE_TYPES; i++) if (counts[i] > 0) return false;
-            return suit !== -1;
-        }
+        // 精简的役种校验器
+        const isKokushiShape = counts => KOKUSHI_INDICES.every(i => counts[i] >= 1) && KOKUSHI_INDICES.reduce((s, i) => s + counts[i], 0) === 14;
+        const isSevenPairs = counts => counts.filter(c => c === 2).length === 7;
+        const isTanyao = counts => counts.every((c, i) => c === 0 || !YAOCHU_INDICES.has(i));
+        function getSuitsAndJi(counts) { let suits = new Set(), hasJi = false; counts.forEach((c, i) => { if (c > 0) i >= 27 ? hasJi = true : suits.add(Math.floor(i / 9)); }); return { suits, hasJi }; }
+        const isHonitsu = counts => { const r = getSuitsAndJi(counts); return r.suits.size === 1 && r.hasJi; };
+        const isChinitsu = counts => { const r = getSuitsAndJi(counts); return r.suits.size === 1 && !r.hasJi; };
 
         // ============================================================
-        //  交互逻辑
+        // 用户交互
         // ============================================================
-        function addTile(tileIndex) {
+        function addTile(ti) {
             if (game.gameOver || game.currentGuess.length >= GUESS_LENGTH) return;
             game.pendingNumbers = [];
-            if (game.currentGuess.filter(x => x === tileIndex).length >= 4) {
-                showMessage('一种牌最多只能有4张哦～');
-                return;
-            }
-            game.currentGuess.push(tileIndex);
-            updateGrid();
+            if (game.currentGuess.filter(x => x === ti).length >= 4) return showMessage('一种牌最多只能有4张哦～');
+            game.currentGuess.push(ti); updateGrid();
         }
 
         function deleteTile() {
             if (game.gameOver) return;
-            if (game.pendingNumbers.length > 0) { game.pendingNumbers.pop(); updateGrid(); return; }
-            if (game.currentGuess.length === 0) return;
-            game.currentGuess.pop();
-            updateGrid();
-        }
-
-        function updateGrid() {
-            for (let i = 0; i < GUESS_LENGTH; i++) {
-                const cell = document.getElementById(`cell-${game.currentRow}-${i}`);
-                cell.innerText = '';
-                cell.className = 'cell';
-                cell.title = i === 13 ? '和牌（第14张）' : '';
-            }
-            for (let i = 0; i < game.currentGuess.length; i++) {
-                const cell = document.getElementById(`cell-${game.currentRow}-${i}`);
-                cell.innerText = TILES[game.currentGuess[i]];
-                cell.classList.add('filled');
-            }
-            for (let i = 0; i < game.pendingNumbers.length && game.currentGuess.length + i < GUESS_LENGTH; i++) {
-                const cell = document.getElementById(`cell-${game.currentRow}-${game.currentGuess.length + i}`);
-                cell.innerText = game.pendingNumbers[i];
-                cell.classList.add('pending-number');
-                cell.title = '等待输入花色（按 M/P/S/Z）';
-            }
-        }
-
-        function showMessage(msg, duration = 2000) {
-            const msgBox = document.getElementById('message');
-            msgBox.innerText = msg;
-            msgBox.classList.add('show-message');
-            clearTimeout(msgBox._timeout);
-            msgBox._timeout = setTimeout(() => msgBox.classList.remove('show-message'), duration);
+            game.pendingNumbers.length ? game.pendingNumbers.pop() : game.currentGuess.pop(); updateGrid();
         }
 
         function submitGuess() {
             if (game.gameOver) return;
-            if (game.pendingNumbers.length > 0) { game.pendingNumbers = []; updateGrid(); }
-            if (game.currentGuess.length < GUESS_LENGTH) {
-                showMessage(`牌数不足14张（当前${game.currentGuess.length}张）`);
-                return;
-            }
-            const vr = validateFullHand(game.currentGuess);
-            if (!vr.valid) { showMessage(vr.reason || '非有效和牌型'); return; }
+            if (game.pendingNumbers.length) { game.pendingNumbers = []; updateGrid(); }
+            if (game.currentGuess.length < GUESS_LENGTH) return showMessage(`牌数不足14张（当前${game.currentGuess.length}张）`);
 
-            const sortedGuess = sortGuessLikeTarget(game.currentGuess);
-            const targetCopy = [...game.targetHand];
-            const guessCopy = [...sortedGuess];
+            const counts = getCounts(game.currentGuess);
+            const vr = checkHandValidity(counts, game.currentGuess[13]);
+            if (!vr.valid) return showMessage(vr.reason || '非有效和牌型');
+
+            const guessCopy = sortGuessLikeTarget(game.currentGuess), targetCopy = [...game.targetHand];
             const cellColors = new Array(GUESS_LENGTH).fill('absent');
 
-            for (let i = 0; i < GUESS_LENGTH; i++) {
-                if (guessCopy[i] === targetCopy[i]) { cellColors[i] = 'correct'; targetCopy[i] = -1; guessCopy[i] = -2; }
-            }
-            for (let i = 0; i < GUESS_LENGTH; i++) {
-                if (guessCopy[i] >= 0) {
-                    const fi = targetCopy.indexOf(guessCopy[i]);
-                    if (fi !== -1) { cellColors[i] = 'present'; targetCopy[fi] = -1; }
-                }
-            }
+            guessCopy.forEach((ti, i) => { if (ti === targetCopy[i]) { cellColors[i] = 'correct'; targetCopy[i] = -1; guessCopy[i] = -2; } });
+            guessCopy.forEach((ti, i) => { if (ti >= 0) { const fi = targetCopy.indexOf(ti); if (fi !== -1) { cellColors[i] = 'present'; targetCopy[fi] = -1; } } });
 
-            // 记录用于分享
-            const rowRecord = sortedGuess.map((tile, i) => ({ tile, color: cellColors[i] }));
-            game.guessHistory.push(rowRecord);
+            const finalGuess = sortGuessLikeTarget(game.currentGuess);
+            game.guessHistory.push(finalGuess.map((tile, i) => ({ tile, color: cellColors[i] })));
 
-            // 渲染（带翻转动画）
             let allCorrect = true;
-            for (let i = 0; i < GUESS_LENGTH; i++) {
+            finalGuess.forEach((ti, i) => {
                 const cell = document.getElementById(`cell-${game.currentRow}-${i}`);
-                cell.innerText = TILES[sortedGuess[i]];
-                cell.className = `cell flip ${cellColors[i]}`;
+                cell.innerText = TILES[ti]; cell.className = `cell flip ${cellColors[i]}`;
                 if (cellColors[i] !== 'correct') allCorrect = false;
-            }
+            });
 
-            updateKeyboardColors(sortedGuess, cellColors);
+            updateKeyboardColors(finalGuess, cellColors);
 
             if (allCorrect) {
-                const yakuList = getAllYakuFromCounts(vr.counts, sortedGuess[13]);
-                showMessage(`🎉 恭喜！你猜对了！\n役种：${yakuList.join(' · ')}`, 4000);
-                game.gameOver = true;
-                game.gameWon = true;
-                highlightKeyboardAllCorrect();
+                showMessage(`🎉 恭喜！你猜对了！\n役种：${getAllYakuFromCounts(counts, finalGuess[13]).join(' · ')}`, 4000);
+                game.gameOver = game.gameWon = true;
+                game.targetHand.forEach(ti => game.keyColors[ti] = 'correct'); applyKeyColors();
                 if (game.mode === 'daily') addStat(true, game.currentRow + 1);
-                setTimeout(() => openModal('stats'), 2000);
-                return;
+                setTimeout(() => openModal('stats'), 2000); return;
             }
 
-            game.currentRow++;
-            game.currentGuess = [];
-
+            game.currentRow++; game.currentGuess = [];
             if (game.currentRow >= MAX_ROWS) {
-                const answerStr = game.targetHand.map(i => TILES[i]).join(' ');
-                showMessage(`😢 游戏结束\n答案是: ${answerStr}`, 6000);
+                showMessage(`😢 游戏结束\n答案是: ${game.targetHand.map(i => TILES[i]).join(' ')}`, 6000);
                 game.gameOver = true;
                 if (game.mode === 'daily') addStat(false, 0);
                 setTimeout(() => openModal('stats'), 2000);
             }
         }
 
-        function sortGuessLikeTarget(guess) {
-            const first13 = guess.slice(0, 13);
-            const lastTile = guess[13];
-            first13.sort((a, b) => a - b);
-            return [...first13, lastTile];
-        }
-
-        function updateKeyboardColors(guess, colors) {
-            for (let i = 0; i < GUESS_LENGTH; i++) {
-                const ti = guess[i], c = colors[i];
-                if (c === 'correct') game.keyColors[ti] = 'correct';
-                else if (c === 'present' && game.keyColors[ti] !== 'correct') game.keyColors[ti] = 'present';
-                else if (c === 'absent' && game.keyColors[ti] !== 'correct' && game.keyColors[ti] !== 'present') game.keyColors[ti] = 'absent';
-            }
-            applyKeyColors();
-        }
-
-        function highlightKeyboardAllCorrect() {
-            for (const ti of game.targetHand) game.keyColors[ti] = 'correct';
-            applyKeyColors();
-        }
-
-        function applyKeyColors() {
-            for (let i = 0; i < TOTAL_TILE_TYPES; i++) {
-                const btn = document.getElementById(`key-${i}`);
-                if (!btn) continue;
-                btn.classList.remove('key-correct', 'key-present', 'key-absent');
-                if (game.keyColors[i] === 'correct') btn.classList.add('key-correct');
-                else if (game.keyColors[i] === 'present') btn.classList.add('key-present');
-                else if (game.keyColors[i] === 'absent') btn.classList.add('key-absent');
-            }
-        }
-
         function showHint() {
             if (game.gameOver) return;
-            const counts = new Array(TOTAL_TILE_TYPES).fill(0);
-            for (const idx of game.targetHand) counts[idx]++;
-            const winningTile = game.targetHand[13];
-            const yakuList = getAllYakuFromCounts(counts, winningTile);
-            let hint = '💡 答案役种提示：\n';
-            hint += `场风: ${WIND_NAMES[game.fieldWind]}  自风: ${WIND_NAMES[game.selfWind]}\n`;
-            hint += `和牌: ${game.isTsumo ? '自摸' : '荣和'}\n`;
-            hint += `役种: ${yakuList.length > 0 ? yakuList.join(' · ') : '无役（仅限自摸）'}`;
-            showMessage(hint, 6000);
+            const yakuList = getAllYakuFromCounts(getCounts(game.targetHand), game.targetHand[13]);
+            showMessage(`💡 答案役种提示：\n场风: ${WIND_NAMES[game.fieldWind]}  自风: ${WIND_NAMES[game.selfWind]}\n和牌: ${game.isTsumo ? '自摸' : '荣和'}\n役种: ${yakuList.length ? yakuList.join(' · ') : '无役（仅限自摸）'}`, 6000);
         }
 
         // ============================================================
-        //  新游戏 / 初始化
+        // 游戏流转控制
         // ============================================================
         function newGame() {
-            document.getElementById('btn-new-game').style.display = (game.mode === 'practice') ? '' : 'none';
-            game.targetHand = [];
-            game.currentGuess = [];
-            game.pendingNumbers = [];
-            game.currentRow = 0;
-            game.gameOver = false;
-            game.gameWon = false;
-            game.keyColors = new Array(TOTAL_TILE_TYPES).fill('');
-            game.guessHistory = [];
+            document.getElementById('btn-new-game').style.display = game.mode === 'practice' ? '' : 'none';
+            Object.assign(game, { targetHand: [], currentGuess: [], pendingNumbers: [], currentRow: 0, gameOver: false, gameWon: false, keyColors: new Array(TOTAL_TILE_TYPES).fill(''), guessHistory: [] });
 
             if (game.mode === 'daily') {
-                const { seed, dateStr } = getTodaySeed();
-                game.dailyDate = dateStr;
+                const { seed, dateStr } = getTodaySeed(); game.dailyDate = dateStr;
                 const rng = mulberry32(seed);
-                game.fieldWind = Math.floor(rng() * 4);
-                game.selfWind = Math.floor(rng() * 4);
-                game.isTsumo = rng() < 0.5;
+                game.fieldWind = Math.floor(rng() * 4); game.selfWind = Math.floor(rng() * 4); game.isTsumo = rng() < 0.5;
                 generateTargetHand(rng);
 
-                // 检查今日是否已玩过
                 const saved = LS.get('mw_daily_' + dateStr, null);
-                if (saved && saved.gameOver) {
-                    // 恢复已完成的局
-                    game.guessHistory = saved.guessHistory || [];
-                    game.currentRow = game.guessHistory.length;
-                    game.gameOver = true;
-                    game.gameWon = saved.gameWon;
-                    // 恢复棋盘和键盘颜色
-                    restoreGame();
-                } else if (saved && saved.guessHistory && saved.guessHistory.length > 0) {
-                    // 恢复未完成的局
-                    game.guessHistory = saved.guessHistory || [];
-                    game.currentRow = game.guessHistory.length;
-                    // 重放历史
-                    for (const row of game.guessHistory) {
-                        for (const cell of row) {
-                            const c = cell.color;
-                            if (c === 'correct') game.keyColors[cell.tile] = 'correct';
-                            else if (c === 'present' && game.keyColors[cell.tile] !== 'correct') game.keyColors[cell.tile] = 'present';
-                            else if (c === 'absent' && game.keyColors[cell.tile] !== 'correct' && game.keyColors[cell.tile] !== 'present') game.keyColors[cell.tile] = 'absent';
-                        }
-                    }
+                if (saved && saved.guessHistory) {
+                    game.guessHistory = saved.guessHistory; game.currentRow = game.guessHistory.length;
+                    if (saved.gameOver) { game.gameOver = true; game.gameWon = saved.gameWon; }
+                    const rank = { '': 0, 'absent': 1, 'present': 2, 'correct': 3 };
+                    game.guessHistory.forEach(row => row.forEach(c => { if (rank[c.color] > rank[game.keyColors[c.tile] || '']) game.keyColors[c.tile] = c.color; }));
                 }
             } else {
-                game.fieldWind = Math.floor(Math.random() * 4);
-                game.selfWind = Math.floor(Math.random() * 4);
-                game.isTsumo = Math.random() < 0.5;
+                game.fieldWind = Math.floor(Math.random() * 4); game.selfWind = Math.floor(Math.random() * 4); game.isTsumo = Math.random() < 0.5;
                 generateTargetHand(Math.random);
             }
 
-            updateGameInfoDisplay();
-            createBoard();
-            createKeyboard();
-            renderBoardFromHistory();
-            applyKeyColors();
-            closeModal('stats');
-            closeModal('info');
-        }
-
-        function renderBoardFromHistory() {
-            for (let r = 0; r < game.guessHistory.length; r++) {
-                const row = game.guessHistory[r];
-                for (let i = 0; i < GUESS_LENGTH; i++) {
-                    const cell = document.getElementById(`cell-${r}-${i}`);
-                    if (!cell) continue;
-                    cell.innerText = TILES[row[i].tile];
-                    cell.className = `cell ${row[i].color}`;
-                }
-            }
-        }
-
-        function restoreGame() {
-            renderBoardFromHistory();
-        }
-
-        function saveDailyProgress() {
-            if (game.mode !== 'daily') return;
-            LS.set('mw_daily_' + game.dailyDate, {
-                guessHistory: game.guessHistory,
-                gameOver: game.gameOver,
-                gameWon: game.gameWon,
-            });
-        }
-
-        function updateGameInfoDisplay() {
             document.getElementById('field-wind-display').innerHTML = TILES[27 + game.fieldWind] + ' ' + WIND_NAMES[game.fieldWind];
             document.getElementById('self-wind-display').innerHTML = TILES[27 + game.selfWind] + ' ' + WIND_NAMES[game.selfWind];
             document.getElementById('win-method-display').innerHTML = game.isTsumo ? '🚀 自摸' : '🎯 荣和';
+            createBoard(); createKeyboard(); renderBoardFromHistory(); applyKeyColors(); closeModal('stats'); closeModal('info');
         }
 
         // ============================================================
-        //  物理键盘
+        // 物理键盘监听
         // ============================================================
-        document.addEventListener('keydown', (e) => {
-            if (game.gameOver) {
-                if (e.key === 'Enter') {
-                    closeModal('stats');
-                    return;
-                }
-                return;
-            }
-            const key = e.key;
-            const lk = key.toLowerCase();
-
-            if (key === 'Backspace' || key === 'Delete') { e.preventDefault(); deleteTile(); return; }
-            if (key === 'Enter') { e.preventDefault(); submitGuess(); saveDailyProgress(); return; }
-
-            if (/^[1-9]$/.test(key)) {
+        document.addEventListener('keydown', e => {
+            if (game.gameOver) return e.key === 'Enter' && closeModal('stats');
+            const k = e.key.toLowerCase();
+            if (k === 'backspace' || k === 'delete') { e.preventDefault(); deleteTile(); }
+            else if (k === 'enter') { e.preventDefault(); submitGuess(); if (game.mode === 'daily') LS.set('mw_daily_' + game.dailyDate, { guessHistory: game.guessHistory, gameOver: game.gameOver, gameWon: game.gameWon }); }
+            else if (/^[1-9]$/.test(k)) {
                 e.preventDefault();
-                if (game.currentGuess.length + game.pendingNumbers.length >= GUESS_LENGTH) return;
-                game.pendingNumbers.push(parseInt(key, 10));
-                updateGrid();
-                return;
-            }
-            if (key === '0') { e.preventDefault(); return; }
-
-            if (['m', 'p', 's', 'z'].includes(lk)) {
+                if (game.currentGuess.length + game.pendingNumbers.length < GUESS_LENGTH) { game.pendingNumbers.push(+k); updateGrid(); }
+            } else if (['m', 'p', 's', 'z'].includes(k) && game.pendingNumbers.length > 0) {
                 e.preventDefault();
-                if (game.pendingNumbers.length === 0) return;
-                if (game.currentGuess.length + game.pendingNumbers.length > GUESS_LENGTH) {
-                    game.pendingNumbers = []; updateGrid(); return;
-                }
-                const tileIndices = [];
-                for (const num of game.pendingNumbers) {
-                    const ti = handleCodeInput(num, lk);
-                    if (ti === -1) {
-                        updateGrid();
-                        showMessage(lk === 'z' ? `无效的字牌代码：${num}z（字牌只有1z~7z）` : `无效的牌代码：${num}${lk}`);
-                        return;
-                    }
-                    tileIndices.push(ti);
-                }
-                const tempCounts = {};
-                game.currentGuess.forEach(x => { tempCounts[x] = (tempCounts[x] || 0) + 1; });
-                for (const ti of tileIndices) {
-                    tempCounts[ti] = (tempCounts[ti] || 0) + 1;
-                    if (tempCounts[ti] > 4) {
-                        updateGrid();
-                        showMessage('一种牌最多只能有4张哦～');
-                        return;
-                    }
-                }
-                for (const ti of tileIndices) game.currentGuess.push(ti);
-                game.pendingNumbers = [];
-                updateGrid();
-                return;
+                if (game.currentGuess.length + game.pendingNumbers.length > GUESS_LENGTH) { game.pendingNumbers = []; return updateGrid(); }
+                const indices = game.pendingNumbers.map(n => {
+                    const base = { m: 0, p: 9, s: 18, z: 27 }[k], max = k === 'z' ? 7 : 9;
+                    return (base !== undefined && n >= 1 && n <= max) ? base + n - 1 : -1;
+                });
+                if (indices.includes(-1)) return showMessage(`无效代码: ${game.pendingNumbers[indices.indexOf(-1)]}${k}`), updateGrid();
+                const tmpCounts = getCounts(game.currentGuess);
+                for (let ti of indices) if (++tmpCounts[ti] > 4) return showMessage('一种牌最多只能有4张哦～'), updateGrid();
+                game.currentGuess.push(...indices); game.pendingNumbers = []; updateGrid();
             }
         });
 
         // ============================================================
-        //  启动
+        // 统计与分享逻辑
         // ============================================================
-        loadTheme();
-        newGame();
-        setInterval(updateCountdown, 1000);
-        updateCountdown();
+        const getStats = () => LS.get('mw_stats', { played: 0, wins: 0, currentStreak: 0, maxStreak: 0, dist: [0, 0, 0, 0, 0, 0] });
+        function addStat(won, tries) {
+            const stats = getStats(); stats.played++;
+            if (won) { stats.wins++; stats.maxStreak = Math.max(stats.maxStreak, ++stats.currentStreak); if (tries >= 1 && tries <= 6) stats.dist[tries - 1]++; }
+            else stats.currentStreak = 0;
+            LS.set('mw_stats', stats);
+        }
+
+        function renderStats() {
+            if (game.mode === 'practice') {
+                document.getElementById('stats-content').style.display = 'none'; document.getElementById('practice-stats').style.display = 'block';
+                document.getElementById('practice-tries').innerText = game.guessHistory.length; document.getElementById('stats-title').innerText = '♾️ 练习模式'; return;
+            }
+            document.getElementById('stats-content').style.display = 'block'; document.getElementById('practice-stats').style.display = 'none'; document.getElementById('stats-title').innerText = '📊 每日统计';
+            const stats = getStats();
+            document.getElementById('stat-played').innerText = stats.played; document.getElementById('stat-winrate').innerText = stats.played ? Math.round(stats.wins / stats.played * 100) : 0;
+            document.getElementById('stat-streak').innerText = stats.currentStreak; document.getElementById('stat-maxstreak').innerText = stats.maxStreak;
+            const container = document.getElementById('dist-container'), maxDist = Math.max(...stats.dist, 1);
+            container.innerHTML = stats.dist.map((d, i) => `<div class="dist-row"><div class="guess-num">${i + 1}</div><div class="dist-bar ${game.gameWon && game.currentRow === i + 1 ? 'green' : 'gray'}" style="width: ${Math.max(8, d / maxDist * 100)}%">${d}</div></div>`).join('');
+        }
+
+        function shareResult() {
+            if (game.mode !== 'daily') return showMessage('练习模式无法分享');
+            if (!game.guessHistory.length) return showMessage('还没有完成的局');
+            const emoji = { correct: '🟩', present: '🟨', absent: '⬜' };
+            const text = `立直麻将Wordle ${game.dailyDate} ${game.gameWon ? game.guessHistory.length : 'X'}/${MAX_ROWS}\n${location.origin}${location.pathname}\n\n` +
+                game.guessHistory.map(row => row.map((c, i) => emoji[c.color] + (i === 12 ? ' ' : '')).join('')).join('\n');
+            navigator.clipboard.writeText(text).then(() => showMessage('已复制到剪贴板！')).catch(() => showMessage(text, 5000));
+        }
+
+        function updateCountdown() {
+            if (game.mode !== 'daily') return document.getElementById('countdown').innerText = '';
+            const now = new Date(), diff = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1) - now;
+            const pad = n => String(Math.floor(n)).padStart(2, '0');
+            document.getElementById('countdown').innerText = `下期题目\n⏰ ${pad(diff / 3600000)}:${pad(diff % 3600000 / 60000)}:${pad(diff % 60000 / 1000)}`;
+        }
+
+        // 初始化
+        game.theme = LS.get('mw_theme', 'dark'); document.body.setAttribute('data-theme', game.theme); document.getElementById('theme-btn').innerText = game.theme === 'dark' ? '☀️' : '🌙';
+        newGame(); setInterval(updateCountdown, 1000); updateCountdown();
     </script>
 </body>
 
