@@ -1095,7 +1095,10 @@
                 showMessage(`🎉 恭喜！你猜对了！\n役种：${getAllYakuFromCounts(counts, finalGuess[13]).join(' · ')}`, 4000);
                 game.gameOver = game.gameWon = true;
                 game.targetHand.forEach(ti => game.keyColors[ti] = 'correct'); applyKeyColors();
-                if (game.mode === 'daily') addStat(true, game.currentRow + 1);
+                if (game.mode === 'daily') {
+                    addStat(true, game.currentRow + 1);
+                    LS.set('mw_daily_' + game.dailyDate, { guessHistory: game.guessHistory, gameOver: game.gameOver, gameWon: game.gameWon });
+                }
                 setTimeout(() => openModal('stats'), 2000); return;
             }
 
@@ -1103,7 +1106,10 @@
             if (game.currentRow >= MAX_ROWS) {
                 showMessage(`😢 游戏结束\n答案是: ${game.targetHand.map(i => TILES[i]).join(' ')}`, 6000);
                 game.gameOver = true;
-                if (game.mode === 'daily') addStat(false, 0);
+                if (game.mode === 'daily') {
+                    addStat(false, 0);
+                    LS.set('mw_daily_' + game.dailyDate, { guessHistory: game.guessHistory, gameOver: game.gameOver, gameWon: game.gameWon });
+                }
                 setTimeout(() => openModal('stats'), 2000);
             }
         }
@@ -1152,7 +1158,7 @@
             if (game.gameOver) return e.key === 'Enter' && closeModal('stats');
             const k = e.key.toLowerCase();
             if (k === 'backspace' || k === 'delete') { e.preventDefault(); deleteTile(); }
-            else if (k === 'enter') { e.preventDefault(); submitGuess(); if (game.mode === 'daily') LS.set('mw_daily_' + game.dailyDate, { guessHistory: game.guessHistory, gameOver: game.gameOver, gameWon: game.gameWon }); }
+            else if (k === 'enter') { e.preventDefault(); submitGuess(); }
             else if (/^[1-9]$/.test(k)) {
                 e.preventDefault();
                 if (game.currentGuess.length + game.pendingNumbers.length < GUESS_LENGTH) { game.pendingNumbers.push(+k); updateGrid(); }
