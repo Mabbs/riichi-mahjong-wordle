@@ -6,6 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>立直麻将 Wordle</title>
     <style>
+        @font-face {
+            font-family: 'Riichi Mahjong Colorful';
+            src: url('Riichi-Mahjong-Colorful.woff2');
+        }
+
         :root {
             --green: #538d4e;
             --yellow: #b59f3b;
@@ -19,7 +24,7 @@
             --panel-bg: #1e1e1e;
             --panel-border: #444;
             --accent: #e6c34a;
-            --emoji-font: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", "Noto Emoji", sans-serif;
+            --emoji-font: "Riichi Mahjong Colorful", "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", "Noto Emoji", sans-serif;
         }
 
         [data-theme="light"] {
@@ -202,7 +207,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 34px;
+            font-size: 40px;
             font-family: var(--emoji-font);
             user-select: none;
             transition: background-color 0.15s, border-color 0.15s, transform 0.2s;
@@ -297,12 +302,12 @@
         }
 
         .key {
-            padding: 7px 9px;
+            padding: 5px 9px;
             border-radius: 5px;
             background-color: var(--light-gray);
             border: none;
             color: white;
-            font-size: 24px;
+            font-size: 30px;
             font-family: var(--emoji-font);
             cursor: pointer;
             user-select: none;
@@ -599,7 +604,7 @@
             .cell {
                 width: 22px;
                 height: 32px;
-                font-size: 18px;
+                font-size: 22px;
                 border-width: 1.5px;
                 border-radius: 3px;
             }
