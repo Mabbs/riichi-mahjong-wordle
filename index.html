@@ -1124,7 +1124,7 @@
             if (game.mode === 'daily') {
                 const { seed, dateStr } = getTodaySeed(); game.dailyDate = dateStr;
                 const rng = mulberry32(seed);
-                game.fieldWind = Math.floor(rng() * 4); game.selfWind = Math.floor(rng() * 4); game.isTsumo = rng() < 0.5;
+                game.fieldWind = Math.floor(rng() * 2); game.selfWind = Math.floor(rng() * 4); game.isTsumo = rng() < 0.5;
                 generateTargetHand(rng);
 
                 const saved = LS.get('mw_daily_' + dateStr, null);
@@ -1135,7 +1135,7 @@
                     game.guessHistory.forEach(row => row.forEach(c => { if (rank[c.color] > rank[game.keyColors[c.tile] || '']) game.keyColors[c.tile] = c.color; }));
                 }
             } else {
-                game.fieldWind = Math.floor(Math.random() * 4); game.selfWind = Math.floor(Math.random() * 4); game.isTsumo = Math.random() < 0.5;
+                game.fieldWind = Math.floor(Math.random() * 2); game.selfWind = Math.floor(Math.random() * 4); game.isTsumo = Math.random() < 0.5;
                 generateTargetHand(Math.random);
             }
 
