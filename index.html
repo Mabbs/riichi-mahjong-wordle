@@ -186,6 +186,16 @@
             font-weight: bold;
         }
 
+        /* 困难模式提示框样式 */
+        #hard-mode-info {
+            display: none;
+            color: var(--accent);
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+
         #board {
             display: grid;
             grid-template-rows: repeat(6, 1fr);
@@ -601,6 +611,11 @@
         }
 
         @media (max-width: 580px) {
+            .mode-btn {
+                padding: 6px 10px;
+                font-size: 12px;
+            }
+
             .cell {
                 width: 22px;
                 height: 32px;
@@ -689,6 +704,7 @@
     <div class="mode-switch">
         <button class="mode-btn active" id="mode-daily" onclick="switchMode('daily')">📅 每日挑战</button>
         <button class="mode-btn" id="mode-practice" onclick="switchMode('practice')">♾️ 无限练习</button>
+        <button class="mode-btn" id="mode-hard" onclick="switchMode('hard')">🔥 困难模式</button>
     </div>
 
     <div class="subtitle">
@@ -707,6 +723,8 @@
         · 和牌方式：<span id="win-method-display"></span>
     </div>
 
+    <div id="hard-mode-info"></div>
+
     <div id="board"></div>
 
     <div id="keyboard">
@@ -717,7 +735,7 @@
         <div class="key-row" style="margin-top:4px;">
             <button class="key action" onclick="deleteTile()">⌫ 删除</button>
             <button class="key action submit-btn" onclick="submitGuess()">✓ 提交</button>
-            <button class="key action hint-btn" onclick="showHint()">💡 提示</button>
+            <button class="key action hint-btn" id="btn-hint" onclick="showHint()">💡 提示</button>
             <button class="key action refresh-btn" id="btn-new-game" onclick="newGame()">🔄 新局</button>
         </div>
     </div>
@@ -742,7 +760,9 @@
                     也可以直接点击屏幕键盘上的牌</p>
                 <p><b>模式：</b><br>
                     📅 每日挑战 — 全球同一题，可分享成绩<br>
-                    ♾️ 无限练习 — 随机出题，不计入统计</p>
+                    ♾️ 无限练习 — 随机出题，不计入统计<br>
+                    🔥 困难模式 — 无限练习进阶版，猜测时必须包含目标的所有役种（如果是门清自摸则不得包含其他役种）
+                </p>
             </div>
         </div>
     </div>
@@ -797,7 +817,7 @@
         const game = {
             mode: 'daily', targetHand: [], currentGuess: [], pendingNumbers: [],
             currentRow: 0, gameOver: false, gameWon: false, keyColors: new Array(TOTAL_TILE_TYPES).fill(''),
-            fieldWind: 0, selfWind: 0, isTsumo: true, guessHistory: [], theme: 'dark', dailyDate: '',
+            fieldWind: 0, selfWind: 0, isTsumo: true, guessHistory: [], theme: 'dark', dailyDate: '', targetYaku: []
         };
 
         const LS = {
@@ -842,6 +862,7 @@
             game.mode = mode;
             document.getElementById('mode-daily').classList.toggle('active', mode === 'daily');
             document.getElementById('mode-practice').classList.toggle('active', mode === 'practice');
+            document.getElementById('mode-hard').classList.toggle('active', mode === 'hard');
             newGame();
         }
 
@@ -1073,6 +1094,15 @@
             const vr = checkHandValidity(counts, game.currentGuess[13]);
             if (!vr.valid) return showMessage(vr.reason || '非有效和牌型');
 
+            // 困难模式校验：必须包含目标的所有役种
+            if (game.mode === 'hard') {
+                const guessYaku = getAllYakuFromCounts(counts, game.currentGuess[13]);
+                const missing = game.targetYaku.filter(y => !guessYaku.includes(y));
+                if (missing.length > 0) {
+                    return showMessage(`困难模式：猜测必须包含目标的所有役种\n缺失：${missing.join(' · ')}`, 3000);
+                }
+            }
+
             const guessCopy = sortGuessLikeTarget(game.currentGuess), targetCopy = [...game.targetHand];
             const cellColors = new Array(GUESS_LENGTH).fill('absent');
 
@@ -1124,8 +1154,9 @@
         // 游戏流转控制
         // ============================================================
         function newGame() {
-            document.getElementById('btn-new-game').style.display = game.mode === 'practice' ? '' : 'none';
-            Object.assign(game, { targetHand: [], currentGuess: [], pendingNumbers: [], currentRow: 0, gameOver: false, gameWon: false, keyColors: new Array(TOTAL_TILE_TYPES).fill(''), guessHistory: [] });
+            document.getElementById('btn-new-game').style.display = (game.mode === 'daily') ? 'none' : '';
+            document.getElementById('btn-hint').style.display = (game.mode === 'hard') ? 'none' : '';
+            Object.assign(game, { targetHand: [], currentGuess: [], pendingNumbers: [], currentRow: 0, gameOver: false, gameWon: false, keyColors: new Array(TOTAL_TILE_TYPES).fill(''), guessHistory: [], targetYaku: [] });
 
             if (game.mode === 'daily') {
                 const { seed, dateStr } = getTodaySeed(); game.dailyDate = dateStr;
@@ -1143,6 +1174,16 @@
             } else {
                 game.fieldWind = Math.floor(Math.random() * 2); game.selfWind = Math.floor(Math.random() * 4); game.isTsumo = Math.random() < 0.5;
                 generateTargetHand(Math.random);
+            }
+
+            // 计算目标役种并展示
+            game.targetYaku = getAllYakuFromCounts(getCounts(game.targetHand), game.targetHand[13]);
+            const hardInfo = document.getElementById('hard-mode-info');
+            if (game.mode === 'hard') {
+                hardInfo.style.display = 'block';
+                hardInfo.innerText = '🎯 目标役种：' + (game.targetYaku.length ? game.targetYaku.join(' · ') : '无役');
+            } else {
+                hardInfo.style.display = 'none';
             }
 
             document.getElementById('field-wind-display').innerHTML = TILES[27 + game.fieldWind] + ' ' + WIND_NAMES[game.fieldWind];
@@ -1188,9 +1229,11 @@
         }
 
         function renderStats() {
-            if (game.mode === 'practice') {
+            if (game.mode === 'practice' || game.mode === 'hard') {
                 document.getElementById('stats-content').style.display = 'none'; document.getElementById('practice-stats').style.display = 'block';
-                document.getElementById('practice-tries').innerText = game.guessHistory.length; document.getElementById('stats-title').innerText = '♾️ 练习模式'; return;
+                document.getElementById('practice-tries').innerText = game.guessHistory.length;
+                document.getElementById('stats-title').innerText = game.mode === 'hard' ? '🔥 困难练习' : '♾️ 练习模式';
+                return;
             }
             document.getElementById('stats-content').style.display = 'block'; document.getElementById('practice-stats').style.display = 'none'; document.getElementById('stats-title').innerText = '📊 每日统计';
             const stats = getStats();
