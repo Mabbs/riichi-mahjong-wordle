@@ -186,7 +186,6 @@
             font-weight: bold;
         }
 
-        /* 困难模式提示框样式 */
         #hard-mode-info {
             display: none;
             color: var(--accent);
@@ -826,7 +825,7 @@
             set: (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch { } }
         };
 
-        // 核心辅助方法（精简循环和数据组装）
+        // 核心辅助方法
         const getCounts = arr => arr.reduce((acc, val) => { acc[val]++; return acc; }, new Array(TOTAL_TILE_TYPES).fill(0));
         const getTileName = i => i < 27 ? `${(i % 9) + 1}${['万', '筒', '索'][Math.floor(i / 9)]}` : WIND_NAMES.concat(['白', '发', '中'])[i - 27];
         const sortGuessLikeTarget = guess => [...guess.slice(0, 13).sort((a, b) => a - b), guess[13]];
@@ -990,51 +989,112 @@
         }
 
         function getAllYakuFromCounts(counts, winningTile) {
-            if (isKokushiShape(counts)) return ['国士无双'];
-            if (isSevenPairs(counts)) return ['七对子', ...(isTanyao(counts) ? ['断幺九'] : []), ...(isHonitsu(counts) ? ['混一色'] : []), ...(isChinitsu(counts) ? ['清一色'] : [])];
-            let bestYaku = [];
-            findAllDecompositions(counts).forEach(decomp => {
-                const y = detectYakuFromDecomposition(counts, decomp, winningTile);
-                if (y.length > bestYaku.length) bestYaku = y;
-            });
-            return bestYaku.length ? bestYaku : (game.isTsumo ? ['门清自摸'] : ['门清（无其他役）']);
+            if (isKokushiShape(counts)) return [counts[winningTile] === 2 ? '国士无双十三面' : '国士无双'];
+
+            const bestYaku = findAllDecompositions(counts)
+                .map(decomp => detectYakuFromDecomposition(counts, decomp, winningTile))
+                .reduce((best, curr) => curr.length > best.length ? curr : best, []);
+
+            // === 役满覆盖机制 ===
+            const yakumanList = ['四暗刻单骑', '四暗刻', '大三元', '大四喜', '小四喜', '字一色', '清老头', '绿一色', '九莲宝灯', '纯正九莲宝灯'];
+            const foundYakuman = bestYaku.filter(y => yakumanList.includes(y));
+
+            // 如果找到了役满，则只返回役满，丢弃所有普通役
+            if (foundYakuman.length) return foundYakuman;
+            if (bestYaku.length) return bestYaku;
+
+            if (isSevenPairs(counts)) {
+                const isAllYaochu = counts.every((c, i) => c === 0 || YAOCHU_INDICES.has(i));
+                let qdYaku = ['七对子'];
+
+                if (counts.every((c, i) => c === 0 || i >= 27)) return ['字一色'];
+                else if (isAllYaochu) qdYaku.push('混老头');
+                else if (isTanyao(counts)) qdYaku.push('断幺九');
+
+                if (isChinitsu(counts)) qdYaku.push('清一色');
+                else if (isHonitsu(counts)) qdYaku.push('混一色');
+
+                return qdYaku;
+            }
+
+            return [game.isTsumo ? '门清自摸' : '门清（无其他役）'];
         }
 
         function detectYakuFromDecomposition(counts, decomp, winningTile) {
-            const yaku = [], { melds, pair } = decomp;
-            if (isChinitsu(counts)) yaku.push('清一色'); else if (isHonitsu(counts)) yaku.push('混一色');
+            const yaku = [];
+            const { melds, pair } = decomp;
+
+            if (isChinitsu(counts)) yaku.push('清一色');
+            else if (isHonitsu(counts)) yaku.push('混一色');
             if (isTanyao(counts)) yaku.push('断幺九');
-            if ([27 + game.selfWind, 27 + game.fieldWind, 31, 32, 33].some(i => counts[i] >= 3)) {
-                const p = [counts[27 + game.selfWind] >= 3 && '自风', counts[27 + game.fieldWind] >= 3 && '场风', counts[31] >= 3 && '白', counts[32] >= 3 && '发', counts[33] >= 3 && '中'].filter(Boolean);
-                yaku.push(`役牌(${p.join('/')})`);
-            }
-            const sequences = melds.filter(m => m.type === 'sequence'), triplets = melds.filter(m => m.type === 'triplet');
 
-            if (sequences.length === 4 && ![27 + game.selfWind, 27 + game.fieldWind, 31, 32, 33].includes(pair) &&
-                sequences.some(s => {
-                    const tiles = [s.start, s.start + 1, s.start + 2];
-                    if (!tiles.includes(winningTile)) return false;
+            const yakuTiles = [27 + game.selfWind, 27 + game.fieldWind, 31, 32, 33];
+            const yakuNames = ['自风', '场风', '白', '发', '中'];
+            const activeFlags = yakuTiles.map((tile, idx) => counts[tile] >= 3 && yakuNames[idx]).filter(Boolean);
+            if (activeFlags.length) yaku.push(`役牌(${activeFlags.join('/')})`);
+
+            const sequences = melds.filter(m => m.type === 'sequence');
+            const triplets = melds.filter(m => m.type === 'triplet');
+
+            const isPinfu = sequences.length === 4 &&
+                !yakuTiles.includes(pair) &&
+                sequences.some(({ start }) => {
+                    const tiles = [start, start + 1, start + 2];
                     const rem = tiles.filter(t => t !== winningTile);
-                    return rem.length === 2 && rem[1] - rem[0] === 1 && rem[0] % 9 !== 0 && rem[0] % 9 !== 7;
-                })) yaku.push('平和');
+                    return tiles.includes(winningTile) && rem.length === 2 && rem[1] - rem[0] === 1 && start % 9 !== 0 && start % 9 !== 7;
+                });
+            if (isPinfu) yaku.push('平和');
 
-            const sC = {}; sequences.forEach(s => sC[s.start] = (sC[s.start] || 0) + 1);
-            const vals = Object.values(sC);
-            if (sequences.length === 4 && (vals.filter(v => v >= 2).length >= 2 || vals.some(v => v >= 4))) yaku.push('二杯口');
-            else if (vals.some(v => v >= 2)) yaku.push('一杯口');
+            const seqCounts = Object.values(sequences.reduce((acc, { start }) => (acc[start] = (acc[start] || 0) + 1, acc), {}));
+            if (sequences.length === 4 && (seqCounts.filter(v => v >= 2).length >= 2 || seqCounts.some(v => v >= 4))) yaku.push('二杯口');
+            else if (seqCounts.some(v => v >= 2)) yaku.push('一杯口');
 
-            const suitS = [new Set(), new Set(), new Set()]; sequences.forEach(s => suitS[Math.floor(s.start / 9)].add(s.start % 9));
-            for (let i = 0; i < 9; i++) if (suitS[0].has(i) && suitS[1].has(i) && suitS[2].has(i)) { yaku.push('三色同顺'); break; }
-            for (let i = 0; i < 3; i++) if (suitS[i].has(0) && suitS[i].has(3) && suitS[i].has(6)) { yaku.push('一气通贯'); break; }
+            const suitS = Array.from({ length: 3 }, () => new Set());
+            sequences.forEach(({ start }) => suitS[Math.floor(start / 9)].add(start % 9));
+            if (Array.from({ length: 9 }, (_, i) => i).some(i => suitS.every(set => set.has(i)))) yaku.push('三色同顺');
+            if (suitS.some(set => [0, 3, 6].every(i => set.has(i)))) yaku.push('一气通贯');
+
+            const suitT = Array.from({ length: 3 }, () => new Set());
+            triplets.filter(({ tile }) => tile < 27).forEach(({ tile }) => suitT[Math.floor(tile / 9)].add(tile % 9));
+            if (Array.from({ length: 9 }, (_, i) => i).some(i => suitT.every(set => set.has(i)))) yaku.push('三色同刻');
+
+            const dTriplets = triplets.filter(({ tile }) => tile >= 31 && tile <= 33).length;
+            const dPair = pair >= 31 && pair <= 33;
+            if (dTriplets === 3) yaku.push('大三元');
+            else if (dTriplets === 2 && dPair) yaku.push('小三元');
+
+            const wTriplets = triplets.filter(({ tile }) => tile >= 27 && tile <= 30).length;
+            const wPair = pair >= 27 && pair <= 30;
+            if (wTriplets === 4) yaku.push('大四喜');
+            else if (wTriplets === 3 && wPair) yaku.push('小四喜');
 
             if (triplets.length === 4) yaku.push('对对和');
-            if (triplets.filter(t => game.isTsumo || t.tile !== winningTile).length >= 3) yaku.push('三暗刻');
 
-            if (melds.every(m => m.type === 'triplet' ? YAOCHU_INDICES.has(m.tile) : (m.start % 9 === 0 || m.start % 9 === 6)) && YAOCHU_INDICES.has(pair))
+            const ankou = triplets.filter(t => game.isTsumo || t.tile !== winningTile).length;
+            if (ankou === 4) yaku.push(pair === winningTile ? '四暗刻单骑' : '四暗刻');
+            else if (ankou >= 3) yaku.push('三暗刻');
+
+            // === 全带幺九与老头系的互斥处理 ===
+            const activeTiles = counts.map((c, i) => c > 0 ? i : -1).filter(i => i !== -1);
+            const isAllYaochu = activeTiles.every(i => YAOCHU_INDICES.has(i));
+            const isYaochuMeld = m => m.type === 'triplet' ? YAOCHU_INDICES.has(m.tile) : [0, 6].includes(m.start % 9);
+
+            if (isAllYaochu) {
+                // 如果全是幺九牌，则是字一色、清老头或混老头
+                yaku.push(activeTiles.every(i => i < 27) ? '清老头' : activeTiles.every(i => i >= 27) ? '字一色' : '混老头');
+            } else if (melds.every(isYaochuMeld) && YAOCHU_INDICES.has(pair)) {
+                // 只有非全幺九牌，才计算全带幺九
                 yaku.push(counts.slice(27).some(c => c > 0) ? '混全带幺九' : '纯全带幺九');
+            }
 
-            if (counts.every((c, i) => c === 0 || (YAOCHU_INDICES.has(i) && i < 27))) yaku.push('清老头');
-            else if (counts.every((c, i) => c === 0 || YAOCHU_INDICES.has(i))) yaku.push('混老头');
+            if (activeTiles.every(i => [19, 20, 21, 23, 25, 32].includes(i))) yaku.push('绿一色');
+
+            [0, 9, 18].forEach(base => {
+                if ([0, 1, 2, 3, 4, 5, 6, 7, 8].every(k => counts[base + k] >= (k === 0 || k === 8 ? 3 : 1))) {
+                    const junsei = [0, 1, 2, 3, 4, 5, 6, 7, 8].every(k => counts[base + k] - (base + k === winningTile) === (k === 0 || k === 8 ? 3 : 1));
+                    yaku.push(junsei ? '纯正九莲宝灯' : '九莲宝灯');
+                }
+            });
 
             return yaku;
         }
@@ -1063,13 +1123,15 @@
             return [...unique.values()];
         }
 
-        // 精简的役种校验器
         const isKokushiShape = counts => KOKUSHI_INDICES.every(i => counts[i] >= 1) && KOKUSHI_INDICES.reduce((s, i) => s + counts[i], 0) === 14;
         const isSevenPairs = counts => counts.filter(c => c === 2).length === 7;
         const isTanyao = counts => counts.every((c, i) => c === 0 || !YAOCHU_INDICES.has(i));
-        function getSuitsAndJi(counts) { let suits = new Set(), hasJi = false; counts.forEach((c, i) => { if (c > 0) i >= 27 ? hasJi = true : suits.add(Math.floor(i / 9)); }); return { suits, hasJi }; }
-        const isHonitsu = counts => { const r = getSuitsAndJi(counts); return r.suits.size === 1 && r.hasJi; };
-        const isChinitsu = counts => { const r = getSuitsAndJi(counts); return r.suits.size === 1 && !r.hasJi; };
+        const isSuitsJi = counts => counts.reduce((acc, c, i) => {
+            if (c > 0) i >= 27 ? acc.hasJi = true : acc.suits.add(Math.floor(i / 9));
+            return acc;
+        }, { suits: new Set(), hasJi: false });
+        const isHonitsu = counts => { const { suits, hasJi } = isSuitsJi(counts); return suits.size === 1 && hasJi; };
+        const isChinitsu = counts => { const { suits, hasJi } = isSuitsJi(counts); return suits.size === 1 && !hasJi; };
 
         // ============================================================
         // 用户交互
@@ -1095,7 +1157,7 @@
             const vr = checkHandValidity(counts, game.currentGuess[13]);
             if (!vr.valid) return showMessage(vr.reason || '非有效和牌型');
 
-            // 困难模式校验：必须包含目标的所有役种
+            // 困难模式校验
             if (game.mode === 'hard') {
                 const guessYaku = getAllYakuFromCounts(counts, game.currentGuess[13]);
                 const missing = game.targetYaku.filter(y => !guessYaku.includes(y));
