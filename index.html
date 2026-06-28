@@ -763,6 +763,7 @@
                     ♾️ 无限练习 — 随机出题，不计入统计<br>
                     🔥 困难模式 — 无限练习进阶版，猜测时必须包含目标的所有役种（如果仅门清自摸则不得包含其他役种）
                 </p>
+                <p> <a href="https://github.com/Mabbs/riichi-mahjong-wordle" style="color:var(--primary);" target="_blank">项目地址</a> </p>
             </div>
         </div>
     </div>
@@ -1039,9 +1040,14 @@
             const isPinfu = sequences.length === 4 &&
                 !yakuTiles.includes(pair) &&
                 sequences.some(({ start }) => {
-                    const tiles = [start, start + 1, start + 2];
-                    const rem = tiles.filter(t => t !== winningTile);
-                    return tiles.includes(winningTile) && rem.length === 2 && rem[1] - rem[0] === 1 && start % 9 !== 0 && start % 9 !== 7;
+                    if (![start, start + 1, start + 2].includes(winningTile)) return false;
+                    const rem = [start, start + 1, start + 2].filter(t => t !== winningTile);
+                    if (rem.length !== 2 || rem[1] - rem[0] !== 1) return false;
+                    if ((winningTile === start + 2 && start % 9 === 0) ||
+                        (winningTile === start && start % 9 === 6)) {
+                        return false;
+                    }
+                    return true;
                 });
             if (isPinfu) yaku.push('平和');
 
