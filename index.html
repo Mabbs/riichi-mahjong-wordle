@@ -763,7 +763,7 @@
                     ♾️ 无限练习 — 随机出题，不计入统计<br>
                     🔥 困难模式 — 无限练习进阶版，猜测时必须包含目标的所有役种（如果仅门清自摸则不得包含其他役种）
                 </p>
-                <p> <a href="https://github.com/Mabbs/riichi-mahjong-wordle" style="color:var(--primary);"
+                <p> <a href="https://github.com/Mabbs/riichi-mahjong-wordle" style="color:var(--text);"
                         target="_blank">项目地址</a> </p>
             </div>
         </div>
@@ -1037,14 +1037,11 @@
             else if (isHon) yaku.push('混一色');
             if (isTan) yaku.push('断幺九');
 
-            const activeFlags = [
-                counts[27 + game.selfWind] >= 3 && '自风',
-                counts[27 + game.fieldWind] >= 3 && '场风',
-                counts[31] >= 3 && '白',
-                counts[32] >= 3 && '发',
-                counts[33] >= 3 && '中'
-            ].filter(Boolean);
-            if (activeFlags.length) yaku.push(`役牌(${activeFlags.join('/')})`);
+            if (counts[27 + game.selfWind] >= 3) yaku.push('役牌(自风)');
+            if (counts[27 + game.fieldWind] >= 3) yaku.push('役牌(场风)');
+            if (counts[31] >= 3) yaku.push('役牌(白)');
+            if (counts[32] >= 3) yaku.push('役牌(发)');
+            if (counts[33] >= 3) yaku.push('役牌(中)');
 
             const sequences = melds.filter(m => m.type === 'sequence');
             const triplets = melds.filter(m => m.type === 'triplet');
