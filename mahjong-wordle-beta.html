@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,1481 +9,710 @@
             font-family: 'Riichi Mahjong Colorful';
             src: url('Riichi-Mahjong-Colorful.woff2');
         }
-
         :root {
-            --green: #538d4e;
-            --yellow: #b59f3b;
-            --gray: #3a3a3c;
-            --dark-gray: #5a5a5c;
-            --light-gray: #818384;
-            --bg: #121213;
-            --text: #ffffff;
-            --tile-bg: #ffffff;
-            --cell-border: #3a3a3c;
-            --panel-bg: #1e1e1e;
-            --panel-border: #444;
-            --accent: #e6c34a;
-            --emoji-font: "Riichi Mahjong Colorful", "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", "Noto Emoji", sans-serif;
+            --green: #538d4e; --yellow: #b59f3b; --gray: #3a3a3c; --dark-gray: #5a5a5c;
+            --light-gray: #818384; --bg: #121213; --text: #ffffff; --tile-bg: #ffffff;
+            --cell-border: #3a3a3c; --panel-bg: #1e1e1e; --panel-border: #444; --accent: #e6c34a;
+            --emoji-font: "Riichi Mahjong Colorful","Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji","Noto Emoji",sans-serif;
         }
-
         [data-theme="light"] {
-            --bg: #ffffff;
-            --text: #1a1a1a;
-            --tile-bg: #f0f0f0;
-            --cell-border: #d0d0d0;
-            --panel-bg: #f5f5f5;
-            --panel-border: #ccc;
-            --gray: #b0b0b0;
-            --light-gray: #d3d6da;
-            --dark-gray: #666;
-            --accent: #b8860b;
-            --green: #6aaa64;
-            --yellow: #c9b458;
+            --bg: #ffffff; --text: #1a1a1a; --tile-bg: #f0f0f0; --cell-border: #d0d0d0;
+            --panel-bg: #f5f5f5; --panel-border: #ccc; --gray: #b0b0b0; --light-gray: #d3d6da;
+            --dark-gray: #666; --accent: #b8860b; --green: #6aaa64; --yellow: #c9b458;
         }
-
-        * {
-            box-sizing: border-box;
-        }
-
+        * { box-sizing: border-box; }
         body {
-            background-color: var(--bg);
-            color: var(--text);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin: 0;
-            padding: 16px 8px;
-            min-height: 100vh;
-            font-family: "Helvetica Neue", Arial, "PingFang SC", "Microsoft YaHei", sans-serif;
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
-
-        .topbar {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 12px;
-            width: 100%;
-            max-width: 620px;
-            margin-bottom: 6px;
-        }
-
-        .topbar-side {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            min-width: 100px;
-        }
-
-        .topbar-side:first-child {
-            visibility: hidden;
-        }
-
-        h1 {
-            margin: 0;
-            font-size: 24px;
-            letter-spacing: 2px;
-            text-align: center;
-        }
-
-        .variant-switch,
-        .mode-switch {
-            display: flex;
-            gap: 0;
-            border-radius: 8px;
-            overflow: hidden;
-        }
-
-        .variant-switch {
-            margin-bottom: 8px;
-            border: 2px solid var(--accent);
-        }
-
-        .mode-switch {
-            margin-bottom: 12px;
-            border: 1px solid var(--panel-border);
-        }
-
-        .variant-btn,
-        .mode-btn {
-            border: none;
-            background: var(--panel-bg);
-            color: var(--text);
-            cursor: pointer;
-            transition: background-color 0.2s;
-            font-family: inherit;
-        }
-
-        .variant-btn {
-            padding: 2px 13px;
-            font-size: 14px;
-            font-weight: bold;
-            letter-spacing: 1px;
-        }
-
-        .variant-btn.active {
-            background: var(--accent);
-            color: #000;
-        }
-
-        .mode-btn {
-            padding: 6px 14px;
-            font-size: 13px;
-        }
-
-        .mode-btn.active {
-            background: var(--green);
-            color: #fff;
-            font-weight: bold;
-        }
-
-        .icon-btn {
-            background: none;
-            border: none;
-            color: var(--text);
-            font-size: 20px;
-            cursor: pointer;
-            padding: 6px;
-            border-radius: 6px;
-            transition: background-color 0.2s;
-            line-height: 1;
-        }
-
-        .icon-btn:hover {
-            background-color: var(--panel-border);
-        }
-
-        .subtitle {
-            color: var(--dark-gray);
-            margin-bottom: 4px;
-            font-size: 13px;
-            text-align: center;
-            line-height: 1.5;
-        }
-
-        .subtitle .highlight {
-            color: var(--accent);
-            font-weight: bold;
-        }
-
-        .hint-bar {
-            color: var(--dark-gray);
-            font-size: 12px;
-            margin-bottom: 6px;
-            text-align: center;
-        }
-
-        .hint-bar .key-hint {
-            display: inline-block;
-            background: var(--panel-bg);
-            color: var(--accent);
-            padding: 2px 7px;
-            border-radius: 3px;
-            margin: 0 2px;
-            font-weight: bold;
-            font-size: 11px;
-            letter-spacing: 0.5px;
-            border: 1px solid var(--panel-border);
-        }
-
-        [data-theme="light"] .hint-bar .key-hint {
-            color: #8b6914;
-            border: 1px solid #d0d0d0;
-        }
-
-        #game-info {
-            background-color: var(--panel-bg);
-            border: 1px solid var(--panel-border);
-            border-radius: 8px;
-            padding: 8px 18px;
-            margin-bottom: 16px;
-            font-size: 15px;
-            display: flex;
-            gap: 20px;
-            align-items: center;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        #game-info span {
-            color: var(--accent);
-            font-weight: bold;
-        }
-
-        #hard-mode-info {
-            display: none;
-            color: var(--accent);
-            font-weight: bold;
-            font-size: 13px;
-            margin-bottom: 12px;
-            text-align: center;
-            margin-top: -8px;
-        }
-
-        #board {
-            display: grid;
-            grid-template-rows: repeat(6, 1fr);
-            gap: 6px;
-            margin-bottom: 20px;
-        }
-
-        .row {
-            display: grid;
-            grid-template-columns: repeat(14, 1fr);
-            gap: 4px;
-        }
-
-        .cell {
-            width: 42px;
-            height: 56px;
-            border: 2px solid var(--cell-border);
-            border-radius: 4px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 40px;
-            font-family: var(--emoji-font);
-            user-select: none;
-            transition: background-color .15s, border-color .15s, transform .2s;
-        }
-
-        .cell:nth-child(14) {
-            margin-left: 10px;
-            border-left: 3px dashed #666;
-        }
-
-        .cell.filled {
-            background-color: var(--tile-bg);
-            color: #000;
-            border-color: #999;
-        }
-
-        .cell.pending-number {
-            font-family: "Helvetica Neue", Arial, sans-serif;
-            color: var(--dark-gray);
-            border-color: var(--dark-gray);
-            border-style: dashed;
-            background-color: rgba(255, 255, 255, 0.04);
-            font-size: 28px;
-            font-weight: bold;
-            animation: pulse-pending 1.2s ease-in-out infinite;
-        }
-
-        [data-theme="light"] .cell.pending-number {
-            background-color: rgba(0, 0, 0, 0.03);
-        }
-
-        @keyframes pulse-pending {
-
-            0%,
-            100% {
-                border-color: var(--dark-gray);
-            }
-
-            50% {
-                border-color: #b0b0b0;
-            }
-        }
-
-        .cell.correct {
-            background-color: var(--green);
-            border-color: var(--green);
-            color: white;
-        }
-
-        .cell.present {
-            background-color: var(--yellow);
-            border-color: var(--yellow);
-            color: white;
-        }
-
-        .cell.absent {
-            background-color: var(--gray);
-            border-color: var(--gray);
-            color: white;
-        }
-
-        .cell.flip {
-            animation: flip 0.5s ease;
-        }
-
-        @keyframes flip {
-
-            0%,
-            100% {
-                transform: rotateX(0);
-            }
-
-            50% {
-                transform: rotateX(90deg);
-            }
-        }
-
-        #keyboard {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            align-items: center;
-            max-width: 620px;
-            width: 100%;
-        }
-
-        .key-row {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
-        .key {
-            padding: 5px 9px;
-            border-radius: 5px;
-            background-color: var(--light-gray);
-            border: none;
-            color: white;
-            font-size: 30px;
-            font-family: var(--emoji-font);
-            cursor: pointer;
-            user-select: none;
-            transition: background-color .2s, transform .05s;
-            min-width: 36px;
-            text-align: center;
-            line-height: 1.2;
-        }
-
-        [data-theme="light"] .key {
-            color: #1a1a1a;
-            background-color: #d3d6da;
-        }
-
-        .key:hover {
-            filter: brightness(1.25);
-        }
-
-        .key:active {
-            filter: brightness(0.85);
-            transform: scale(0.94);
-        }
-
-        .key.action {
-            font-size: 15px;
-            font-weight: bold;
-            padding: 14px 18px;
-            font-family: inherit;
-            min-width: 70px;
-            letter-spacing: 1px;
-            background-color: #555;
-        }
-
-        [data-theme="light"] .key.action {
-            color: #fff;
-            background-color: #6b6b6b;
-        }
-
-        .key.action:hover {
-            background-color: #777;
-        }
-
-        [data-theme="light"] .key.action:hover {
-            background-color: #555;
-        }
-
-        .key.action.submit-btn {
-            background-color: #4a7c4f;
-        }
-
-        .key.action.submit-btn:hover {
-            background-color: #5d9e63;
-        }
-
-        .key.action.hint-btn {
-            background-color: #b07d3b;
-        }
-
-        .key.action.hint-btn:hover {
-            background-color: #c88e44;
-        }
-
-        .key.action.refresh-btn {
-            background-color: #4a4a6a;
-        }
-
-        .key.action.refresh-btn:hover {
-            background-color: #6a6a8a;
-        }
-
-        .key.key-correct {
-            background-color: var(--green);
-            border: 1px solid #6ab464;
-        }
-
-        [data-theme="light"] .key.key-correct {
-            border: 1px solid #5a9a54;
-        }
-
-        .key.key-present {
-            background-color: var(--yellow);
-            border: 1px solid #d4b840;
-        }
-
-        [data-theme="light"] .key.key-present {
-            border: 1px solid #b89e36;
-        }
-
-        .key.key-absent {
-            background-color: var(--gray);
-            border: 1px solid #444;
-            color: #666;
-        }
-
-        [data-theme="light"] .key.key-absent {
-            background-color: #b0b0b0;
-            border: 1px solid #999;
-            color: #fff;
-        }
-
-        #message {
-            position: fixed;
-            top: 18%;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: rgba(255, 255, 255, 0.95);
-            color: #000;
-            padding: 14px 22px;
-            border-radius: 10px;
-            font-weight: bold;
-            font-size: 15px;
-            opacity: 0;
-            transition: opacity 0.3s;
-            pointer-events: none;
-            z-index: 400;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-            text-align: center;
-            white-space: pre-line;
-            max-width: 90vw;
-        }
-
-        .show-message {
-            opacity: 1 !important;
-        }
-
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.6);
-            z-index: 300;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal-overlay.show {
-            display: flex;
-        }
-
-        .modal {
-            background: var(--bg);
-            border: 1px solid var(--panel-border);
-            border-radius: 12px;
-            padding: 24px;
-            max-width: 420px;
-            width: 90%;
-            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
-        }
-
-        .modal h2 {
-            margin: 0 0 16px 0;
-            font-size: 20px;
-            text-align: center;
-        }
-
-        .modal .close-btn {
-            float: right;
-            background: none;
-            border: none;
-            color: var(--text);
-            font-size: 22px;
-            cursor: pointer;
-            line-height: 1;
-        }
-
-        .stat-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 8px;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .stat-cell .num {
-            font-size: 28px;
-            font-weight: bold;
-            color: var(--accent);
-        }
-
-        .stat-cell .label {
-            font-size: 11px;
-            color: var(--dark-gray);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .dist-title {
-            font-size: 13px;
-            font-weight: bold;
-            margin-bottom: 8px;
-            text-align: center;
-        }
-
-        .dist-row {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 4px;
-        }
-
-        .dist-row .guess-num {
-            font-size: 12px;
-            font-weight: bold;
-            width: 14px;
-            text-align: center;
-        }
-
-        .dist-bar {
-            height: 22px;
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            padding-right: 8px;
-            font-size: 12px;
-            font-weight: bold;
-            color: white;
-            min-width: 24px;
-        }
-
-        .dist-bar.green {
-            background: var(--green);
-        }
-
-        .dist-bar.gray {
-            background: var(--gray);
-        }
-
-        .modal-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 20px;
-            gap: 12px;
-        }
-
-        .countdown {
-            font-size: 12px;
-            color: var(--dark-gray);
-            text-align: center;
-            flex: 1;
-        }
-
-        .share-btn {
-            background: var(--green);
-            color: #fff;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 6px;
-            font-size: 14px;
-            font-weight: bold;
-            cursor: pointer;
-            font-family: inherit;
-        }
-
-        .share-btn:hover {
-            filter: brightness(1.15);
-        }
-
-        .modal-text {
-            font-size: 14px;
-            line-height: 1.7;
-        }
-
-        .modal-text .example-cell {
-            display: inline-flex;
-            width: 28px;
-            height: 28px;
-            border-radius: 4px;
-            align-items: center;
-            justify-content: center;
-            font-family: var(--emoji-font);
-            font-size: 18px;
-            margin: 2px;
-            vertical-align: middle;
-        }
-
-        .modal-text .ex-correct {
-            background: var(--green);
-            color: white;
-        }
-
-        .modal-text .ex-present {
-            background: var(--yellow);
-            color: white;
-        }
-
-        .modal-text .ex-absent {
-            background: var(--gray);
-            color: white;
-        }
-
-        @media (max-width: 580px) {
-            .variant-btn {
-                padding: 6px 12px;
-                font-size: 12px;
-            }
-
-            .mode-btn {
-                padding: 6px 8px;
-                font-size: 11px;
-            }
-
-            .cell {
-                width: 22px;
-                height: 32px;
-                font-size: 22px;
-                border-width: 1.5px;
-                border-radius: 3px;
-            }
-
-            .cell:nth-child(14) {
-                margin-left: 4px;
-                border-left-width: 2px;
-            }
-
-            .cell.pending-number {
-                font-size: 15px;
-            }
-
-            .key {
-                font-size: 18px;
-                padding: 5px 6px;
-                min-width: 26px;
-                border-radius: 3px;
-            }
-
-            .key.action {
-                font-size: 13px;
-                padding: 10px 12px;
-                min-width: 56px;
-            }
-
-            h1 {
-                font-size: 18px;
-            }
-
-            .subtitle {
-                font-size: 11px;
-            }
-
-            .hint-bar,
-            .hint-bar .key-hint {
-                font-size: 10px;
-            }
-
-            .hint-bar .key-hint {
-                padding: 1px 5px;
-            }
-
-            .row {
-                gap: 2px;
-            }
-
-            #board {
-                gap: 4px;
-            }
-
-            #game-info {
-                font-size: 13px;
-                padding: 6px 12px;
-                gap: 12px;
-            }
-
-            .stat-cell .num {
-                font-size: 22px;
-            }
-
-            .icon-btn {
-                font-size: 18px;
-                padding: 4px;
-            }
+            background-color: var(--bg); color: var(--text); display: flex; flex-direction: column;
+            align-items: center; margin: 0; padding: 16px 8px; min-height: 100vh;
+            font-family: "Helvetica Neue",Arial,"PingFang SC","Microsoft YaHei",sans-serif;
+            transition: background-color 0.3s ease,color 0.3s ease;
+        }
+        .topbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%; max-width: 620px; margin-bottom: 6px; }
+        .topbar-side { display: flex; align-items: center; gap: 8px; min-width: 100px; }
+        .topbar-side:first-child { visibility: hidden; }
+        h1 { margin: 0; font-size: 24px; letter-spacing: 2px; text-align: center; }
+        .variant-switch,.mode-switch { display: flex; gap: 0; border-radius: 8px; overflow: hidden; }
+        .variant-switch { margin-bottom: 8px; border: 2px solid var(--accent); }
+        .mode-switch { margin-bottom: 12px; border: 1px solid var(--panel-border); }
+        .variant-btn,.mode-btn {
+            border: none; background: var(--panel-bg); color: var(--text); cursor: pointer;
+            transition: background-color 0.2s; font-family: inherit;
+        }
+        .variant-btn { padding: 2px 13px; font-size: 14px; font-weight: bold; letter-spacing: 1px; }
+        .variant-btn.active { background: var(--accent); color: #000; }
+        .mode-btn { padding: 6px 14px; font-size: 13px; }
+        .mode-btn.active { background: var(--green); color: #fff; font-weight: bold; }
+        .icon-btn { background: none; border: none; color: var(--text); font-size: 20px; cursor: pointer; padding: 6px; border-radius: 6px; transition: background-color 0.2s; line-height: 1; }
+        .icon-btn:hover { background-color: var(--panel-border); }
+        .subtitle { color: var(--dark-gray); margin-bottom: 4px; font-size: 13px; text-align: center; line-height: 1.5; }
+        .subtitle .highlight { color: var(--accent); font-weight: bold; }
+        .hint-bar { color: var(--dark-gray); font-size: 12px; margin-bottom: 6px; text-align: center; }
+        .hint-bar .key-hint { display: inline-block; background: var(--panel-bg); color: var(--accent); padding: 2px 7px; border-radius: 3px; margin: 0 2px; font-weight: bold; font-size: 11px; letter-spacing: 0.5px; border: 1px solid var(--panel-border); }
+        #game-info { background-color: var(--panel-bg); border: 1px solid var(--panel-border); border-radius: 8px; padding: 8px 18px; margin-bottom: 16px; font-size: 15px; display: flex; gap: 20px; align-items: center; justify-content: center; flex-wrap: wrap; }
+        #game-info span { color: var(--accent); font-weight: bold; }
+        #hard-mode-info { display: none; color: var(--accent); font-weight: bold; font-size: 13px; margin-bottom: 12px; text-align: center; margin-top: -8px; }
+        #board { display: grid; grid-template-rows: repeat(6,1fr); gap: 6px; margin-bottom: 20px; }
+        .row { display: grid; grid-template-columns: repeat(14,1fr); gap: 4px; }
+        .cell { width: 42px; height: 56px; border: 2px solid var(--cell-border); border-radius: 4px; display: flex; justify-content: center; align-items: center; font-size: 40px; font-family: var(--emoji-font); user-select: none; transition: background-color .15s,border-color .15s,transform .2s; }
+        .cell:nth-child(14) { margin-left: 10px; border-left: 3px dashed #666; }
+        .cell.filled { background-color: var(--tile-bg); color: #000; border-color: #999; }
+        .cell.pending-number { font-family: "Helvetica Neue",Arial,sans-serif; color: var(--dark-gray); border-color: var(--dark-gray); border-style: dashed; background-color: rgba(255,255,255,0.04); font-size: 28px; font-weight: bold; animation: pulse-pending 1.2s ease-in-out infinite; }
+        @keyframes pulse-pending { 0%,100%{border-color:var(--dark-gray)}50%{border-color:#b0b0b0} }
+        .cell.correct { background-color: var(--green); border-color: var(--green); color: white; }
+        .cell.present { background-color: var(--yellow); border-color: var(--yellow); color: white; }
+        .cell.absent { background-color: var(--gray); border-color: var(--gray); color: white; }
+        .cell.flip { animation: flip 0.5s ease; }
+        @keyframes flip { 0%,100%{transform:rotateX(0)}50%{transform:rotateX(90deg)} }
+        #keyboard { display: flex; flex-direction: column; gap: 8px; align-items: center; max-width: 620px; width: 100%; }
+        .key-row { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+        .key { padding: 5px 9px; border-radius: 5px; background-color: var(--light-gray); border: none; color: white; font-size: 30px; font-family: var(--emoji-font); cursor: pointer; user-select: none; transition: background-color .2s,transform .05s; min-width: 36px; text-align: center; line-height: 1.2; }
+        [data-theme="light"] .key { color: #1a1a1a; background-color: #d3d6da; }
+        .key:hover { filter: brightness(1.25); }
+        .key:active { filter: brightness(0.85); transform: scale(0.94); }
+        .key.action { font-size: 15px; font-weight: bold; padding: 14px 18px; font-family: inherit; min-width: 70px; letter-spacing: 1px; background-color: #555; }
+        [data-theme="light"] .key.action { color: #fff; background-color: #6b6b6b; }
+        .key.action:hover { background-color: #777; } [data-theme="light"] .key.action:hover { background-color: #555; }
+        .key.action.submit-btn { background-color: #4a7c4f; } .key.action.submit-btn:hover { background-color: #5d9e63; }
+        .key.action.hint-btn { background-color: #b07d3b; } .key.action.hint-btn:hover { background-color: #c88e44; }
+        .key.action.refresh-btn { background-color: #4a4a6a; } .key.action.refresh-btn:hover { background-color: #6a6a8a; }
+        .key.key-correct { background-color: var(--green); border: 1px solid #6ab464; }
+        .key.key-present { background-color: var(--yellow); border: 1px solid #d4b840; }
+        .key.key-absent { background-color: var(--gray); border: 1px solid #444; color: #666; }
+        #message { position: fixed; top: 18%; left: 50%; transform: translateX(-50%); background-color: rgba(255,255,255,0.95); color: #000; padding: 14px 22px; border-radius: 10px; font-weight: bold; font-size: 15px; opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 400; box-shadow: 0 4px 20px rgba(0,0,0,0.5); text-align: center; white-space: pre-line; max-width: 90vw; }
+        .show-message { opacity: 1 !important; }
+        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 300; justify-content: center; align-items: center; }
+        .modal-overlay.show { display: flex; }
+        .modal { background: var(--bg); border: 1px solid var(--panel-border); border-radius: 12px; padding: 24px; max-width: 420px; width: 90%; box-shadow: 0 8px 40px rgba(0,0,0,0.5); }
+        .modal h2 { margin: 0 0 16px 0; font-size: 20px; text-align: center; }
+        .modal .close-btn { float: right; background: none; border: none; color: var(--text); font-size: 22px; cursor: pointer; line-height: 1; }
+        .stat-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 8px; margin-bottom: 20px; text-align: center; }
+        .stat-cell .num { font-size: 28px; font-weight: bold; color: var(--accent); }
+        .stat-cell .label { font-size: 11px; color: var(--dark-gray); text-transform: uppercase; letter-spacing: 0.5px; }
+        .dist-title { font-size: 13px; font-weight: bold; margin-bottom: 8px; text-align: center; }
+        .dist-row { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+        .dist-row .guess-num { font-size: 12px; font-weight: bold; width: 14px; text-align: center; }
+        .dist-bar { height: 22px; border-radius: 4px; display: flex; align-items: center; justify-content: flex-end; padding-right: 8px; font-size: 12px; font-weight: bold; color: white; min-width: 24px; }
+        .dist-bar.green { background: var(--green); } .dist-bar.gray { background: var(--gray); }
+        .modal-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; gap: 12px; }
+        .countdown { font-size: 12px; color: var(--dark-gray); text-align: center; flex: 1; }
+        .share-btn { background: var(--green); color: #fff; border: none; padding: 10px 20px; border-radius: 6px; font-size: 14px; font-weight: bold; cursor: pointer; font-family: inherit; }
+        .share-btn:hover { filter: brightness(1.15); }
+        .modal-text { font-size: 14px; line-height: 1.7; }
+        .modal-text .example-cell { display: inline-flex; width: 28px; height: 28px; border-radius: 4px; align-items: center; justify-content: center; font-family: var(--emoji-font); font-size: 18px; margin: 2px; vertical-align: middle; }
+        .modal-text .ex-correct { background: var(--green); color: white; }
+        .modal-text .ex-present { background: var(--yellow); color: white; }
+        .modal-text .ex-absent { background: var(--gray); color: white; }
+        @media (max-width:580px) {
+            .cell { width: 22px; height: 32px; font-size: 22px; }
+            .key { font-size: 18px; padding: 5px 6px; min-width: 26px; }
+            .key.action { font-size: 13px; padding: 10px 12px; min-width: 56px; }
         }
     </style>
 </head>
-
 <body>
-    <div class="topbar">
-        <div class="topbar-side"></div>
-        <h1 id="game-title">🀫 立直麻将 Wordle</h1>
-        <div class="topbar-side">
-            <button class="icon-btn" onclick="toggleTheme()" id="theme-btn" title="切换主题">☀️</button>
-            <button class="icon-btn" onclick="openModal('info')" title="玩法说明">❓</button>
-            <button class="icon-btn" onclick="openModal('stats')" title="统计" id="stats-icon">📊</button>
+<div class="topbar">
+    <div class="topbar-side"></div>
+    <h1 id="game-title">🀫 立直麻将 Wordle</h1>
+    <div class="topbar-side">
+        <button class="icon-btn" onclick="toggleTheme()" id="theme-btn" title="切换主题">☀️</button>
+        <button class="icon-btn" onclick="openModal('info')" title="玩法说明">❓</button>
+        <button class="icon-btn" onclick="openModal('stats')" title="统计" id="stats-icon">📊</button>
+    </div>
+</div>
+<div class="variant-switch">
+    <button class="variant-btn active" id="variant-riichi" onclick="switchVariant('riichi')">🇯🇵 立直麻将</button>
+    <button class="variant-btn" id="variant-guobiao" onclick="switchVariant('guobiao')">🇨🇳 国标麻将</button>
+</div>
+<div class="mode-switch">
+    <button class="mode-btn active" id="mode-daily" onclick="switchMode('daily')">📅 每日挑战</button>
+    <button class="mode-btn" id="mode-practice" onclick="switchMode('practice')">♾️ 无限练习</button>
+    <button class="mode-btn" id="mode-hard" onclick="switchMode('hard')">🔥 困难模式</button>
+</div>
+<div class="subtitle" id="subtitle"></div>
+<div class="hint-bar">💡 键盘快捷输入：<span class="key-hint">数字</span> + <span class="key-hint">M/P/S/Z</span> 可连续输入如 <span class="key-hint">1</span><span class="key-hint">2</span><span class="key-hint">3</span><span class="key-hint">M</span> = 1万2万3万</div>
+<div id="game-info">
+    <span id="wind-label">场风</span>：<span id="field-wind-display"></span>
+    <span id="self-wind-label">自风</span>：<span id="self-wind-display"></span>
+    · 和牌方式：<span id="win-method-display"></span>
+</div>
+<div id="hard-mode-info"></div>
+<div id="board"></div>
+<div id="keyboard">
+    <div class="key-row" id="row-man"></div>
+    <div class="key-row" id="row-pin"></div>
+    <div class="key-row" id="row-sou"></div>
+    <div class="key-row" id="row-ji"></div>
+    <div class="key-row" style="margin-top:4px;">
+        <button class="key action" onclick="deleteTile()">⌫ 删除</button>
+        <button class="key action submit-btn" onclick="submitGuess()">✓ 提交</button>
+        <button class="key action hint-btn" id="btn-hint" onclick="showHint()">💡 提示</button>
+        <button class="key action refresh-btn" id="btn-new-game" onclick="newGame()">🔄 新局</button>
+    </div>
+</div>
+<div id="message"></div>
+<div class="modal-overlay" id="modal-info">
+    <div class="modal">
+        <button class="close-btn" onclick="closeModal('info')">×</button>
+        <h2>🀄 玩法说明</h2>
+        <div class="modal-text">
+            <p>猜出目标的 14 张牌（13张+1张和牌），共 6 次机会。</p>
+            <p>每次提交后，牌会变色：<br><span class="example-cell ex-correct">🀇</span> 正确位置 <span class="example-cell ex-present">🀇</span> 位置不对 <span class="example-cell ex-absent">🀇</span> 不在答案中</p>
+            <p><b>输入：</b>键盘数字+花色（1m=1万，5z=白）或点击屏幕牌</p>
+            <p>🇯🇵 立直 — 需要有役（或门清自摸）<br>🇨🇳 国标 — 需要至少8番起和</p>
         </div>
     </div>
-    <div class="variant-switch">
-        <button class="variant-btn active" id="variant-riichi" onclick="switchVariant('riichi')">🇯🇵 立直麻将</button>
-        <button class="variant-btn" id="variant-guobiao" onclick="switchVariant('guobiao')">🇨🇳 国标麻将</button>
-    </div>
-    <div class="mode-switch">
-        <button class="mode-btn active" id="mode-daily" onclick="switchMode('daily')">📅 每日挑战</button>
-        <button class="mode-btn" id="mode-practice" onclick="switchMode('practice')">♾️ 无限练习</button>
-        <button class="mode-btn" id="mode-hard" onclick="switchMode('hard')">🔥 困难模式</button>
-    </div>
-    <div class="subtitle" id="subtitle"></div>
-    <div class="hint-bar">
-        💡 键盘快捷输入：<span class="key-hint">数字</span> + <span class="key-hint">M/P/S/Z</span>
-        &nbsp;可连续输入如 <span class="key-hint">1</span><span class="key-hint">2</span><span class="key-hint">3</span><span
-            class="key-hint">M</span> = 1万2万3万
-    </div>
-    <div id="game-info">
-        <span id="wind-label">场风</span>：<span id="field-wind-display"></span>
-        <span id="self-wind-label">自风</span>：<span id="self-wind-display"></span>
-        · 和牌方式：<span id="win-method-display"></span>
-    </div>
-    <div id="hard-mode-info"></div>
-    <div id="board"></div>
-    <div id="keyboard">
-        <div class="key-row" id="row-man"></div>
-        <div class="key-row" id="row-pin"></div>
-        <div class="key-row" id="row-sou"></div>
-        <div class="key-row" id="row-ji"></div>
-        <div class="key-row" style="margin-top:4px;">
-            <button class="key action" onclick="deleteTile()">⌫ 删除</button>
-            <button class="key action submit-btn" onclick="submitGuess()">✓ 提交</button>
-            <button class="key action hint-btn" id="btn-hint" onclick="showHint()">💡 提示</button>
-            <button class="key action refresh-btn" id="btn-new-game" onclick="newGame()">🔄 新局</button>
-        </div>
-    </div>
-    <div id="message"></div>
-    <div class="modal-overlay" id="modal-info">
-        <div class="modal">
-            <button class="close-btn" onclick="closeModal('info')">×</button>
-            <h2>🀄 玩法说明</h2>
-            <div class="modal-text">
-                <p>猜出目标的 14 张牌（13张+1张和牌），共 6 次机会。</p>
-                <p>每次提交后，牌会变色：</p>
-                <p><span class="example-cell ex-correct">🀇</span> 绿色 = 在正确位置<br><span
-                        class="example-cell ex-present">🀇</span> 黄色 = 在答案中但位置不对<br><span
-                        class="example-cell ex-absent">🀇</span> 灰色 = 不在答案中</p>
-                <p><b>输入方式：</b>键盘：数字+花色（如 <b>1m</b>=1万，<b>5z</b>=白）<br>可连续输入：<b>123m</b> 一次输入1万2万3万<br>也可以直接点击屏幕键盘上的牌
-                </p>
-                <p><b>游戏类型：</b><br>🇯🇵 立直麻将 — 需要有役（或门清自摸）<br>🇨🇳 国标麻将 — 需要至少8番起和</p>
-                <p><b>模式：</b><br>📅 每日挑战 — 全球同一题，可分享成绩<br>♾️ 无限练习 — 随机出题，不计入统计<br>🔥 困难模式 — 猜测时必须包含目标的所有役种/番种</p>
-                <p><a href="https://github.com/Mabbs/riichi-mahjong-wordle" style="color:var(--text);"
-                        target="_blank">项目地址</a></p>
+</div>
+<div class="modal-overlay" id="modal-stats">
+    <div class="modal">
+        <button class="close-btn" onclick="closeModal('stats')">×</button>
+        <h2 id="stats-title">📊 统计</h2>
+        <div id="stats-content">
+            <div class="stat-grid">
+                <div class="stat-cell"><div class="num" id="stat-played">0</div><div class="label">已玩</div></div>
+                <div class="stat-cell"><div class="num" id="stat-winrate">0</div><div class="label">胜率%</div></div>
+                <div class="stat-cell"><div class="num" id="stat-streak">0</div><div class="label">连胜</div></div>
+                <div class="stat-cell"><div class="num" id="stat-maxstreak">0</div><div class="label">最大连胜</div></div>
+            </div>
+            <div class="dist-title">猜对所用次数分布</div>
+            <div id="dist-container"></div>
+            <div class="modal-footer">
+                <div class="countdown" id="countdown"></div>
+                <button class="share-btn" onclick="shareResult()">📋 分享成绩</button>
             </div>
         </div>
+        <div id="practice-stats" style="display:none;text-align:center;color:var(--dark-gray);font-size:14px;padding:20px 0;">
+            练习模式不计入统计<br>本局用了 <span id="practice-tries">0</span> 次猜测</div>
     </div>
-    <div class="modal-overlay" id="modal-stats">
-        <div class="modal">
-            <button class="close-btn" onclick="closeModal('stats')">×</button>
-            <h2 id="stats-title">📊 统计</h2>
-            <div id="stats-content">
-                <div class="stat-grid">
-                    <div class="stat-cell">
-                        <div class="num" id="stat-played">0</div>
-                        <div class="label">已玩</div>
-                    </div>
-                    <div class="stat-cell">
-                        <div class="num" id="stat-winrate">0</div>
-                        <div class="label">胜率%</div>
-                    </div>
-                    <div class="stat-cell">
-                        <div class="num" id="stat-streak">0</div>
-                        <div class="label">连胜</div>
-                    </div>
-                    <div class="stat-cell">
-                        <div class="num" id="stat-maxstreak">0</div>
-                        <div class="label">最大连胜</div>
-                    </div>
-                </div>
-                <div class="dist-title">猜对所用次数分布</div>
-                <div id="dist-container"></div>
-                <div class="modal-footer">
-                    <div class="countdown" id="countdown"></div><button class="share-btn" onclick="shareResult()">📋
-                        分享成绩</button>
-                </div>
-            </div>
-            <div id="practice-stats"
-                style="display:none;text-align:center;color:var(--dark-gray);font-size:14px;padding:20px 0;">
-                练习模式不计入统计<br>本局用了 <span id="practice-tries">0</span> 次猜测</div>
-        </div>
-    </div>
+</div>
 
-    <script>
-        const $ = id => document.getElementById(id);
-        const $$ = sel => document.querySelectorAll(sel);
+<script>
+    const $ = id => document.getElementById(id);
+    const $$ = sel => document.querySelectorAll(sel);
+    const TILES = ['🀇','🀈','🀉','🀊','🀋','🀌','🀍','🀎','🀏','🀙','🀚','🀛','🀜','🀝','🀞','🀟','🀠','🀡','🀐','🀑','🀒','🀓','🀔','🀕','🀖','🀗','🀘','🀀','🀁','🀂','🀃','🀆','🀅','🀄'];
+    const TOTAL_TILE_TYPES = 34, GUESS_LENGTH = 14, MAX_ROWS = 6;
+    const KOKUSHI_INDICES = [0,8,9,17,18,26,27,28,29,30,31,32,33];
+    const YAOCHU_INDICES = new Set(KOKUSHI_INDICES);
+    const GREEN_TILES = new Set([19,20,21,23,25,32]);
+    const WIND_NAMES = ['东','南','西','北'];
+    const game = { variant:'riichi', mode:'daily', targetHand:[], currentGuess:[], pendingNumbers:[], currentRow:0, gameOver:false, gameWon:false, keyColors:Array(TOTAL_TILE_TYPES).fill(''), fieldWind:0, selfWind:0, isTsumo:true, guessHistory:[], theme:'dark', dailyDate:'', targetYaku:[] };
+    const LS = { get:(k,d)=>{try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch{return d}}, set:(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch{}} };
+    const lsPrefix = ()=>'mw_'+game.variant+'_';
+    const getCounts = arr=>arr.reduce((acc,val)=>{acc[val]++;return acc},Array(TOTAL_TILE_TYPES).fill(0));
+    const getTileName = i=>i<27?`${(i%9)+1}${['万','筒','索'][i/9|0]}`:WIND_NAMES.concat(['白','发','中'])[i-27];
+    const sortGuessLikeTarget = guess=>[...guess.slice(0,13).sort((a,b)=>a-b),guess[13]];
+    const isKokushiShape = counts=>KOKUSHI_INDICES.every(i=>counts[i]>=1) && KOKUSHI_INDICES.reduce((s,i)=>s+counts[i],0)===14;
+    const isSevenPairs = counts=>counts.filter(c=>c===2).length===7;
+    function mulberry32(a){return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
 
-        const TILES = ['🀇', '🀈', '🀉', '🀊', '🀋', '🀌', '🀍', '🀎', '🀏', '🀙', '🀚', '🀛', '🀜', '🀝', '🀞', '🀟', '🀠', '🀡', '🀐', '🀑', '🀒', '🀓', '🀔', '🀕', '🀖', '🀗', '🀘', '🀀', '🀁', '🀂', '🀃', '🀆', '🀅', '🀄'];
-        const TOTAL_TILE_TYPES = 34, GUESS_LENGTH = 14, MAX_ROWS = 6;
-        const KOKUSHI_INDICES = [0, 8, 9, 17, 18, 26, 27, 28, 29, 30, 31, 32, 33];
-        const YAOCHU_INDICES = new Set(KOKUSHI_INDICES);
-        const GREEN_TILES = new Set([19, 20, 21, 23, 25, 32]);
-        const WIND_NAMES = ['东', '南', '西', '北'];
+    function getTodaySeed(){
+        const now=new Date(),dateStr=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+        let hash=0;for(let i=0;i<dateStr.length;i++)hash=((hash<<5)-hash)+dateStr.charCodeAt(i)|0;
+        return {seed:Math.abs(hash)+(game.variant==='guobiao'?99999:0),dateStr};
+    }
 
-        const game = { variant: 'riichi', mode: 'daily', targetHand: [], currentGuess: [], pendingNumbers: [], currentRow: 0, gameOver: false, gameWon: false, keyColors: Array(TOTAL_TILE_TYPES).fill(''), fieldWind: 0, selfWind: 0, isTsumo: true, guessHistory: [], theme: 'dark', dailyDate: '', targetYaku: [] };
-        const LS = { get: (k, d) => { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch { return d; } }, set: (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch { } } };
-        const lsPrefix = () => 'mw_' + game.variant + '_';
-
-        const getCounts = arr => arr.reduce((acc, val) => { acc[val]++; return acc; }, Array(TOTAL_TILE_TYPES).fill(0));
-        const getTileName = i => i < 27 ? `${(i % 9) + 1}${['万', '筒', '索'][i / 9 | 0]}` : WIND_NAMES.concat(['白', '发', '中'])[i - 27];
-        const sortGuessLikeTarget = guess => [...guess.slice(0, 13).sort((a, b) => a - b), guess[13]];
-        const isKokushiShape = counts => KOKUSHI_INDICES.every(i => counts[i] >= 1) && KOKUSHI_INDICES.reduce((s, i) => s + counts[i], 0) === 14;
-        const isSevenPairs = counts => counts.filter(c => c === 2).length === 7;
-
-        function mulberry32(a) { return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
-
-        function getTodaySeed() {
-            const now = new Date(), dateStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
-            let hash = 0;
-            for (let i = 0; i < dateStr.length; i++) hash = ((hash << 5) - hash) + dateStr.charCodeAt(i) | 0;
-            return { seed: Math.abs(hash) + (game.variant === 'guobiao' ? 99999 : 0), dateStr };
-        }
-
-        function findAllDecompositions(counts) {
-            const results = [], used = Array(TOTAL_TILE_TYPES).fill(0);
-            function bt(melds, pair) {
-                if (melds.length === 4 && pair !== -1) return results.push({ melds: [...melds], pair });
-                if (pair === -1) {
-                    for (let i = 0; i < TOTAL_TILE_TYPES; i++) if (counts[i] - used[i] >= 2) { used[i] += 2; bt(melds, i); used[i] -= 2; }
-                } else {
-                    for (let i = 0; i < TOTAL_TILE_TYPES; i++) if (counts[i] - used[i] >= 3) { used[i] += 3; melds.push({ type: 'triplet', tile: i }); bt(melds, pair); melds.pop(); used[i] -= 3; }
-                    for (let s = 0; s < 3; s++) for (let n = 0; n < 7; n++) {
-                        const i = s * 9 + n;
-                        if (counts[i] - used[i] > 0 && counts[i + 1] - used[i + 1] > 0 && counts[i + 2] - used[i + 2] > 0) { used[i]++; used[i + 1]++; used[i + 2]++; melds.push({ type: 'sequence', start: i }); bt(melds, pair); melds.pop(); used[i]--; used[i + 1]--; used[i + 2]--; }
+    function findAllDecompositions(counts){
+        const results=[],used=Array(TOTAL_TILE_TYPES).fill(0);
+        function bt(melds,pair){
+            if(melds.length===4&&pair!==-1)return results.push({melds:[...melds],pair});
+            if(pair===-1){for(let i=0;i<TOTAL_TILE_TYPES;i++)if(counts[i]-used[i]>=2){used[i]+=2;bt(melds,i);used[i]-=2}}
+            else{
+                for(let i=0;i<TOTAL_TILE_TYPES;i++)if(counts[i]-used[i]>=3){used[i]+=3;melds.push({type:'triplet',tile:i});bt(melds,pair);melds.pop();used[i]-=3}
+                for(let s=0;s<3;s++)for(let n=0;n<7;n++){
+                    const i=s*9+n;
+                    if(counts[i]-used[i]>0&&counts[i+1]-used[i+1]>0&&counts[i+2]-used[i+2]>0){
+                        used[i]++;used[i+1]++;used[i+2]++;melds.push({type:'sequence',start:i});bt(melds,pair);melds.pop();used[i]--;used[i+1]--;used[i+2]--;
                     }
                 }
             }
-            bt([], -1);
-            const unique = new Map();
-            results.forEach(res => unique.set(JSON.stringify({ melds: res.melds.map(m => m.type + (m.start ?? m.tile)).sort(), pair: res.pair }), res));
-            return [...unique.values()];
         }
+        bt([],-1);
+        const unique=new Map();
+        results.forEach(res=>unique.set(JSON.stringify({melds:res.melds.map(m=>m.type+(m.start??m.tile)).sort(),pair:res.pair}),res));
+        return [...unique.values()];
+    }
 
-        function tryGenerateStandardHand(counts, rng) {
-            counts[Math.floor(rng() * TOTAL_TILE_TYPES)] += 2;
-            for (let m = 0; m < 4; m++) {
-                if (rng() < 0.4) counts[rng() < 0.5 ? Math.floor(rng() * 3) * 9 + Math.floor(rng() * 7) + 1 : Math.floor(rng() * TOTAL_TILE_TYPES)] += 3;
-                else { const b = Math.floor(rng() * 3) * 9 + Math.floor(rng() * 7); counts[b]++; counts[b + 1]++; counts[b + 2]++; }
+    function tryGenerateStandardHand(counts,rng){
+        counts[Math.floor(rng()*TOTAL_TILE_TYPES)]+=2;
+        for(let m=0;m<4;m++){
+            if(rng()<0.4)counts[rng()<0.5?Math.floor(rng()*3)*9+Math.floor(rng()*7)+1:Math.floor(rng()*TOTAL_TILE_TYPES)]+=3;
+            else{const b=Math.floor(rng()*3)*9+Math.floor(rng()*7);counts[b]++;counts[b+1]++;counts[b+2]++}
+        }
+        return counts.every(c=>c<=4);
+    }
+
+    const runHandGen = (rng,chkFn,fallback)=>{
+        let valid=false,counts=Array(TOTAL_TILE_TYPES).fill(0),attempts=0;
+        while(!valid&&attempts++<8000){
+            counts.fill(0);const rand=rng();
+            if(rand<0.03){counts[KOKUSHI_INDICES[Math.floor(rng()*KOKUSHI_INDICES.length)]]=2;KOKUSHI_INDICES.forEach(i=>counts[i]=Math.max(counts[i],1));valid=true}
+            else if(rand<0.12){Array.from({length:TOTAL_TILE_TYPES},(_,i)=>i).sort(()=>rng()-0.5).slice(0,7).forEach(i=>counts[i]=2);valid=true}
+            else valid=tryGenerateStandardHand(counts,rng);
+            if(valid&&counts.every(c=>c<=4)){
+                const allT=counts.flatMap((c,i)=>Array(c).fill(i)),wTile=allT.splice(Math.floor(rng()*allT.length),1)[0];
+                if(valid=chkFn(counts,wTile).valid)game.targetHand=[...allT.sort((a,b)=>a-b),wTile];
             }
-            return counts.every(c => c <= 4);
         }
+        if(!valid)game.targetHand=fallback;
+    };
 
-        const runHandGen = (rng, chkFn, fallback) => {
-            let valid = false, counts = Array(TOTAL_TILE_TYPES).fill(0), attempts = 0;
-            while (!valid && attempts++ < 8000) {
-                counts.fill(0);
-                const rand = rng();
-                if (rand < 0.03) { counts[KOKUSHI_INDICES[Math.floor(rng() * KOKUSHI_INDICES.length)]] = 2; KOKUSHI_INDICES.forEach(i => counts[i] = Math.max(counts[i], 1)); valid = true; }
-                else if (rand < 0.12) { Array.from({ length: TOTAL_TILE_TYPES }, (_, i) => i).sort(() => rng() - 0.5).slice(0, 7).forEach(i => counts[i] = 2); valid = true; }
-                else valid = tryGenerateStandardHand(counts, rng);
-                if (valid && counts.every(c => c <= 4)) {
-                    const allT = counts.flatMap((c, i) => Array(c).fill(i)), wTile = allT.splice(Math.floor(rng() * allT.length), 1)[0];
-                    if (valid = chkFn(counts, wTile).valid) game.targetHand = [...allT.sort((a, b) => a - b), wTile];
+    const riichi_generateTargetHand = rng=>runHandGen(rng,riichi_checkHandValidity,[1,2,3,4,5,10,11,12,13,14,15,19,19,6]);
+    const guobiao_generateTargetHand = rng=>runHandGen(rng,guobiao_checkHandValidity,[0,1,2,9,10,11,18,19,20,27,27,27,31,31]);
+
+    function riichi_checkHandValidity(counts,winningTile){
+        if(!counts.every(c=>c<=4))return{valid:false,reason:'存在超过4张的同种牌'};
+        if(isKokushiShape(counts)||isSevenPairs(counts))return{valid:true};
+        if(findAllDecompositions(counts).length)return(!game.isTsumo&&!riichi_hasYakuForRon(counts,winningTile))?{valid:false,reason:'无役！荣和必须至少有一个役'}:{valid:true};
+        return{valid:false,reason:'无法构成有效的和牌型'};
+    }
+    function riichi_hasYakuForRon(counts,winningTile){const y=riichi_getAllYakuFromCounts(counts,winningTile);return y.length>0&&!(y.length===1&&y[0]==='门清（无其他役）')}
+
+    function riichi_getAllYakuFromCounts(counts,winningTile){
+        if(isKokushiShape(counts))return[counts[winningTile]===2?'国士无双十三面':'国士无双'];
+        const act=[];counts.forEach((c,i)=>c&&act.push(i));
+        const isTan=act.every(i=>!YAOCHU_INDICES.has(i)),isAllY=act.every(i=>YAOCHU_INDICES.has(i)),hasJi=act.some(i=>i>=27);
+        const suitSet=new Set(act.filter(i=>i<27).map(i=>i/9|0)),isChin=suitSet.size===1&&!hasJi,isHon=suitSet.size===1&&hasJi;
+        const meta={act,isTan,isAllY,hasJi,isChin,isHon};
+        const bestYaku=findAllDecompositions(counts).map(d=>riichi_detectYakuFromDecomposition(counts,d,winningTile,meta)).reduce((b,c)=>c.length>b.length?c:b,[]);
+        const ymList=['四暗刻单骑','四暗刻','大三元','大四喜','小四喜','字一色','清老头','绿一色','九莲宝灯','纯正九莲宝灯'],fYm=bestYaku.filter(y=>ymList.includes(y));
+        if(fYm.length)return fYm;if(bestYaku.length)return bestYaku;
+        if(isSevenPairs(counts)){
+            if(!suitSet.size)return['字一色'];const qd=['七对子'];
+            if(isAllY)qd.push('混老头');else if(isTan)qd.push('断幺九');
+            qd.push(isChin?'清一色':isHon?'混一色':null);return qd.filter(Boolean);
+        }
+        return[game.isTsumo?'门清自摸':'门清（无其他役）'];
+    }
+
+    function riichi_detectYakuFromDecomposition(counts,decomp,winningTile,meta){
+        const yaku=[],add=t=>yaku.push(t),{melds,pair}=decomp,{act,isTan,isAllY,hasJi,isChin,isHon}=meta;
+        if(isChin)add('清一色');else if(isHon)add('混一色');
+        if(isTan)add('断幺九');
+        if(counts[27+game.selfWind]>=3)add('役牌(自风)');
+        if(counts[27+game.fieldWind]>=3)add('役牌(场风)');
+        [31,32,33].forEach((i,idx)=>counts[i]>=3&&add(`役牌(${['白','发','中'][idx]})`));
+        const seq=melds.filter(m=>m.type==='sequence'),tri=melds.filter(m=>m.type==='triplet');
+        const isYpPair=pair>=31||pair===27+game.selfWind||pair===27+game.fieldWind;
+        if(seq.length===4&&!isYpPair&&seq.some(({start:s})=>(winningTile===s&&s%9!==6)||(winningTile===s+2&&s%9!==0)))add('平和');
+        const pairsCnt=Object.values(seq.reduce((a,{start})=>(a[start]=(a[start]||0)+1,a),{})).reduce((s,c)=>s+(c>>1),0);
+        if(seq.length===4&&pairsCnt===2)add('二杯口');else if(pairsCnt>=1)add('一杯口');
+        const sqS=[new Set(),new Set(),new Set()];seq.forEach(({start:s})=>sqS[s/9|0].add(s%9));
+        if([...sqS[0]].some(n=>sqS[1].has(n)&&sqS[2].has(n)))add('三色同顺');
+        if(sqS.some(set=>set.has(0)&&set.has(3)&&set.has(6)))add('一气通贯');
+        const trS=[new Set(),new Set(),new Set()];tri.forEach(({tile:t})=>t<27&&trS[t/9|0].add(t%9));
+        if([...trS[0]].some(n=>trS[1].has(n)&&trS[2].has(n)))add('三色同刻');
+        const dTri=tri.filter(t=>t.tile>=31).length;
+        if(dTri===3)add('大三元');else if(dTri===2&&pair>=31)add('小三元');
+        const wTri=tri.filter(t=>t.tile>=27&&t.tile<=30).length;
+        if(wTri===4)add('大四喜');else if(wTri===3&&pair>=27&&pair<=30)add('小四喜');
+        if(tri.length===4)add('对对和');
+        const ankou=tri.filter(t=>game.isTsumo||t.tile!==winningTile).length;
+        if(ankou===4)add(pair===winningTile?'四暗刻单骑':'四暗刻');else if(ankou>=3)add('三暗刻');
+        if(isAllY)add(!hasJi?'清老头':act.every(i=>i>=27)?'字一色':'混老头');
+        else if(YAOCHU_INDICES.has(pair)&&melds.every(m=>m.type==='triplet'?YAOCHU_INDICES.has(m.tile):m.start%9===0||m.start%9===6))add(hasJi?'混全带幺九':'纯全带幺九');
+        if(act.every(i=>[19,20,21,23,25,32].includes(i)))add('绿一色');
+        if(isChin){const b=(act[0]/9|0)*9,r=[3,1,1,1,1,1,1,1,3];if(r.every((min,k)=>counts[b+k]>=min))add(r.every((min,k)=>counts[b+k]-(b+k===winningTile)===min)?'纯正九莲宝灯':'九莲宝灯')}
+        return yaku;
+    }
+
+    // ====================== 国标番种计算（完全修复版） ======================
+    function guobiao_checkHandValidity(counts,winningTile){
+        if(!counts.every(c=>c<=4))return{valid:false,reason:'存在超过4张的同种牌'};
+        const d=calcGuobiaoMax(counts,winningTile);
+        return d.score>=8?{valid:true}:(d.score>0?{valid:false,reason:`番数不足8番（当前 ${d.score} 番：${d.types.join(' · ')}）`}:{valid:false,reason:'无法构成国标有效的和牌型'});
+    }
+    function guobiao_getAllYakuFromCounts(counts,winningTile){return calcGuobiaoMax(counts,winningTile).types;}
+
+    function calcGuobiaoMax(counts,winningTile){
+        if(isKokushiShape(counts))return{score:88,types:['十三幺']};
+        const allSingle=counts.every(c=>c<=1);
+        if(allSingle&&counts.reduce((s,c)=>s+c,0)===14){
+            const suits=[[],[],[]];
+            for(let i=0;i<27;i++)if(counts[i])suits[i/9|0].push(i%9+1);
+            const sets=[[1,4,7],[2,5,8],[3,6,9]];
+            const perm=[[0,1,2],[0,2,1],[1,0,2],[1,2,0],[2,0,1],[2,1,0]];
+            let validFK=false;
+            for(const [a,b,c] of perm){
+                if(suits[0].every(n=>sets[a].includes(n))&&suits[1].every(n=>sets[b].includes(n))&&suits[2].every(n=>sets[c].includes(n))){validFK=true;break}
+            }
+            if(validFK){
+                const isQixing=counts.slice(27,34).every(c=>c===1);
+                const types=isQixing?['七星不靠']:['全不靠'];
+                let score=isQixing?24:12;
+                if(hasWuMenQi(counts)){types.push('五门齐');score+=6}
+                return{score,types};
+            }
+        }
+        if(isSevenPairs(counts)){
+            const act=[];counts.forEach((c,i)=>c&&act.push(i));
+            const sSz=new Set(act.filter(i=>i<27).map(i=>i/9|0)).size;
+            const hasJ=act.some(i=>i>=27);
+            const isAllY=act.every(i=>YAOCHU_INDICES.has(i));
+            let isL=false;
+            for(let s=0;s<3;s++)for(let n=0;n<3;n++)if(Array.from({length:7},(_,i)=>counts[s*9+n+i]===2).every(Boolean))isL=true;
+            if(isL)return{score:88,types:['连七对']};
+            let types=['七对'],score=24;
+            if(!sSz&&hasJ){types.push('字一色');score+=64}
+            else if(sSz===1&&!hasJ){types.push('清一色');score+=24}
+            else if(sSz===1&&hasJ){types.push('混一色');score+=6}
+            if(isAllY&&hasJ&&sSz>0){types.push('混老头');score+=16}
+            if(isAllY&&!hasJ){types.push('清老头');score+=64}
+            if(act.every(i=>GREEN_TILES.has(i))){types.push('绿一色');score+=88}
+            if(act.every(i=>!YAOCHU_INDICES.has(i))){types.push('断幺');score+=2}
+            if(!hasJ){types.push('无字');score+=1}
+            if(hasWuMenQi(counts)){types.push('五门齐');score+=6}
+            return{score,types};
+        }
+        const decomps=findAllDecompositions(counts);
+        if(!decomps.length)return{score:0,types:[]};
+        let best={score:0,types:[]};
+        for(const d of decomps){
+            const res=evaluateDecompFan(d,counts,winningTile);
+            if(res.score>best.score)best=res;
+        }
+        const combDragRes=tryCombinationDragon(counts,winningTile);
+        if(combDragRes&&combDragRes.score>best.score)best=combDragRes;
+        return best;
+    }
+
+    function hasWuMenQi(counts){
+        return counts.slice(0,9).some(c=>c>0)&&counts.slice(9,18).some(c=>c>0)&&counts.slice(18,27).some(c=>c>0)&&counts.slice(27,31).some(c=>c>0)&&counts.slice(31,34).some(c=>c>0);
+    }
+
+    function tryCombinationDragon(counts,winningTile){
+        const dragonSets=[[0,3,6],[1,4,7],[2,5,8]];
+        const perms=[[0,1,2],[0,2,1],[1,0,2],[1,2,0],[2,0,1],[2,1,0]];
+        let best=null;
+        for(const [m0,m1,m2] of perms){
+            const used=Array(34).fill(0);
+            let ok=true;
+            for(let s=0;s<3;s++){
+                for(let r of dragonSets[[m0,m1,m2][s]]){
+                    let idx=s*9+r;
+                    if(counts[idx]<1){ok=false;break}
+                    used[idx]++;
                 }
+                if(!ok)break;
             }
-            if (!valid) game.targetHand = fallback;
-        };
-
-        const riichi_generateTargetHand = rng => runHandGen(rng, riichi_checkHandValidity, [1, 2, 3, 4, 5, 10, 11, 12, 13, 14, 15, 19, 19, 6]);
-        const guobiao_generateTargetHand = rng => runHandGen(rng, guobiao_checkHandValidity, [0, 1, 2, 9, 10, 11, 18, 19, 20, 27, 27, 27, 31, 31]);
-
-        function riichi_checkHandValidity(counts, winningTile) {
-            if (!counts.every(c => c <= 4)) return { valid: false, reason: '存在超过4张的同种牌' };
-            if (isKokushiShape(counts) || isSevenPairs(counts)) return { valid: true };
-            if (findAllDecompositions(counts).length) return (!game.isTsumo && !riichi_hasYakuForRon(counts, winningTile)) ? { valid: false, reason: '无役！荣和必须至少有一个役' } : { valid: true };
-            return { valid: false, reason: '无法构成有效的和牌型' };
-        }
-
-        function riichi_hasYakuForRon(counts, winningTile) { const y = riichi_getAllYakuFromCounts(counts, winningTile); return y.length > 0 && !(y.length === 1 && y[0] === '门清（无其他役）'); }
-
-        function riichi_getAllYakuFromCounts(counts, winningTile) {
-            if (isKokushiShape(counts)) return [counts[winningTile] === 2 ? '国士无双十三面' : '国士无双'];
-            const act = []; counts.forEach((c, i) => c && act.push(i));
-            const isTan = act.every(i => !YAOCHU_INDICES.has(i)), isAllY = act.every(i => YAOCHU_INDICES.has(i)), hasJi = act.some(i => i >= 27);
-            const suitSet = new Set(act.filter(i => i < 27).map(i => i / 9 | 0)), isChin = suitSet.size === 1 && !hasJi, isHon = suitSet.size === 1 && hasJi;
-            const meta = { act, isTan, isAllY, hasJi, isChin, isHon };
-            const bestYaku = findAllDecompositions(counts).map(d => riichi_detectYakuFromDecomposition(counts, d, winningTile, meta)).reduce((b, c) => c.length > b.length ? c : b, []);
-            const ymList = ['四暗刻单骑', '四暗刻', '大三元', '大四喜', '小四喜', '字一色', '清老头', '绿一色', '九莲宝灯', '纯正九莲宝灯'], fYm = bestYaku.filter(y => ymList.includes(y));
-            if (fYm.length) return fYm;
-            if (bestYaku.length) return bestYaku;
-            if (isSevenPairs(counts)) {
-                if (!suitSet.size) return ['字一色'];
-                const qd = ['七对子'];
-                if (isAllY) qd.push('混老头'); else if (isTan) qd.push('断幺九');
-                qd.push(isChin ? '清一色' : isHon ? '混一色' : null);
-                return qd.filter(Boolean);
-            }
-            return [game.isTsumo ? '门清自摸' : '门清（无其他役）'];
-        }
-
-        function riichi_detectYakuFromDecomposition(counts, decomp, winningTile, meta) {
-            const yaku = [], add = t => yaku.push(t), { melds, pair } = decomp, { act, isTan, isAllY, hasJi, isChin, isHon } = meta;
-            if (isChin) add('清一色'); else if (isHon) add('混一色');
-            if (isTan) add('断幺九');
-            if (counts[27 + game.selfWind] >= 3) add('役牌(自风)');
-            if (counts[27 + game.fieldWind] >= 3) add('役牌(场风)');
-            [31, 32, 33].forEach((i, idx) => counts[i] >= 3 && add(`役牌(${['白', '发', '中'][idx]})`));
-            const seq = melds.filter(m => m.type === 'sequence'), tri = melds.filter(m => m.type === 'triplet');
-            const isYpPair = pair >= 31 || pair === 27 + game.selfWind || pair === 27 + game.fieldWind;
-            if (seq.length === 4 && !isYpPair && seq.some(({ start: s }) => (winningTile === s && s % 9 !== 6) || (winningTile === s + 2 && s % 9 !== 0))) add('平和');
-            const pairsCnt = Object.values(seq.reduce((a, { start }) => (a[start] = (a[start] || 0) + 1, a), {})).reduce((s, c) => s + (c >> 1), 0);
-            if (seq.length === 4 && pairsCnt === 2) add('二杯口'); else if (pairsCnt >= 1) add('一杯口');
-            const sqS = [new Set(), new Set(), new Set()]; seq.forEach(({ start: s }) => sqS[s / 9 | 0].add(s % 9));
-            if ([...sqS[0]].some(n => sqS[1].has(n) && sqS[2].has(n))) add('三色同顺');
-            if (sqS.some(set => set.has(0) && set.has(3) && set.has(6))) add('一气通贯');
-            const trS = [new Set(), new Set(), new Set()]; tri.forEach(({ tile: t }) => t < 27 && trS[t / 9 | 0].add(t % 9));
-            if ([...trS[0]].some(n => trS[1].has(n) && trS[2].has(n))) add('三色同刻');
-            const dTri = tri.filter(t => t.tile >= 31).length;
-            if (dTri === 3) add('大三元'); else if (dTri === 2 && pair >= 31) add('小三元');
-            const wTri = tri.filter(t => t.tile >= 27 && t.tile <= 30).length;
-            if (wTri === 4) add('大四喜'); else if (wTri === 3 && pair >= 27 && pair <= 30) add('小四喜');
-            if (tri.length === 4) add('对对和');
-            const ankou = tri.filter(t => game.isTsumo || t.tile !== winningTile).length;
-            if (ankou === 4) add(pair === winningTile ? '四暗刻单骑' : '四暗刻'); else if (ankou >= 3) add('三暗刻');
-            if (isAllY) add(!hasJi ? '清老头' : act.every(i => i >= 27) ? '字一色' : '混老头');
-            else if (YAOCHU_INDICES.has(pair) && melds.every(m => m.type === 'triplet' ? YAOCHU_INDICES.has(m.tile) : m.start % 9 === 0 || m.start % 9 === 6)) add(hasJi ? '混全带幺九' : '纯全带幺九');
-            if (act.every(i => [19, 20, 21, 23, 25, 32].includes(i))) add('绿一色');
-            if (isChin) { const b = (act[0] / 9 | 0) * 9, r = [3, 1, 1, 1, 1, 1, 1, 1, 3]; if (r.every((min, k) => counts[b + k] >= min)) add(r.every((min, k) => counts[b + k] - (b + k === winningTile) === min) ? '纯正九莲宝灯' : '九莲宝灯'); }
-            return yaku;
-        }
-
-        function guobiao_checkHandValidity(counts, winningTile) {
-            if (!counts.every(c => c <= 4)) return { valid: false, reason: '存在超过4张的同种牌' };
-            const d = guobiao_getDetails(counts, winningTile);
-            return d.score >= 8 ? { valid: true } : (d.score > 0 ? { valid: false, reason: `番数不足8番（当前 ${d.score} 番：${d.types.join(' · ')}）` } : { valid: false, reason: '无法构成国标有效的和牌型' });
-        }
-
-        function guobiao_getAllYakuFromCounts(counts, winningTile) { return guobiao_getDetails(counts, winningTile).types; }
-
-        function guobiao_getDetails(counts, winningTile) {
-            let types = [], score = 0;
-            const add = (t, s) => { if (s > 0 && !types.includes(t)) { types.push(t); score += s; } };
-
-            // 1. 十三幺
-            if (isKokushiShape(counts)) { add('十三幺', 88); return { types, score }; }
-
-            // 2. 全不靠 / 七星不靠
-            const allSingle = counts.every(c => c <= 1);
-            if (allSingle && counts.reduce((s, c) => s + c, 0) === 14) {
-                const honorCnt = counts.slice(27).reduce((s, c) => s + c, 0);
-                const suits = [[], [], []];
-                for (let i = 0; i < 27; i++) if (counts[i]) suits[i / 9 | 0].push(i % 9 + 1);
-                const sets = [[1, 4, 7], [2, 5, 8], [3, 6, 9]];
-                const perm = [[0, 1, 2], [0, 2, 1], [1, 0, 2], [1, 2, 0], [2, 0, 1], [2, 1, 0]];
-                let validFK = false;
-                for (const [a, b, c] of perm) {
-                    if (suits[0].every(n => sets[a].includes(n)) && suits[1].every(n => sets[b].includes(n)) && suits[2].every(n => sets[c].includes(n))) { validFK = true; break; }
-                }
-                if (validFK && honorCnt >= 1) {
-                    const isQixing = counts.slice(27, 34).every(c => c === 1);
-                    add(isQixing ? '七星不靠' : '全不靠', isQixing ? 24 : 12);
-                    if (guobiao_hasWuMenQi(counts)) add('五门齐', 6);
-                    return { types, score };
-                }
-            }
-
-            // 3. 组合龙 (独立逻辑拆解，修复原有无法拆解余牌的Bug)
-            const combDragDecomps = guobiao_findCombinationDragonDecompositions(counts);
-            if (combDragDecomps.length > 0) {
-                return combDragDecomps.map(d => guobiao_evaluateCombinationDragon(counts, d)).reduce((a, b) => a.score > b.score ? a : b, { types: [], score: 0 });
-            }
-
-            // 4. 七对系列
-            if (isSevenPairs(counts)) {
-                const act = []; counts.forEach((c, i) => c && act.push(i));
-                const sSz = new Set(act.filter(i => i < 27).map(i => i / 9 | 0)).size;
-                const hasJ = act.some(i => i >= 27);
-                const isAllY = act.every(i => YAOCHU_INDICES.has(i));
-                let isL = [0, 1, 2].some(s => [0, 1, 2].some(n => Array.from({ length: 7 }, (_, i) => counts[s * 9 + n + i] === 2).every(Boolean)));
-                if (isL) { add('连七对', 88); return { types, score }; }
-                add('七对', 24);
-                if (!sSz && hasJ) add('字一色', 64);
-                else if (sSz === 1 && !hasJ) add('清一色', 24);
-                else if (sSz === 1 && hasJ) add('混一色', 6);
-                if (isAllY && hasJ && sSz > 0) add('混老头', 16);
-                if (isAllY && !hasJ) add('清老头', 64);
-                if (act.every(i => GREEN_TILES.has(i))) add('绿一色', 88);
-                if (act.every(i => !YAOCHU_INDICES.has(i))) add('断幺', 2);
-                if (!hasJ) add('无字', 1);
-                if (guobiao_hasWuMenQi(counts)) add('五门齐', 6);
-                return { types, score };
-            }
-
-            // 5. 标准 4面子 1将 牌型
-            const dec = findAllDecompositions(counts);
-            if (!dec.length) return { types: [], score: 0 };
-            return dec.map(d => guobiao_evaluateDecomposition(counts, d, winningTile)).reduce((b, c) => c.score > b.score ? c : b, { types: [], score: -1 });
-        }
-
-        function guobiao_hasWuMenQi(counts) {
-            const hasWan = counts.slice(0, 9).some(c => c > 0);
-            const hasTong = counts.slice(9, 18).some(c => c > 0);
-            const hasSuo = counts.slice(18, 27).some(c => c > 0);
-            const hasFeng = counts.slice(27, 31).some(c => c > 0);
-            const hasJian = counts.slice(31, 34).some(c => c > 0);
-            return hasWan && hasTong && hasSuo && hasFeng && hasJian;
-        }
-
-        // 精准提取组合龙骨架及余牌
-        function guobiao_findCombinationDragonDecompositions(counts) {
-            const dragonSets = [[0, 3, 6], [1, 4, 7], [2, 5, 8]]; // 147, 258, 369
-            const perms = [[0, 1, 2], [0, 2, 1], [1, 0, 2], [1, 2, 0], [2, 0, 1], [2, 1, 0]];
-            const validDecomps = [];
-
-            for (const [m0, m1, m2] of perms) {
-                let ok = true;
-                const used = Array(TOTAL_TILE_TYPES).fill(0);
-                const suits = [m0, m1, m2];
-                for (let s = 0; s < 3; s++) {
-                    for (let r of dragonSets[suits[s]]) {
-                        let idx = s * 9 + r;
-                        if (counts[idx] < 1) { ok = false; break; }
-                        used[idx]++;
-                    }
-                    if (!ok) break;
-                }
-                if (!ok) continue;
-
-                const remCounts = counts.map((c, i) => c - used[i]);
-                // 校验剩下的5张牌能否构成 1个面子+1个对子
-                for (let p = 0; p < TOTAL_TILE_TYPES; p++) {
-                    if (remCounts[p] >= 2) {
-                        const rem2 = [...remCounts];
-                        rem2[p] -= 2;
-                        // 刻子校验
-                        for (let t = 0; t < TOTAL_TILE_TYPES; t++) {
-                            if (rem2[t] === 3) validDecomps.push({ remMeld: { type: 'triplet', tile: t }, pair: p });
+            if(!ok)continue;
+            const remCounts=counts.map((c,i)=>c-used[i]);
+            for(let p=0;p<34;p++){
+                if(remCounts[p]>=2){
+                    const rem2=[...remCounts];rem2[p]-=2;
+                    for(let t=0;t<34;t++){
+                        if(rem2[t]===3){
+                            const melds=[{type:'sequence',start:0},{type:'sequence',start:9},{type:'sequence',start:18},{type:'triplet',tile:t}];
+                            const res=evaluateDecompFan({melds,pair:p},counts,winningTile,true);
+                            if(!best||res.score>best.score)best=res;
                         }
-                        // 顺子校验
-                        for (let s = 0; s < 3; s++) {
-                            for (let n = 0; n < 7; n++) {
-                                let idx = s * 9 + n;
-                                if (rem2[idx] >= 1 && rem2[idx + 1] >= 1 && rem2[idx + 2] >= 1) {
-                                    validDecomps.push({ remMeld: { type: 'sequence', start: idx }, pair: p });
-                                }
+                    }
+                    for(let s=0;s<3;s++){
+                        for(let n=0;n<7;n++){
+                            let idx=s*9+n;
+                            if(rem2[idx]>=1&&rem2[idx+1]>=1&&rem2[idx+2]>=1){
+                                const melds=[{type:'sequence',start:0},{type:'sequence',start:9},{type:'sequence',start:18},{type:'sequence',start:idx}];
+                                const res=evaluateDecompFan({melds,pair:p},counts,winningTile,true);
+                                if(!best||res.score>best.score)best=res;
                             }
                         }
                     }
                 }
             }
-            return validDecomps;
         }
+        return best;
+    }
 
-        // 组合龙番种结算
-        function guobiao_evaluateCombinationDragon(counts, decomp) {
-            let types = ['组合龙'], score = 12;
-            const add = (t, s) => { if (!types.includes(t)) { types.push(t); score += s; } };
-            const { remMeld, pair } = decomp;
+    function evaluateDecompFan(decomp,counts,winningTile,isCombDragon=false){
+        const {melds,pair}=decomp;
+        const seqs=melds.filter(m=>m.type==='sequence').map(m=>({start:m.start,suit:m.start/9|0}));
+        const tris=melds.filter(m=>m.type==='triplet').map(m=>({tile:m.tile}));
+        const shunCounts=Array(27).fill(0);seqs.forEach(s=>shunCounts[s.start]++);
+        const keCounts=Array(34).fill(0);tris.forEach(t=>keCounts[t.tile]++);
+        const allTiles=counts.flatMap((c,i)=>Array(c).fill(i));
+        const hasZi=allTiles.some(i=>i>=27);
+        const suitTypes=new Set(allTiles.filter(i=>i<27).map(i=>i/9|0)).size;
+        const isAllY=allTiles.every(i=>YAOCHU_INDICES.has(i));
+        const isQing=suitTypes===1&&!hasZi;
+        const isHun=suitTypes===1&&hasZi;
+        const isZiSe=!suitTypes&&hasZi;
 
-            if (remMeld.type === 'triplet') {
-                let t = remMeld.tile;
-                if (t >= 31) add('箭刻', 2);
-                else if (t === 27 + game.fieldWind) add('圈风刻', 2);
-                else if (t === 27 + game.selfWind) add('门风刻', 2);
-                else if (t >= 27 && t <= 30) add('幺九刻', 1);
-                else if (t < 27 && (t % 9 === 0 || t % 9 === 8)) add('幺九刻', 1);
-            }
-            const act = []; counts.forEach((c, i) => c && act.push(i));
-            if (!act.some(i => i >= 27)) add('无字', 1);
-            if (guobiao_hasWuMenQi(counts)) add('五门齐', 6);
-            add(game.isTsumo ? '不求人' : '门清', game.isTsumo ? 4 : 2);
+        let fans=[],score=0;
+        const add=(n,s)=>{if(!fans.includes(n)){fans.push(n);score+=s}};
+        const addMul=(n,s,cnt)=>{for(let i=0;i<cnt;i++)add(n,s)};
 
-            let sigC = 0; counts.forEach(c => { if (c === 4) sigC++; });
-            if (sigC > 0) [...Array(sigC)].forEach(() => add('四归一', 2));
-            return { types, score };
+        if(isCombDragon)add('组合龙',12);
+        if(fengKeCount(tris,27,30)===4)add('大四喜',88);
+        if(jianKeCount(tris)===3)add('大三元',88);
+        if(allTiles.every(i=>GREEN_TILES.has(i)))add('绿一色',88);
+        if(isQing){const b=(allTiles.find(i=>i<27)/9|0)*9;if([3,1,1,1,1,1,1,1,3].every((min,k)=>counts[b+k]>=min))add('九莲宝灯',88)}
+        if(!isAllY&&!hasZi&&allTiles.every(i=>i%9===0||i%9===8))add('清幺九',64);
+        if(fengKeCount(tris,27,30)===3&&pair>=27&&pair<=30)add('小四喜',64);
+        if(jianKeCount(tris)===2&&pair>=31)add('小三元',64);
+        if(isZiSe)add('字一色',64);
+        if(ankouCount(tris,winningTile)===4)add('四暗刻',64);
+        if(isYiSeShuangLong(counts,allTiles))add('一色双龙会',64);
+        if(shunCounts.some(c=>c===4))add('一色四同顺',48);
+        if(hasYiSeSiJieGao(tris))add('一色四节高',48);
+        if(hasYiSeSiBuGao(seqs))add('一色四步高',32);
+        if(tris.length===4&&isAllY&&hasZi&&suitTypes>0)add('混幺九',32);
+        if(!isCombDragon){
+            if(suitTypes===1&&!hasZi)add('清一色',24);
+            if(hasYiSeSanTongShun(shunCounts))add('一色三同顺',24);
+            if(hasYiSeSanJieGao(tris))add('一色三节高',24);
+            if(allTiles.every(i=>i<27&&i%9>=6))add('全大',24);
+            if(allTiles.every(i=>i<27&&i%9>=3&&i%9<=5))add('全中',24);
+            if(allTiles.every(i=>i<27&&i%9<=2))add('全小',24);
         }
+        if(tris.length===4&&tris.every(t=>t.tile<27&&(t.tile%9)%2===1)&&pair<27&&(pair%9)%2===1)add('全双刻',24);
+        if(hasQingLong(shunCounts))add('清龙',16);
+        if(hasSanSeShuangLong(seqs,pair))add('三色双龙会',16);
+        if(hasYiSeSanBuGao(seqs))add('一色三步高',16);
+        if(melds.every(m=>m.type==='triplet'?(m.tile<27&&m.tile%9===4):(m.start%9===2))&&pair<27&&pair%9===4)add('全带五',16);
+        if(hasSanTongKe(tris))add('三同刻',16);
+        if(ankouCount(tris,winningTile)===3)add('三暗刻',16);
+        if(fengKeCount(tris,27,30)===3)add('三风刻',12);
+        if(allTiles.every(i=>i<27&&i%9>=5))add('大于五',12);
+        if(allTiles.every(i=>i<27&&i%9<=3))add('小于五',12);
+        if(hasHuaLong(seqs))add('花龙',8);
+        if(allTiles.every(i=>[0,1,2,7,8,9,10,11,12,13,14,16,17,24,25].includes(i)))add('推不倒',8);
+        if(hasSanSeSanTongShun(shunCounts))add('三色三同顺',8);
+        if(hasSanSeSanJieGao(tris))add('三色三节高',8);
+        if(tris.filter(t=>!game.isTsumo&&t.tile===winningTile).length===0&&tris.length>=2)add('双暗杠',8);
+        if(tris.length===4)add('碰碰和',6);
+        if(isHun)add('混一色',6);
+        if(hasSanSeSanBuGao(seqs))add('三色三步高',6);
+        if(hasWuMenQi(counts))add('五门齐',6);
+        if(jianKeCount(tris)===2)add('双箭刻',6);
+        if(melds.every(m=>m.type==='triplet'?YAOCHU_INDICES.has(m.tile):(m.start%9===0||m.start%9===6))&&YAOCHU_INDICES.has(pair)&&!isAllY)add('全带幺',4);
+        if(game.isTsumo&&melds.every(m=>!m.open))add('不求人',4);
+        tris.forEach(t=>{if(t.tile>=31)add('箭刻',2)});
+        tris.forEach(t=>{if(t.tile===27+game.fieldWind)add('圈风刻',2)});
+        tris.forEach(t=>{if(t.tile===27+game.selfWind)add('门风刻',2)});
+        if(melds.every(m=>!m.open))add('门前清',2);
+        if(seqs.length===4&&pair<27)add('平和',2);
+        if(allTiles.every(i=>!YAOCHU_INDICES.has(i)))add('断幺',2);
+        let sigC=0;for(let i=0;i<34;i++)if(counts[i]===4)sigC++;addMul('四归一',2,sigC);
+        if(ankouCount(tris,winningTile)>=2)add('双暗刻',2);
+        if(hasShuangTongKe(tris))add('双同刻',2);
+        let ybG=0;for(let s=0;s<3;s++)for(let n=0;n<7;n++){const c=shunCounts[s*9+n];if(c>=2)ybG+=Math.floor(c/2)}addMul('一般高',1,ybG);
+        for(let n=0;n<7;n++){let pairs=Math.min(shunCounts[n]||0,shunCounts[9+n]||0)+Math.min(shunCounts[n]||0,shunCounts[18+n]||0)+Math.min(shunCounts[9+n]||0,shunCounts[18+n]||0);addMul('喜相逢',1,pairs)}
+        for(let s=0;s<3;s++)for(let n=0;n<=3;n++){let p=Math.min(shunCounts[s*9+n]||0,shunCounts[s*9+n+3]||0);addMul('连六',1,p)}
+        for(let s=0;s<3;s++){let p=Math.min(shunCounts[s*9]||0,shunCounts[s*9+6]||0);addMul('老少副',1,p)}
+        tris.forEach(t=>{if(t.tile<27&&(t.tile%9===0||t.tile%9===8))add('幺九刻',1);else if(t.tile>=27&&t.tile<=30&&t.tile!==27+game.fieldWind&&t.tile!==27+game.selfWind)add('幺九刻',1)});
+        if(!hasZi)add('无字',1);
+        if(suitTypes===2&&!hasZi)add('缺一门',1);
+        if(game.isTsumo)add('自摸',1);
 
-        // 标准形完整番种评估
-        function guobiao_evaluateDecomposition(counts, decomp, winningTile) {
-            let types = [], score = 0;
-            const add = (t, s) => { if (s > 0 && !types.includes(t)) { types.push(t); score += s; } };
+        applyExclusions(fans);
+        const finalScore=fans.reduce((s,f)=>s+(fanScoreMap[f]||0),0);
+        return{score:finalScore,types:fans};
+    }
 
-            const { melds, pair } = decomp;
-            const seq = melds.filter(m => m.type === 'sequence');
-            const tri = melds.filter(m => m.type === 'triplet');
+    const fanScoreMap={
+        '大四喜':88,'大三元':88,'绿一色':88,'九莲宝灯':88,'连七对':88,'十三幺':88,
+        '清幺九':64,'小四喜':64,'小三元':64,'字一色':64,'四暗刻':64,'一色双龙会':64,
+        '一色四同顺':48,'一色四节高':48,
+        '一色四步高':32,'混幺九':32,
+        '七对':24,'七星不靠':24,'全双刻':24,'清一色':24,'一色三同顺':24,'一色三节高':24,'全大':24,'全中':24,'全小':24,
+        '清龙':16,'三色双龙会':16,'一色三步高':16,'全带五':16,'三同刻':16,'三暗刻':16,
+        '全不靠':12,'组合龙':12,'大于五':12,'小于五':12,'三风刻':12,
+        '花龙':8,'推不倒':8,'三色三同顺':8,'三色三节高':8,'双暗杠':8,
+        '碰碰和':6,'混一色':6,'三色三步高':6,'五门齐':6,'双箭刻':6,
+        '全带幺':4,'不求人':4,
+        '箭刻':2,'圈风刻':2,'门风刻':2,'门前清':2,'平和':2,'四归一':2,'双同刻':2,'双暗刻':2,'断幺':2,
+        '一般高':1,'喜相逢':1,'连六':1,'老少副':1,'幺九刻':1,'缺一门':1,'无字':1,'自摸':1
+    };
 
-            const act = []; counts.forEach((c, i) => c && act.push(i));
-            const sSz = new Set(act.filter(i => i < 27).map(i => i / 9 | 0)).size;
-            const hasJ = act.some(i => i >= 27);
-            const isAllY = act.every(i => YAOCHU_INDICES.has(i));
+    function applyExclusions(fans){
+        const remove=name=>{const i=fans.indexOf(name);if(i!==-1)fans.splice(i,1)};
+        if(fans.includes('清一色'))remove('无字');
+        if(fans.includes('混一色'))remove('缺一门');
+        if(fans.includes('字一色')){remove('碰碰和');remove('全带幺');remove('幺九刻')}
+        if(fans.includes('清幺九')){remove('混幺九');remove('碰碰和');remove('双同刻');remove('全带幺');remove('无字')}
+        if(fans.includes('小四喜')){remove('三风刻');remove('幺九刻')}
+        if(fans.includes('小三元')){remove('双箭刻');remove('箭刻')}
+        if(fans.includes('大四喜')){remove('圈风刻');remove('门风刻');remove('三风刻');remove('碰碰和');remove('全带幺');remove('幺九刻')}
+        if(fans.includes('大三元')){remove('箭刻');remove('双箭刻');remove('幺九刻')}
+        if(fans.includes('绿一色'))remove('混一色');
+        if(fans.includes('九莲宝灯')){remove('清一色');remove('门前清');remove('幺九刻')}
+        if(fans.includes('连七对')){remove('七对');remove('清一色');remove('门前清')}
+        if(fans.includes('十三幺')){remove('五门齐');remove('门前清');remove('混幺九')}
+        if(fans.includes('一色四同顺')){remove('一色三节高');remove('一色三同顺');remove('一般高');remove('四归一')}
+        if(fans.includes('一色四节高')){remove('一色三同顺');remove('一色三节高');remove('碰碰和')}
+        if(fans.includes('一色四步高')){remove('一色三步高');remove('连六');remove('老少副')}
+        if(fans.includes('混幺九')){remove('碰碰和');remove('全带幺');remove('幺九刻')}
+        if(fans.includes('七对'))remove('门前清');
+        if(fans.includes('七星不靠')){remove('五门齐');remove('门前清');remove('全不靠')}
+        if(fans.includes('全双刻')){remove('碰碰和');remove('断幺')}
+        if(fans.includes('全大')||fans.includes('全中')||fans.includes('全小')){remove('无字');if(fans.includes('全大'))remove('大于五');if(fans.includes('全小'))remove('小于五')}
+        if(fans.includes('清龙')){remove('连六');remove('老少副')}
+        if(fans.includes('三色双龙会')){remove('喜相逢');remove('老少副');remove('平和')}
+        if(fans.includes('全带五'))remove('断幺');
+        if(fans.includes('三同刻'))remove('双同刻');
+        if(fans.includes('全不靠')){remove('五门齐');remove('门前清')}
+        if(fans.includes('大于五')||fans.includes('小于五'))remove('无字');
+        if(fans.includes('不求人')){remove('自摸');remove('门前清')}
+        if(fans.includes('双箭刻')){remove('箭刻');remove('幺九刻')}
+        if(fans.includes('平和'))remove('无字');
+        if(!fans.includes('门风刻')&&fans.includes('圈风刻'))remove('幺九刻');
+        if(!fans.includes('圈风刻')&&fans.includes('门风刻'))remove('幺九刻');
+        while(fans.filter(f=>f==='一般高').length>2)fans.splice(fans.lastIndexOf('一般高'),1);
+        while(fans.filter(f=>f==='喜相逢').length>2)fans.splice(fans.lastIndexOf('喜相逢'),1);
+        while(fans.filter(f=>f==='连六').length>2)fans.splice(fans.lastIndexOf('连六'),1);
+        while(fans.filter(f=>f==='老少副').length>2)fans.splice(fans.lastIndexOf('老少副'),1);
+    }
 
-            let hDSX = false, hXSX = false, hSAK = false;
+    function fengKeCount(tris,from,to){return tris.filter(t=>t.tile>=from&&t.tile<=to).length}
+    function jianKeCount(tris){return tris.filter(t=>t.tile>=31).length}
+    function ankouCount(tris,winningTile){return tris.filter(t=>game.isTsumo||t.tile!==winningTile).length}
+    function isYiSeShuangLong(counts,allTiles){
+        const sorted=[...allTiles].sort((a,b)=>a-b);
+        const last=sorted[13];
+        if(last>=27)return false;
+        const base=last-last%9;
+        const target=[1,2,3,1,2,3,5,5,7,8,9,7,8,9].map(p=>base+p);
+        return sorted.length===14&&sorted.every((v,i)=>v===target[i]);
+    }
+    function hasYiSeSiJieGao(tris){const vals=tris.filter(t=>t.tile<27).map(t=>({s:t.tile/9|0,v:t.tile%9}));for(let s=0;s<3;s++){const v=vals.filter(x=>x.s===s).map(x=>x.v).sort((a,b)=>a-b);for(let i=0;i<=v.length-4;i++)if(v[i+1]===v[i]+1&&v[i+2]===v[i]+2&&v[i+3]===v[i]+3)return true}return false}
+    function hasYiSeSiBuGao(seqs){for(let s=0;s<3;s++){const v=[...new Set(seqs.filter(x=>x.suit===s).map(x=>x.start%9).sort((a,b)=>a-b))];for(let i=0;i<=v.length-4;i++)if((v[i+1]===v[i]+1&&v[i+2]===v[i]+2&&v[i+3]===v[i]+3)||(v[i+1]===v[i]+2&&v[i+2]===v[i]+4&&v[i+3]===v[i]+6))return true}return false}
+    function hasYiSeSanTongShun(shunCounts){return shunCounts.some(c=>c>=3)}
+    function hasYiSeSanJieGao(tris){const vals=tris.filter(t=>t.tile<27).map(t=>({s:t.tile/9|0,v:t.tile%9}));for(let s=0;s<3;s++){const v=vals.filter(x=>x.s===s).map(x=>x.v).sort((a,b)=>a-b);for(let i=0;i<=v.length-3;i++)if(v[i+1]===v[i]+1&&v[i+2]===v[i]+2)return true}return false}
+    function hasQingLong(shunCounts){for(let s=0;s<3;s++)if(shunCounts[s*9]&&shunCounts[s*9+3]&&shunCounts[s*9+6])return true;return false}
+    function hasSanSeShuangLong(seqs,pair){if(pair>=27||pair%9!==4)return false;const need=[0,6];for(let p of need){const suits=new Set([0,1,2]);for(const s of seqs)if(s.start%9===p&&suits.has(s.suit))suits.delete(s.suit);if(suits.size!==0)return false}return true}
+    function hasYiSeSanBuGao(seqs){for(let s=0;s<3;s++){const v=[...new Set(seqs.filter(x=>x.suit===s).map(x=>x.start%9).sort((a,b)=>a-b))];for(let i=0;i<=v.length-3;i++)if((v[i+1]===v[i]+1&&v[i+2]===v[i]+2)||(v[i+1]===v[i]+2&&v[i+2]===v[i]+4))return true}return false}
+    function hasSanTongKe(tris){const m=new Map();tris.filter(t=>t.tile<27).forEach(t=>{const k=t.tile%9;m.set(k,(m.get(k)||new Set()).add(t.tile/9|0))});for(const[,set]of m)if(set.size>=3)return true;return false}
+    function hasHuaLong(seqs){return[0,3,6].every(st=>seqs.some(s=>s.start%9===st))&&new Set(seqs.filter(s=>[0,3,6].includes(s.start%9)).map(s=>s.suit)).size===3}
+    function hasSanSeSanTongShun(shunCounts){for(let n=0;n<7;n++)if(shunCounts[n]&&shunCounts[9+n]&&shunCounts[18+n])return true;return false}
+    function hasSanSeSanJieGao(tris){const suits=[[],[],[]];tris.filter(t=>t.tile<27).forEach(t=>suits[t.tile/9|0].push(t.tile%9));for(let n=0;n<7;n++){const perms=[[0,1,2],[0,2,1],[1,0,2],[1,2,0],[2,0,1],[2,1,0]];if(perms.some(p=>suits[p[0]].includes(n)&&suits[p[1]].includes(n+1)&&suits[p[2]].includes(n+2)))return true}return false}
+    function hasSanSeSanBuGao(seqs){for(let base=0;base<=4;base++){const suits=new Set([0,1,2]);let ok=true;for(let off=0;off<3;off++){const match=seqs.find(s=>s.start%9===base+off&&suits.has(s.suit));if(!match){ok=false;break}suits.delete(match.suit)}if(ok)return true}return false}
+    function hasShuangTongKe(tris){const m=new Map();tris.filter(t=>t.tile<27).forEach(t=>{const k=t.tile%9;m.set(k,(m.get(k)||0)+1)});return[...m.values()].some(c=>c>=2)}
 
-            // 大四喜 / 小四喜 / 三风刻
-            const wTri = tri.filter(t => t.tile >= 27 && t.tile <= 30).length;
-            if (wTri === 4) { add('大四喜', 88); hDSX = true; }
-            else if (wTri === 3 && pair >= 27 && pair <= 30) { add('小四喜', 64); hXSX = true; }
-            else if (wTri === 3) add('三风刻', 12);
+    const generateTargetHand = rng=>game.variant==='guobiao'?guobiao_generateTargetHand(rng):riichi_generateTargetHand(rng);
+    const checkHandValidity = (counts,wTile)=>game.variant==='guobiao'?guobiao_checkHandValidity(counts,wTile):riichi_checkHandValidity(counts,wTile);
+    const getAllYakuFromCounts = (counts,wTile)=>game.variant==='guobiao'?guobiao_getAllYakuFromCounts(counts,wTile):riichi_getAllYakuFromCounts(counts,wTile);
 
-            // 大三元 / 小三元 / 双箭刻 / 箭刻
-            const aTri = tri.filter(t => t.tile >= 31).length;
-            if (aTri === 3) { add('大三元', 88); }
-            else if (aTri === 2 && pair >= 31) { add('小三元', 64); }
-            else if (aTri === 2) add('双箭刻', 6);
-            else if (aTri === 1) add('箭刻', 2);
-
-            // 风刻加番
-            if (!hDSX && !hXSX) {
-                tri.forEach(t => {
-                    if (t.tile === 27 + game.fieldWind) add('圈风刻', 2);
-                    if (t.tile === 27 + game.selfWind) add('门风刻', 2);
-                });
-            }
-
-            // 花色大类
-            if (sSz === 1 && !hasJ) add('清一色', 24);
-            else if (sSz === 1 && hasJ) add('混一色', 6);
-            else if (!sSz && hasJ) add('字一色', 64);
-
-            if (act.every(i => !YAOCHU_INDICES.has(i))) add('断幺', 2);
-
-            if (isAllY) {
-                if (!hasJ) add('清老头', 64);
-                else if (sSz > 0) add('混老头', 16);
-            }
-
-            // 【精准修正】暗刻计算逻辑：若是荣和，且赢牌无法被顺子/将牌吸收，则必须扣减 1 个暗刻
-            let canAbsorb = (pair === winningTile) || seq.some(s => winningTile >= s.start && winningTile <= s.start + 2);
-            let hasTriWinning = tri.some(t => t.tile === winningTile);
-            let akC = tri.length;
-            if (!game.isTsumo && hasTriWinning && !canAbsorb) akC = tri.length - 1;
-
-            if (akC === 4) { add('四暗刻', 64); hSAK = true; }
-            else if (akC === 3) add('三暗刻', 16);
-            else if (akC === 2) add('双暗刻', 2);
-
-            if (tri.length === 4 && !hDSX && !isAllY && !hSAK) add('碰碰和', 6);
-
-            // 【修正】国标平和：只要4个顺子且数牌作将即可，不排除1、9
-            if (seq.length === 4 && pair < 27) add('平和', 2);
-
-            // 顺子结构分析
-            const sC = Array(TOTAL_TILE_TYPES).fill(0);
-            seq.forEach(s => sC[s.start]++);
-
-            // 一色四同顺 / 一色三同顺 / 一般高
-            let h4 = false, h3 = false, ybG = 0;
-            sC.forEach(c => { if (c === 4) h4 = true; else if (c === 3) h3 = true; else if (c === 2) ybG++; });
-            if (h4) add('一色四同顺', 48); else if (h3) add('一色三同顺', 24);
-            if (ybG > 0) [...Array(ybG)].forEach(() => add('一般高', 1));
-
-            // 【补充】一色三节高
-            [0, 1, 2].forEach(s => {
-                const triVals = tri.filter(t => (t.tile / 9 | 0) === s).map(t => t.tile % 9).sort((a, b) => a - b);
-                for (let i = 0; i <= triVals.length - 3; i++) {
-                    if (triVals[i + 1] === triVals[i] + 1 && triVals[i + 2] === triVals[i] + 2) add('一色三节高', 24);
-                }
-            });
-
-            // 【补充】全双刻
-            if (tri.length === 4) {
-                let allEven = (pair < 27 && (pair % 9) % 2 === 1) && tri.every(t => t.tile < 27 && (t.tile % 9) % 2 === 1);
-                if (allEven) add('全双刻', 24);
-            }
-
-            // 【重构修复】三色三同顺与喜相逢的冲突与复合计算
-            for (let n = 0; n < 7; n++) {
-                let c0 = sC[0 * 9 + n] || 0;
-                let c1 = sC[1 * 9 + n] || 0;
-                let c2 = sC[2 * 9 + n] || 0;
-                let nSSTS = Math.min(c0, c1, c2);
-                if (nSSTS > 0) {
-                    add('三色三同顺', 8);
-                    c0 -= nSSTS; c1 -= nSSTS; c2 -= nSSTS;
-                }
-                let p01 = Math.min(c0, c1); if (p01 > 0) { add('喜相逢', 1); c0 -= p01; c1 -= p01; }
-                let p02 = Math.min(c0, c2); if (p02 > 0) { add('喜相逢', 1); c0 -= p02; c2 -= p02; }
-                let p12 = Math.min(c1, c2); if (p12 > 0) { add('喜相逢', 1); c1 -= p12; c2 -= p12; }
-            }
-
-            // 清龙
-            [0, 1, 2].forEach(s => { if (sC[s * 9] && sC[s * 9 + 3] && sC[s * 9 + 6]) add('清龙', 16); });
-
-            // 花龙
-            const seqInfo = seq.map(s => ({ suit: s.start / 9 | 0, start: s.start % 9 }));
-            const hasHuaLong = [0, 3, 6].every(st => seqInfo.some(({ suit, start }) => start === st)) && new Set(seqInfo.filter(({ start }) => [0, 3, 6].includes(start)).map(s => s.suit)).size === 3;
-            if (hasHuaLong) add('花龙', 8);
-
-            // 三色三步高
-            for (let base = 0; base <= 4; base++) {
-                const suitsNeeded = new Set([0, 1, 2]);
-                let found = true;
-                for (let off = 0; off < 3; off++) {
-                    const targetStart = base + off;
-                    const match = seqInfo.find(({ suit, start }) => start === targetStart && suitsNeeded.has(suit));
-                    if (!match) { found = false; break; }
-                    suitsNeeded.delete(match.suit);
-                }
-                if (found) { add('三色三步高', 6); break; }
-            }
-
-            // 一色四步高 / 一色三步高
-            [0, 1, 2].forEach(s => {
-                const uS = [...new Set(seq.filter(m => (m.start / 9 | 0) === s).map(m => m.start % 9).sort((a, b) => a - b))];
-                let l4 = false, l3 = false;
-                for (let i = 0; i <= uS.length - 4; i++) if ((uS[i + 1] === uS[i] + 1 && uS[i + 2] === uS[i] + 2 && uS[i + 3] === uS[i] + 3) || (uS[i + 1] === uS[i] + 2 && uS[i + 2] === uS[i] + 4 && uS[i + 3] === uS[i] + 6)) l4 = true;
-                for (let i = 0; i <= uS.length - 3; i++) if (!l4 && ((uS[i + 1] === uS[i] + 1 && uS[i + 2] === uS[i] + 2) || (uS[i + 1] === uS[i] + 2 && uS[i + 2] === uS[i] + 4))) l3 = true;
-                if (l4) add('一色四步高', 32); else if (l3) add('一色三步高', 16);
-            });
-
-            // 三色三节高
-            const triValsAll = [[], [], []];
-            tri.forEach(t => { if (t.tile < 27) triValsAll[t.tile / 9 | 0].push(t.tile % 9); });
-            for (let n = 0; n < 7; n++) {
-                const perms = [[0, 1, 2], [0, 2, 1], [1, 0, 2], [1, 2, 0], [2, 0, 1], [2, 1, 0]];
-                if (perms.some(p => triValsAll[p[0]].includes(n) && triValsAll[p[1]].includes(n + 1) && triValsAll[p[2]].includes(n + 2))) { add('三色三节高', 8); break; }
-            }
-
-            // 三色同刻
-            const trS = [new Set(), new Set(), new Set()];
-            tri.forEach(({ tile: t }) => t < 27 && trS[t / 9 | 0].add(t % 9));
-            if ([...trS[0]].some(n => trS[1].has(n) && trS[2].has(n))) add('三色同刻', 8);
-
-            // 全带幺 (去掉多余的“纯全带幺”概念)
-            const isQuanDaiYao = melds.every(m => m.type === 'triplet' ? YAOCHU_INDICES.has(m.tile) : (m.start % 9 === 0 || m.start % 9 === 6)) && YAOCHU_INDICES.has(pair);
-            if (isQuanDaiYao && !isAllY) add('全带幺', 4);
-
-            // 【补充】老少配 / 连六 (在没有组成清龙时允许计番)
-            if (!types.includes('清龙')) {
-                [0, 1, 2].forEach(s => {
-                    let lsp = Math.min(sC[s * 9 + 0] || 0, sC[s * 9 + 6] || 0);
-                    if (lsp > 0) [...Array(lsp)].forEach(() => add('老少配', 1));
-
-                    let tempSC = [0, 1, 2, 3, 4, 5, 6].map(n => sC[s * 9 + n] || 0);
-                    for (let n = 0; n <= 3; n++) {
-                        let pairs = Math.min(tempSC[n], tempSC[n + 3]);
-                        if (pairs > 0) {
-                            add('连六', 1);
-                            tempSC[n] -= pairs;
-                            tempSC[n + 3] -= pairs;
-                        }
-                    }
-                });
-            }
-
-            // 【补充】么九刻基础番 (排除高阶复合覆盖)
-            if (!types.includes('清老头') && !types.includes('混老头') && !types.includes('字一色')) {
-                tri.forEach(t => {
-                    if (YAOCHU_INDICES.has(t.tile)) {
-                        let isTerminal = (t.tile < 27 && (t.tile % 9 === 0 || t.tile % 9 === 8));
-                        let isWind = (t.tile >= 27 && t.tile <= 30);
-                        if (isTerminal) add('幺九刻', 1);
-                        else if (isWind) {
-                            if (!types.includes('大四喜') && !types.includes('小四喜') && !types.includes('三风刻')) {
-                                if (t.tile !== 27 + game.fieldWind && t.tile !== 27 + game.selfWind) add('幺九刻', 1);
-                            }
-                        }
-                    }
-                });
-            }
-
-            if (act.every(i => GREEN_TILES.has(i))) add('绿一色', 88);
-
-            // 九莲宝灯 (国标不分纯正)
-            if (sSz === 1 && !hasJ) {
-                const b = (act[0] / 9 | 0) * 9, r = [3, 1, 1, 1, 1, 1, 1, 1, 3];
-                if (r.every((min, k) => counts[b + k] >= min)) add('九莲宝灯', 88);
-            }
-
-            if (guobiao_hasWuMenQi(counts)) add('五门齐', 6);
-            if (!hasJ) add('无字', 1); // 恢复与清一色等的合法复合
-
-            // 门清 / 不求人 结算
-            if (!hSAK) add(game.isTsumo ? '不求人' : '门清', game.isTsumo ? 4 : 2);
-
-            // 排斥校验：平和不计无字
-            if (types.includes('平和') && types.includes('无字')) {
-                types = types.filter(t => t !== '无字');
-                score -= 1;
-            }
-
-            // 【补充】四归一检测 (排除一色三/四同顺引起的内置重复)
-            let sigC = 0;
-            for (let i = 0; i < TOTAL_TILE_TYPES; i++) {
-                if (counts[i] === 4) {
-                    let inThree同顺 = false;
-                    if (i < 27) {
-                        let s = i / 9 | 0, n = i % 9;
-                        for (let st = Math.max(0, n - 2); st <= Math.min(6, n); st++) {
-                            if (sC[s * 9 + st] >= 3) inThree同顺 = true;
-                        }
-                    }
-                    if (!inThree同顺) sigC++;
-                }
-            }
-            if (sigC > 0) [...Array(sigC)].forEach(() => add('四归一', 2));
-
-            return { types: [...new Set(types.filter(Boolean))], score };
-        }
-
-        // ==================== 游戏核心逻辑 ====================
-        const generateTargetHand = rng => game.variant === 'guobiao' ? guobiao_generateTargetHand(rng) : riichi_generateTargetHand(rng);
-        const checkHandValidity = (counts, wTile) => game.variant === 'guobiao' ? guobiao_checkHandValidity(counts, wTile) : riichi_checkHandValidity(counts, wTile);
-        const getAllYakuFromCounts = (counts, wTile) => game.variant === 'guobiao' ? guobiao_getAllYakuFromCounts(counts, wTile) : riichi_getAllYakuFromCounts(counts, wTile);
-        const getGuobiaoDetails = (counts, wTile) => guobiao_getDetails(counts, wTile);
-
-        function toggleTheme() { game.theme = game.theme === 'dark' ? 'light' : 'dark'; document.body.setAttribute('data-theme', game.theme); $('theme-btn').innerText = game.theme === 'dark' ? '☀️' : '🌙'; LS.set('mw_theme', game.theme); }
-        function switchVariant(v) { if (v === game.variant) return; game.variant = v;['riichi', 'guobiao'].forEach(x => $(`variant-${x}`).classList.toggle('active', v === x)); updateVariantUI(); newGame(); }
-        function updateVariantUI() { const isR = game.variant === 'riichi'; $('game-title').innerText = isR ? '🀫 立直麻将 Wordle' : '🀫 国标麻将 Wordle'; $('subtitle').innerHTML = `猜出14张牌的<span class="highlight">${isR ? '有役和牌型' : '符合8番及以上的和牌型'}</span>（最后一张为和牌）<br>前13张按 <span class="highlight">万→筒→索→字</span> 排序 · 共6次机会`; $('wind-label').innerText = isR ? '场风' : '圈风'; $('self-wind-label').innerText = isR ? '自风' : '门风'; }
-        function switchMode(m) { if (m === game.mode) return; game.mode = m;['daily', 'practice', 'hard'].forEach(x => $(`mode-${x}`).classList.toggle('active', m === x)); newGame(); }
-        function showMessage(msg, dur = 2000) { const m = $('message'); m.innerText = msg; m.classList.add('show-message'); clearTimeout(m._to); m._to = setTimeout(() => m.classList.remove('show-message'), dur); }
-        const openModal = n => { if (n === 'stats') renderStats(); $(`modal-${n}`).classList.add('show'); };
-        const closeModal = n => $(`modal-${n}`).classList.remove('show');
-        $$('.modal-overlay').forEach(el => el.addEventListener('click', e => { if (e.target === el) el.classList.remove('show'); }));
-
-        function createBoard() { $('board').innerHTML = Array.from({ length: MAX_ROWS }, (_, r) => `<div class="row" id="row-${r}">` + Array.from({ length: GUESS_LENGTH }, (_, c) => `<div class="cell" id="cell-${r}-${c}" ${c === 13 ? 'title="和牌（第14张）"' : ''}></div>`).join('') + `</div>`).join(''); }
-        function createKeyboard() { const bs = [0, 9, 18, 27, 34], ids = ['man', 'pin', 'sou', 'ji']; ids.forEach((id, g) => { $(`row-${id}`).innerHTML = Array.from({ length: bs[g + 1] - bs[g] }, (_, i) => `<button class="key" id="key-${bs[g] + i}" title="${getTileName(bs[g] + i)}" onclick="addTile(${bs[g] + i})">${TILES[bs[g] + i]}</button>`).join(''); }); }
-
-        function updateGrid() {
-            for (let i = 0; i < GUESS_LENGTH; i++) {
-                const c = $(`cell-${game.currentRow}-${i}`), gL = game.currentGuess.length, pL = game.pendingNumbers.length;
-                c.className = 'cell'; c.innerText = ''; c.title = i === 13 ? '和牌（第14张）' : '';
-                if (i < gL) { c.innerText = TILES[game.currentGuess[i]]; c.classList.add('filled'); }
-                else if (i - gL < pL) { c.innerText = game.pendingNumbers[i - gL]; c.classList.add('pending-number'); c.title = '等待输入花色（按 M/P/S/Z）'; }
+    function toggleTheme(){game.theme=game.theme==='dark'?'light':'dark';document.body.setAttribute('data-theme',game.theme);$('theme-btn').innerText=game.theme==='dark'?'☀️':'🌙';LS.set('mw_theme',game.theme)}
+    function switchVariant(v){if(v===game.variant)return;game.variant=v;['riichi','guobiao'].forEach(x=>$(`variant-${x}`).classList.toggle('active',v===x));updateVariantUI();newGame()}
+    function updateVariantUI(){const isR=game.variant==='riichi';$('game-title').innerText=isR?'🀫 立直麻将 Wordle':'🀫 国标麻将 Wordle';$('subtitle').innerHTML=`猜出14张牌的<span class="highlight">${isR?'有役和牌型':'符合8番及以上的和牌型'}</span>（最后一张为和牌）<br>前13张按 <span class="highlight">万→筒→索→字</span> 排序 · 共6次机会`;$('wind-label').innerText=isR?'场风':'圈风';$('self-wind-label').innerText=isR?'自风':'门风'}
+    function switchMode(m){if(m===game.mode)return;game.mode=m;['daily','practice','hard'].forEach(x=>$(`mode-${x}`).classList.toggle('active',m===x));newGame()}
+    function showMessage(msg,dur=2000){const m=$('message');m.innerText=msg;m.classList.add('show-message');clearTimeout(m._to);m._to=setTimeout(()=>m.classList.remove('show-message'),dur)}
+    const openModal=n=>{if(n==='stats')renderStats();$(`modal-${n}`).classList.add('show')}
+    const closeModal=n=>$(`modal-${n}`).classList.remove('show')
+    $$('.modal-overlay').forEach(el=>el.addEventListener('click',e=>{if(e.target===el)el.classList.remove('show')}))
+    function createBoard(){$('board').innerHTML=Array.from({length:MAX_ROWS},(_,r)=>`<div class="row" id="row-${r}">`+Array.from({length:GUESS_LENGTH},(_,c)=>`<div class="cell" id="cell-${r}-${c}" ${c===13?'title="和牌（第14张）"':''}></div>`).join('')+`</div>`).join('')}
+    function createKeyboard(){const bs=[0,9,18,27,34],ids=['man','pin','sou','ji'];ids.forEach((id,g)=>{$(`row-${id}`).innerHTML=Array.from({length:bs[g+1]-bs[g]},(_,i)=>`<button class="key" id="key-${bs[g]+i}" title="${getTileName(bs[g]+i)}" onclick="addTile(${bs[g]+i})">${TILES[bs[g]+i]}</button>`).join('')})}
+    function updateGrid(){for(let i=0;i<GUESS_LENGTH;i++){const c=$(`cell-${game.currentRow}-${i}`),gL=game.currentGuess.length,pL=game.pendingNumbers.length;c.className='cell';c.innerText='';c.title=i===13?'和牌（第14张）':'';if(i<gL){c.innerText=TILES[game.currentGuess[i]];c.classList.add('filled')}else if(i-gL<pL){c.innerText=game.pendingNumbers[i-gL];c.classList.add('pending-number');c.title='等待输入花色（按 M/P/S/Z）'}}}
+    function applyKeyColors(){for(let i=0;i<TOTAL_TILE_TYPES;i++){const b=$(`key-${i}`);if(b){b.classList.remove('key-correct','key-present','key-absent');if(game.keyColors[i])b.classList.add(`key-${game.keyColors[i]}`)}}}
+    function updateKeyboardColors(guess,colors){const r={'':0,'absent':1,'present':2,'correct':3};guess.forEach((ti,i)=>{if(r[colors[i]]>r[game.keyColors[ti]||''])game.keyColors[ti]=colors[i]});applyKeyColors()}
+    function renderBoardFromHistory(){game.guessHistory.forEach((r,rowI)=>r.forEach((c,i)=>{const cell=$(`cell-${rowI}-${i}`);if(cell){cell.innerText=TILES[c.tile];cell.className=`cell ${c.color}`}}))}
+    function addTile(ti){if(game.gameOver||game.currentGuess.length>=GUESS_LENGTH)return;game.pendingNumbers=[];if(game.currentGuess.filter(x=>x===ti).length>=4)return showMessage('一种牌最多只能有4张哦～');game.currentGuess.push(ti);updateGrid()}
+    function deleteTile(){if(game.gameOver)return;game.pendingNumbers.length?game.pendingNumbers.pop():game.currentGuess.pop();updateGrid()}
+    function submitGuess(){
+        if(game.gameOver)return;
+        if(game.pendingNumbers.length){game.pendingNumbers=[];updateGrid()}
+        if(game.currentGuess.length<GUESS_LENGTH)return showMessage(`牌数不足14张（当前${game.currentGuess.length}张）`);
+        const counts=getCounts(game.currentGuess),vr=checkHandValidity(counts,game.currentGuess[13]);
+        if(!vr.valid)return showMessage(vr.reason||'非有效和牌型');
+        if(game.mode==='hard'){
+            const gYaku=getAllYakuFromCounts(counts,game.currentGuess[13]);
+            if(game.variant==='guobiao'){
+                const tDet=calcGuobiaoMax(getCounts(game.targetHand),game.targetHand[13]),gDet=calcGuobiaoMax(counts,game.currentGuess[13]),miss=tDet.types.filter(y=>!gDet.types.includes(y));
+                if(miss.length||gDet.score<tDet.score)return showMessage(`困难模式：猜测须涵盖目标全番种且总番不少于目标番\n缺失番种：${miss.length?miss.join(' · '):'无'} · 目标番数: ${tDet.score}番`,3500);
+            }else{
+                const miss=game.targetYaku.filter(y=>!gYaku.includes(y));if(miss.length)return showMessage(`困难模式：猜测必须包含目标的所有役种\n缺失：${miss.join(' · ')}`,3000);
             }
         }
-
-        function applyKeyColors() { for (let i = 0; i < TOTAL_TILE_TYPES; i++) { const b = $(`key-${i}`); if (b) { b.classList.remove('key-correct', 'key-present', 'key-absent'); if (game.keyColors[i]) b.classList.add(`key-${game.keyColors[i]}`); } } }
-        function updateKeyboardColors(guess, colors) { const r = { '': 0, 'absent': 1, 'present': 2, 'correct': 3 }; guess.forEach((ti, i) => { if (r[colors[i]] > r[game.keyColors[ti] || '']) game.keyColors[ti] = colors[i]; }); applyKeyColors(); }
-        function renderBoardFromHistory() { game.guessHistory.forEach((r, rowI) => r.forEach((c, i) => { const cell = $(`cell-${rowI}-${i}`); if (cell) { cell.innerText = TILES[c.tile]; cell.className = `cell ${c.color}`; } })); }
-
-        function addTile(ti) { if (game.gameOver || game.currentGuess.length >= GUESS_LENGTH) return; game.pendingNumbers = []; if (game.currentGuess.filter(x => x === ti).length >= 4) return showMessage('一种牌最多只能有4张哦～'); game.currentGuess.push(ti); updateGrid(); }
-        function deleteTile() { if (game.gameOver) return; game.pendingNumbers.length ? game.pendingNumbers.pop() : game.currentGuess.pop(); updateGrid(); }
-
-        function submitGuess() {
-            if (game.gameOver) return;
-            if (game.pendingNumbers.length) { game.pendingNumbers = []; updateGrid(); }
-            if (game.currentGuess.length < GUESS_LENGTH) return showMessage(`牌数不足14张（当前${game.currentGuess.length}张）`);
-            const counts = getCounts(game.currentGuess), vr = checkHandValidity(counts, game.currentGuess[13]);
-            if (!vr.valid) return showMessage(vr.reason || '非有效和牌型');
-
-            if (game.mode === 'hard') {
-                const gYaku = getAllYakuFromCounts(counts, game.currentGuess[13]);
-                if (game.variant === 'guobiao') {
-                    const tDet = getGuobiaoDetails(getCounts(game.targetHand), game.targetHand[13]), gDet = getGuobiaoDetails(counts, game.currentGuess[13]), miss = tDet.types.filter(y => !gDet.types.includes(y));
-                    if (miss.length || gDet.score < tDet.score) return showMessage(`困难模式：猜测须涵盖目标全番种且总番不少于目标番\n缺失番种：${miss.length ? miss.join(' · ') : '无'} · 目标番数: ${tDet.score}番`, 3500);
-                } else {
-                    const miss = game.targetYaku.filter(y => !gYaku.includes(y)); if (miss.length) return showMessage(`困难模式：猜测必须包含目标的所有役种\n缺失：${miss.join(' · ')}`, 3000);
-                }
-            }
-
-            const gCp = sortGuessLikeTarget(game.currentGuess), tCp = [...game.targetHand], col = Array(GUESS_LENGTH).fill('absent');
-            gCp.forEach((ti, i) => { if (ti === tCp[i]) { col[i] = 'correct'; tCp[i] = gCp[i] = -2; } });
-            gCp.forEach((ti, i) => { if (ti >= 0) { const fi = tCp.indexOf(ti); if (fi !== -1) { col[i] = 'present'; tCp[fi] = -1; } } });
-
-            const finalG = sortGuessLikeTarget(game.currentGuess);
-            let allCorr = true;
-            finalG.forEach((ti, i) => { const c = $(`cell-${game.currentRow}-${i}`); c.innerText = TILES[ti]; c.className = `cell flip ${col[i]}`; if (col[i] !== 'correct') allCorr = false; });
-            game.guessHistory.push(finalG.map((t, i) => ({ tile: t, color: col[i] })));
-            updateKeyboardColors(finalG, col);
-
-            if (allCorr) {
-                game.currentRow++;
-                const yL = getAllYakuFromCounts(counts, finalG[13]);
-                let msg = `🎉 恭喜！你猜对了！\n`;
-                if (game.variant === 'guobiao') { const d = getGuobiaoDetails(counts, finalG[13]); msg += `结算：${d.score}番\n番种：${d.types.join(' · ')}`; }
-                else msg += `役种：${yL.join(' · ')}`;
-                showMessage(msg, 4500);
-                game.gameOver = game.gameWon = true;
-                game.targetHand.forEach(ti => game.keyColors[ti] = 'correct');
-                applyKeyColors();
-                if (game.mode === 'daily') { addStat(true, game.currentRow); LS.set(lsPrefix() + 'daily_' + game.dailyDate, { guessHistory: game.guessHistory, gameOver: true, gameWon: true }); }
-                return setTimeout(() => openModal('stats'), 2000);
-            }
+        const gCp=sortGuessLikeTarget(game.currentGuess),tCp=[...game.targetHand],col=Array(GUESS_LENGTH).fill('absent');
+        gCp.forEach((ti,i)=>{if(ti===tCp[i]){col[i]='correct';tCp[i]=gCp[i]=-2}});
+        gCp.forEach((ti,i)=>{if(ti>=0){const fi=tCp.indexOf(ti);if(fi!==-1){col[i]='present';tCp[fi]=-1}}});
+        const finalG=sortGuessLikeTarget(game.currentGuess);
+        let allCorr=true;
+        finalG.forEach((ti,i)=>{const c=$(`cell-${game.currentRow}-${i}`);c.innerText=TILES[ti];c.className=`cell flip ${col[i]}`;if(col[i]!=='correct')allCorr=false});
+        game.guessHistory.push(finalG.map((t,i)=>({tile:t,color:col[i]})));
+        updateKeyboardColors(finalG,col);
+        if(allCorr){
             game.currentRow++;
-            game.currentGuess = [];
-            if (game.currentRow >= MAX_ROWS) {
-                showMessage(`😢 游戏结束\n答案是: ${game.targetHand.map(i => TILES[i]).join(' ')}`, 6000);
-                game.gameOver = true;
-                if (game.mode === 'daily') { addStat(false, 0); LS.set(lsPrefix() + 'daily_' + game.dailyDate, { guessHistory: game.guessHistory, gameOver: true, gameWon: false }); }
-                setTimeout(() => openModal('stats'), 2000);
-            }
+            const yL=getAllYakuFromCounts(counts,finalG[13]);
+            let msg=`🎉 恭喜！你猜对了！\n`;
+            if(game.variant==='guobiao'){const d=calcGuobiaoMax(counts,finalG[13]);msg+=`结算：${d.score}番\n番种：${d.types.join(' · ')}`}
+            else msg+=`役种：${yL.join(' · ')}`;
+            showMessage(msg,4500);game.gameOver=game.gameWon=true;
+            game.targetHand.forEach(ti=>game.keyColors[ti]='correct');applyKeyColors();
+            if(game.mode==='daily'){addStat(true,game.currentRow);LS.set(lsPrefix()+'daily_'+game.dailyDate,{guessHistory:game.guessHistory,gameOver:true,gameWon:true})}
+            return setTimeout(()=>openModal('stats'),2000);
         }
-
-        function showHint() {
-            if (game.gameOver) return;
-            if (game.variant === 'guobiao') { const d = getGuobiaoDetails(getCounts(game.targetHand), game.targetHand[13]); showMessage(`💡 答案番种提示：\n圈风: ${WIND_NAMES[game.fieldWind]}  门风: ${WIND_NAMES[game.selfWind]}\n和牌: ${game.isTsumo ? '自摸' : '荣和'}\n总番数: ${d.score}番\n番种: ${d.types.length ? d.types.join(' · ') : '无番'}`, 6000); }
-            else { const y = getAllYakuFromCounts(getCounts(game.targetHand), game.targetHand[13]); showMessage(`💡 答案役种提示：\n场风: ${WIND_NAMES[game.fieldWind]}  自风: ${WIND_NAMES[game.selfWind]}\n和牌: ${game.isTsumo ? '自摸' : '荣和'}\n役种: ${y.length ? y.join(' · ') : '无役（仅限自摸）'}`, 6000); }
+        game.currentRow++;game.currentGuess=[];
+        if(game.currentRow>=MAX_ROWS){
+            showMessage(`😢 游戏结束\n答案是: ${game.targetHand.map(i=>TILES[i]).join(' ')}`,6000);
+            game.gameOver=true;
+            if(game.mode==='daily'){addStat(false,0);LS.set(lsPrefix()+'daily_'+game.dailyDate,{guessHistory:game.guessHistory,gameOver:true,gameWon:false})}
+            setTimeout(()=>openModal('stats'),2000);
         }
-
-        function newGame() {
-            $('btn-new-game').style.display = game.mode === 'daily' ? 'none' : '';
-            $('btn-hint').style.display = game.mode === 'hard' ? 'none' : '';
-            Object.assign(game, { targetHand: [], currentGuess: [], pendingNumbers: [], currentRow: 0, gameOver: false, gameWon: false, keyColors: Array(TOTAL_TILE_TYPES).fill(''), guessHistory: [], targetYaku: [] });
-            if (game.mode === 'daily') {
-                const { seed, dateStr } = getTodaySeed(); game.dailyDate = dateStr;
-                const rng = mulberry32(seed); game.fieldWind = rng() * 2 | 0; game.selfWind = rng() * 4 | 0; game.isTsumo = rng() < 0.5;
-                generateTargetHand(rng);
-                const s = LS.get(lsPrefix() + 'daily_' + dateStr, null);
-                if (s && s.guessHistory) { game.guessHistory = s.guessHistory; game.currentRow = s.guessHistory.length; if (s.gameOver) { game.gameOver = true; game.gameWon = s.gameWon; } const r = { '': 0, 'absent': 1, 'present': 2, 'correct': 3 }; s.guessHistory.forEach(row => row.forEach(c => { if (r[c.color] > r[game.keyColors[c.tile] || '']) game.keyColors[c.tile] = c.color; })); }
-            } else { game.fieldWind = Math.random() * 2 | 0; game.selfWind = Math.random() * 4 | 0; game.isTsumo = Math.random() < 0.5; generateTargetHand(Math.random); }
-
-            game.targetYaku = getAllYakuFromCounts(getCounts(game.targetHand), game.targetHand[13]);
-            const hi = $('hard-mode-info');
-            if (game.mode === 'hard') {
-                hi.style.display = 'block';
-                if (game.variant === 'guobiao') hi.innerText = `🎯 目标番种：${game.targetYaku.length ? game.targetYaku.join(' · ') : '无'}（最低门槛：${getGuobiaoDetails(getCounts(game.targetHand), game.targetHand[13]).score}番）`;
-                else hi.innerText = '🎯 目标役种：' + (game.targetYaku.length ? game.targetYaku.join(' · ') : '无役');
-            } else hi.style.display = 'none';
-            $('field-wind-display').innerHTML = TILES[27 + game.fieldWind] + ' ' + WIND_NAMES[game.fieldWind];
-            $('self-wind-display').innerHTML = TILES[27 + game.selfWind] + ' ' + WIND_NAMES[game.selfWind];
-            $('win-method-display').innerHTML = game.isTsumo ? '🚀 自摸' : '🎯 荣和';
-            updateVariantUI(); createBoard(); createKeyboard(); renderBoardFromHistory(); applyKeyColors();
-            closeModal('stats'); closeModal('info');
+    }
+    function showHint(){
+        if(game.gameOver)return;
+        if(game.variant==='guobiao'){const d=calcGuobiaoMax(getCounts(game.targetHand),game.targetHand[13]);showMessage(`💡 答案番种提示：\n圈风: ${WIND_NAMES[game.fieldWind]}  门风: ${WIND_NAMES[game.selfWind]}\n和牌: ${game.isTsumo?'自摸':'荣和'}\n总番数: ${d.score}番\n番种: ${d.types.length?d.types.join(' · '):'无番'}`,6000)}
+        else{const y=getAllYakuFromCounts(getCounts(game.targetHand),game.targetHand[13]);showMessage(`💡 答案役种提示：\n场风: ${WIND_NAMES[game.fieldWind]}  自风: ${WIND_NAMES[game.selfWind]}\n和牌: ${game.isTsumo?'自摸':'荣和'}\n役种: ${y.length?y.join(' · '):'无役（仅限自摸）'}`,6000)}
+    }
+    function newGame(){
+        $('btn-new-game').style.display=game.mode==='daily'?'none':'';$('btn-hint').style.display=game.mode==='hard'?'none':'';
+        Object.assign(game,{targetHand:[],currentGuess:[],pendingNumbers:[],currentRow:0,gameOver:false,gameWon:false,keyColors:Array(TOTAL_TILE_TYPES).fill(''),guessHistory:[],targetYaku:[]});
+        if(game.mode==='daily'){
+            const{seed,dateStr}=getTodaySeed();game.dailyDate=dateStr;
+            const rng=mulberry32(seed);game.fieldWind=rng()*2|0;game.selfWind=rng()*4|0;game.isTsumo=rng()<0.5;
+            generateTargetHand(rng);
+            const s=LS.get(lsPrefix()+'daily_'+dateStr,null);
+            if(s&&s.guessHistory){game.guessHistory=s.guessHistory;game.currentRow=s.guessHistory.length;if(s.gameOver){game.gameOver=true;game.gameWon=s.gameWon}const r={'':0,'absent':1,'present':2,'correct':3};s.guessHistory.forEach(row=>row.forEach(c=>{if(r[c.color]>r[game.keyColors[c.tile]||''])game.keyColors[c.tile]=c.color}))}
+        }else{game.fieldWind=Math.random()*2|0;game.selfWind=Math.random()*4|0;game.isTsumo=Math.random()<0.5;generateTargetHand(Math.random)}
+        game.targetYaku=getAllYakuFromCounts(getCounts(game.targetHand),game.targetHand[13]);
+        const hi=$('hard-mode-info');
+        if(game.mode==='hard'){
+            hi.style.display='block';
+            if(game.variant==='guobiao')hi.innerText=`🎯 目标番种：${game.targetYaku.length?game.targetYaku.join(' · '):'无'}（最低门槛：${calcGuobiaoMax(getCounts(game.targetHand),game.targetHand[13]).score}番）`;
+            else hi.innerText='🎯 目标役种：'+(game.targetYaku.length?game.targetYaku.join(' · '):'无役');
+        }else hi.style.display='none';
+        $('field-wind-display').innerHTML=TILES[27+game.fieldWind]+' '+WIND_NAMES[game.fieldWind];
+        $('self-wind-display').innerHTML=TILES[27+game.selfWind]+' '+WIND_NAMES[game.selfWind];
+        $('win-method-display').innerHTML=game.isTsumo?'🚀 自摸':'🎯 荣和';
+        updateVariantUI();createBoard();createKeyboard();renderBoardFromHistory();applyKeyColors();
+        closeModal('stats');closeModal('info');
+    }
+    document.addEventListener('keydown',e=>{
+        if(game.gameOver)return e.key==='Enter'&&closeModal('stats');
+        const k=e.key.toLowerCase();
+        if(['backspace','delete'].includes(k)){e.preventDefault();deleteTile()}
+        else if(k==='enter'){e.preventDefault();submitGuess()}
+        else if(/^[1-9]$/.test(k)){e.preventDefault();if(game.currentGuess.length+game.pendingNumbers.length<GUESS_LENGTH){game.pendingNumbers.push(+k);updateGrid()}}
+        else if(['m','p','s','z'].includes(k)&&game.pendingNumbers.length){
+            e.preventDefault();
+            if(game.currentGuess.length+game.pendingNumbers.length>GUESS_LENGTH){game.pendingNumbers=[];return updateGrid()}
+            const idxs=game.pendingNumbers.map(n=>{const b={m:0,p:9,s:18,z:27}[k],m=k==='z'?7:9;return(b!==undefined&&n>=1&&n<=m)?b+n-1:-1});
+            if(idxs.includes(-1)){showMessage(`无效代码: ${game.pendingNumbers[idxs.indexOf(-1)]}${k}`);game.pendingNumbers=[];return updateGrid()}
+            const tmpC=getCounts(game.currentGuess);if(idxs.some(ti=>++tmpC[ti]>4)){showMessage('一种牌最多只能有4张哦～');return updateGrid()}
+            game.currentGuess.push(...idxs);game.pendingNumbers=[];updateGrid();
         }
-
-        document.addEventListener('keydown', e => {
-            if (game.gameOver) return e.key === 'Enter' && closeModal('stats');
-            const k = e.key.toLowerCase();
-            if (['backspace', 'delete'].includes(k)) { e.preventDefault(); deleteTile(); }
-            else if (k === 'enter') { e.preventDefault(); submitGuess(); }
-            else if (/^[1-9]$/.test(k)) { e.preventDefault(); if (game.currentGuess.length + game.pendingNumbers.length < GUESS_LENGTH) { game.pendingNumbers.push(+k); updateGrid(); } }
-            else if (['m', 'p', 's', 'z'].includes(k) && game.pendingNumbers.length) {
-                e.preventDefault();
-                if (game.currentGuess.length + game.pendingNumbers.length > GUESS_LENGTH) { game.pendingNumbers = []; return updateGrid(); }
-                const idxs = game.pendingNumbers.map(n => { const b = { m: 0, p: 9, s: 18, z: 27 }[k], m = k === 'z' ? 7 : 9; return (b !== undefined && n >= 1 && n <= m) ? b + n - 1 : -1; });
-                if (idxs.includes(-1)) { showMessage(`无效代码: ${game.pendingNumbers[idxs.indexOf(-1)]}${k}`); game.pendingNumbers = []; return updateGrid(); }
-                const tmpC = getCounts(game.currentGuess); if (idxs.some(ti => ++tmpC[ti] > 4)) { showMessage('一种牌最多只能有4张哦～'); return updateGrid(); }
-                game.currentGuess.push(...idxs); game.pendingNumbers = []; updateGrid();
-            }
-        });
-
-        const getStats = () => LS.get(lsPrefix() + 'stats', { played: 0, wins: 0, currentStreak: 0, maxStreak: 0, dist: [0, 0, 0, 0, 0, 0] });
-        function addStat(w, t) { const s = getStats(); s.played++; if (w) { s.wins++; s.maxStreak = Math.max(s.maxStreak, ++s.currentStreak); if (t >= 1 && t <= 6) s.dist[t - 1]++; } else s.currentStreak = 0; LS.set(lsPrefix() + 'stats', s); }
-
-        function renderStats() {
-            if (game.mode !== 'daily') { $('stats-content').style.display = 'none'; $('practice-stats').style.display = 'block'; $('practice-tries').innerText = game.guessHistory.length; $('stats-title').innerText = game.mode === 'hard' ? '🔥 困难练习' : '♾️ 练习模式'; return; }
-            $('stats-content').style.display = 'block'; $('practice-stats').style.display = 'none'; $('stats-title').innerText = '📊 每日统计 (' + (game.variant === 'riichi' ? '立直' : '国标') + ')';
-            const s = getStats(), maxD = Math.max(...s.dist, 1);
-            $('stat-played').innerText = s.played; $('stat-winrate').innerText = s.played ? Math.round(s.wins / s.played * 100) : 0; $('stat-streak').innerText = s.currentStreak; $('stat-maxstreak').innerText = s.maxStreak;
-            $('dist-container').innerHTML = s.dist.map((d, i) => `<div class="dist-row"><div class="guess-num">${i + 1}</div><div class="dist-bar ${game.gameWon && game.currentRow === i + 1 ? 'green' : 'gray'}" style="width: ${Math.max(8, d / maxD * 100)}%">${d}</div></div>`).join('');
-        }
-
-        function shareResult() {
-            if (game.mode !== 'daily') return showMessage('练习模式无法分享'); if (!game.guessHistory.length) return showMessage('还没有完成的局');
-            const emj = { correct: '🟩', present: '🟨', absent: '⬜' }, txt = `${game.variant === 'riichi' ? '立直麻将Wordle' : '国标麻将Wordle'} ${game.dailyDate} ${game.gameWon ? game.guessHistory.length : 'X'}/${MAX_ROWS}\n${location.origin}${location.pathname}\n\n` + game.guessHistory.map(r => r.map((c, i) => emj[c.color] + (i === 12 ? ' ' : '')).join('')).join('\n');
-            navigator.clipboard.writeText(txt).then(() => showMessage('已复制到剪贴板！')).catch(() => showMessage(txt, 5000));
-        }
-
-        function updateCountdown() {
-            if (game.mode !== 'daily') return $('countdown').innerText = '';
-            const n = new Date(), d = new Date(n.getFullYear(), n.getMonth(), n.getDate() + 1) - n, pad = x => String(Math.floor(x)).padStart(2, '0');
-            $('countdown').innerText = `下期题目\n⏰ ${pad(d / 3600000)}:${pad(d % 3600000 / 60000)}:${pad(d % 60000 / 1000)}`;
-        }
-
-        game.theme = LS.get('mw_theme', 'dark'); document.body.setAttribute('data-theme', game.theme); $('theme-btn').innerText = game.theme === 'dark' ? '☀️' : '🌙';
-        updateVariantUI(); newGame();
-        setInterval(updateCountdown, 1000); updateCountdown();
-    </script>
+    });
+    const getStats=()=>LS.get(lsPrefix()+'stats',{played:0,wins:0,currentStreak:0,maxStreak:0,dist:[0,0,0,0,0,0]});
+    function addStat(w,t){const s=getStats();s.played++;if(w){s.wins++;s.maxStreak=Math.max(s.maxStreak,++s.currentStreak);if(t>=1&&t<=6)s.dist[t-1]++}else s.currentStreak=0;LS.set(lsPrefix()+'stats',s)}
+    function renderStats(){
+        if(game.mode!=='daily'){$('stats-content').style.display='none';$('practice-stats').style.display='block';$('practice-tries').innerText=game.guessHistory.length;$('stats-title').innerText=game.mode==='hard'?'🔥 困难练习':'♾️ 练习模式';return}
+        $('stats-content').style.display='block';$('practice-stats').style.display='none';$('stats-title').innerText='📊 每日统计 ('+(game.variant==='riichi'?'立直':'国标')+')';
+        const s=getStats(),maxD=Math.max(...s.dist,1);
+        $('stat-played').innerText=s.played;$('stat-winrate').innerText=s.played?Math.round(s.wins/s.played*100):0;$('stat-streak').innerText=s.currentStreak;$('stat-maxstreak').innerText=s.maxStreak;
+        $('dist-container').innerHTML=s.dist.map((d,i)=>`<div class="dist-row"><div class="guess-num">${i+1}</div><div class="dist-bar ${game.gameWon&&game.currentRow===i+1?'green':'gray'}" style="width:${Math.max(8,d/maxD*100)}%">${d}</div></div>`).join('');
+    }
+    function shareResult(){
+        if(game.mode!=='daily')return showMessage('练习模式无法分享');if(!game.guessHistory.length)return showMessage('还没有完成的局');
+        const emj={correct:'🟩',present:'🟨',absent:'⬜'},txt=`${game.variant==='riichi'?'立直麻将Wordle':'国标麻将Wordle'} ${game.dailyDate} ${game.gameWon?game.guessHistory.length:'X'}/${MAX_ROWS}\n${location.origin}${location.pathname}\n\n`+game.guessHistory.map(r=>r.map((c,i)=>emj[c.color]+(i===12?' ':'')).join('')).join('\n');
+        navigator.clipboard.writeText(txt).then(()=>showMessage('已复制到剪贴板！')).catch(()=>showMessage(txt,5000));
+    }
+    function updateCountdown(){
+        if(game.mode!=='daily')return $('countdown').innerText='';
+        const n=new Date(),d=new Date(n.getFullYear(),n.getMonth(),n.getDate()+1)-n,pad=x=>String(Math.floor(x)).padStart(2,'0');
+        $('countdown').innerText=`下期题目\n⏰ ${pad(d/3600000)}:${pad(d%3600000/60000)}:${pad(d%60000/1000)}`;
+    }
+    game.theme=LS.get('mw_theme','dark');document.body.setAttribute('data-theme',game.theme);$('theme-btn').innerText=game.theme==='dark'?'☀️':'🌙';
+    updateVariantUI();newGame();
+    setInterval(updateCountdown,1000);updateCountdown();
+</script>
 </body>
-
 </html>
