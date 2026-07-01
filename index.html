@@ -1177,11 +1177,12 @@
             updateKeyboardColors(finalGuess, cellColors);
 
             if (allCorrect) {
+                game.currentRow++;
                 showMessage(`🎉 恭喜！你猜对了！\n役种：${getAllYakuFromCounts(counts, finalGuess[13]).join(' · ')}`, 4000);
                 game.gameOver = game.gameWon = true;
                 game.targetHand.forEach(ti => game.keyColors[ti] = 'correct'); applyKeyColors();
                 if (game.mode === 'daily') {
-                    addStat(true, game.currentRow + 1);
+                    addStat(true, game.currentRow);
                     LS.set('mw_daily_' + game.dailyDate, { guessHistory: game.guessHistory, gameOver: game.gameOver, gameWon: game.gameWon });
                 }
                 setTimeout(() => openModal('stats'), 2000); return;
