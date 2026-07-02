@@ -1102,6 +1102,9 @@
             if (game.isTsumo) add('自摸', 1);
 
             applyExclusions(fans);
+            if (fans.length === 0) {
+                fans.push('无番和');
+            }
             const finalScore = fans.reduce((s, f) => s + (fanScoreMap[f] || 0), 0);
             return { score: finalScore, types: fans };
         }
@@ -1114,7 +1117,7 @@
             '七对': 24, '七星不靠': 24, '全双刻': 24, '清一色': 24, '一色三同顺': 24, '一色三节高': 24, '全大': 24, '全中': 24, '全小': 24,
             '清龙': 16, '三色双龙会': 16, '一色三步高': 16, '全带五': 16, '三同刻': 16, '三暗刻': 16,
             '全不靠': 12, '组合龙': 12, '大于五': 12, '小于五': 12, '三风刻': 12,
-            '花龙': 8, '推不倒': 8, '三色三同顺': 8, '三色三节高': 8, '双暗杠': 8,
+            '花龙': 8, '推不倒': 8, '三色三同顺': 8, '三色三节高': 8, '双暗杠': 8, '无番和': 8,
             '碰碰和': 6, '混一色': 6, '三色三步高': 6, '五门齐': 6, '双箭刻': 6,
             '全带幺': 4, '不求人': 4,
             '箭刻': 2, '圈风刻': 2, '门风刻': 2, '门前清': 2, '平和': 2, '四归一': 2, '双同刻': 2, '双暗刻': 2, '断幺': 2,
@@ -1250,7 +1253,7 @@
         }
         function showHint() {
             if (game.gameOver) return;
-            if (game.variant === 'guobiao') { const d = calcGuobiaoMax(getCounts(game.targetHand), game.targetHand[13]); showMessage(`💡 答案番种提示：\n圈风: ${WIND_NAMES[game.fieldWind]}  门风: ${WIND_NAMES[game.selfWind]}\n和牌: ${game.isTsumo ? '自摸' : '荣和'}\n总番数: ${d.score}番\n番种: ${d.types.length ? d.types.join(' · ') : '无番'}`, 6000) }
+            if (game.variant === 'guobiao') { const d = calcGuobiaoMax(getCounts(game.targetHand), game.targetHand[13]); showMessage(`💡 答案番种提示：\n圈风: ${WIND_NAMES[game.fieldWind]}  门风: ${WIND_NAMES[game.selfWind]}\n和牌: ${game.isTsumo ? '自摸' : '点和'}\n总番数: ${d.score}番\n番种: ${d.types.length ? d.types.join(' · ') : '无番'}`, 6000) }
             else { const y = getAllYakuFromCounts(getCounts(game.targetHand), game.targetHand[13]); showMessage(`💡 答案役种提示：\n场风: ${WIND_NAMES[game.fieldWind]}  自风: ${WIND_NAMES[game.selfWind]}\n和牌: ${game.isTsumo ? '自摸' : '荣和'}\n役种: ${y.length ? y.join(' · ') : '无役（仅限自摸）'}`, 6000) }
         }
         function newGame() {
@@ -1272,7 +1275,7 @@
             } else hi.style.display = 'none';
             $('field-wind-display').innerHTML = TILES[27 + game.fieldWind] + ' ' + WIND_NAMES[game.fieldWind];
             $('self-wind-display').innerHTML = TILES[27 + game.selfWind] + ' ' + WIND_NAMES[game.selfWind];
-            $('win-method-display').innerHTML = game.isTsumo ? '🚀 自摸' : '🎯 荣和';
+            $('win-method-display').innerHTML = game.isTsumo ? '🚀 自摸' : (game.variant === 'guobiao' ? '🎯 点和' : '🎯 荣和');
             updateVariantUI(); createBoard(); createKeyboard(); renderBoardFromHistory(); applyKeyColors();
             closeModal('stats'); closeModal('info');
         }
