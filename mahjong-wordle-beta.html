@@ -1215,8 +1215,8 @@
             if (game.mode === 'hard') {
                 const gYaku = getAllYakuFromCounts(counts, game.currentGuess[13]);
                 if (game.variant === 'guobiao') {
-                    const tDet = calcGuobiaoMax(getCounts(game.targetHand), game.targetHand[13]), gDet = calcGuobiaoMax(counts, game.currentGuess[13]), miss = tDet.types.filter(y => !gDet.types.includes(y));
-                    if (miss.length || gDet.score < tDet.score) return showMessage(`困难模式：猜测须涵盖目标全番种且总番不少于目标番\n缺失番种：${miss.length ? miss.join(' · ') : '无'} · 目标番数: ${tDet.score}番`, 3500);
+                    const tDet = calcGuobiaoMax(getCounts(game.targetHand), game.targetHand[13]), gDet = calcGuobiaoMax(counts, game.currentGuess[13]);
+                    if (gDet.score !== tDet.score) return showMessage(`困难模式：猜测的番数必须等于目标番数\n当前猜测：${gDet.score}番 · 目标番数：${tDet.score}番`, 3500);
                 } else {
                     const miss = game.targetYaku.filter(y => !gYaku.includes(y)); if (miss.length) return showMessage(`困难模式：猜测必须包含目标的所有役种\n缺失：${miss.join(' · ')}`, 3000);
                 }
@@ -1267,7 +1267,7 @@
             const hi = $('hard-mode-info');
             if (game.mode === 'hard') {
                 hi.style.display = 'block';
-                if (game.variant === 'guobiao') hi.innerText = `🎯 目标番种：${game.targetYaku.length ? game.targetYaku.join(' · ') : '无'}（最低门槛：${calcGuobiaoMax(getCounts(game.targetHand), game.targetHand[13]).score}番）`;
+                if (game.variant === 'guobiao') hi.innerText = `🎯 目标番数：${calcGuobiaoMax(getCounts(game.targetHand), game.targetHand[13]).score}番`;
                 else hi.innerText = '🎯 目标役种：' + (game.targetYaku.length ? game.targetYaku.join(' · ') : '无役');
             } else hi.style.display = 'none';
             $('field-wind-display').innerHTML = TILES[27 + game.fieldWind] + ' ' + WIND_NAMES[game.fieldWind];
