@@ -612,23 +612,80 @@
             color: white;
         }
 
-        @media (max-width:580px) {
+        @media (max-width: 580px) {
+            .mode-btn {
+                padding: 6px 10px;
+                font-size: 12px;
+            }
+
             .cell {
                 width: 22px;
                 height: 32px;
                 font-size: 22px;
+                border-width: 1.5px;
+                border-radius: 3px;
+            }
+
+            .cell:nth-child(14) {
+                margin-left: 4px;
+                border-left-width: 2px;
+            }
+
+            .cell.pending-number {
+                font-size: 15px;
             }
 
             .key {
                 font-size: 18px;
                 padding: 5px 6px;
                 min-width: 26px;
+                border-radius: 3px;
             }
 
             .key.action {
                 font-size: 13px;
                 padding: 10px 12px;
                 min-width: 56px;
+            }
+
+            h1 {
+                font-size: 20px;
+            }
+
+            .subtitle {
+                font-size: 11px;
+            }
+
+            .hint-bar {
+                font-size: 10px;
+            }
+
+            .hint-bar .key-hint {
+                font-size: 10px;
+                padding: 1px 5px;
+            }
+
+            .row {
+                gap: 2px;
+            }
+
+            #board {
+                gap: 4px;
+            }
+
+            #game-info {
+                font-size: 13px;
+                padding: 6px 12px;
+                gap: 12px;
+            }
+
+            .stat-cell .num {
+                font-size: 22px;
+            }
+
+            .icon-btn {
+                font-size: 18px;
+                padding: 4px;
             }
         }
     </style>
@@ -656,7 +713,8 @@
     <div class="subtitle" id="subtitle"></div>
     <div class="hint-bar">💡 键盘快捷输入：<span class="key-hint">数字</span> + <span class="key-hint">M/P/S/Z</span> 可连续输入如
         <span class="key-hint">1</span><span class="key-hint">2</span><span class="key-hint">3</span><span
-            class="key-hint">M</span> = 1万2万3万</div>
+            class="key-hint">M</span> = 1万2万3万
+    </div>
     <div id="game-info">
         <span id="wind-label">场风</span>：<span id="field-wind-display"></span>
         <span id="self-wind-label">自风</span>：<span id="self-wind-display"></span>
@@ -1089,6 +1147,7 @@
             if (fans.includes('三色双龙会')) { remove('喜相逢'); remove('老少副'); remove('平和') }
             if (fans.includes('全带五')) remove('断幺');
             if (fans.includes('三同刻')) remove('双同刻');
+            if (fans.includes('三暗刻')) remove('双暗刻');
             if (fans.includes('全不靠')) { remove('五门齐'); remove('门前清') }
             if (fans.includes('大于五') || fans.includes('小于五')) remove('无字');
             if (fans.includes('不求人')) { remove('自摸'); remove('门前清') }
